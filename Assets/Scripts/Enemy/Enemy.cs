@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -13,7 +14,11 @@ public class Enemy : MonoBehaviour
     public Transform Target;
     public float Distance;
     public bool Alive = true;
-    public float ProbBloqueo = 0.75f;
+    public float ProbBloqueo = 0.30f;
+    private float bloquearTime; 
+    private float bloquearDuration = 1.0f;
+    private float tiempoUltimoBloqueo = 0f; // Tiempo del último intento de bloqueo
+    private float intervaloBloqueo = 5f;
 
     public void Awake()
     {
@@ -64,6 +69,7 @@ public class Enemy : MonoBehaviour
             case Estados.atacar:
                 break;
             case Estados.Bloquear:
+                bloquearTime = 0f;
                 break;
             case Estados.muerto:
                 Alive = false;
@@ -103,40 +109,53 @@ public class Enemy : MonoBehaviour
             CambiarEstado (Estados.Seguir);
         }
 
-        if (Player.instance.atacando)
+        if (Player.instance.atacandoDebil && Time.time - tiempoUltimoBloqueo > intervaloBloqueo)
         {
-            
-            float Bloqueo = Random.Range(0.0f, 1.0f);
+            float Bloqueo = UnityEngine.Random.Range(0.0f, 1.0f);
 
-            
-            if (Bloqueo <= ProbBloqueo) 
+            Debug.Log("Valor de Bloqueo: " + Bloqueo);
+
+            if (Bloqueo <= ProbBloqueo)
             {
-                CambiarEstado(Estados.Bloquear); 
+                CambiarEstado(Estados.Bloquear);
             }
+
+            tiempoUltimoBloqueo = Time.time; // Actualiza el tiempo del último bloqueo
         }
     }
 
     public virtual void EstadoBloquear()
     {
-        if (Distance < disSeguir)
+
+        bloquearTime += Time.deltaTime;
+
+        //Debug.Log("Bloqueado!!!");
+
+        if (bloquearTime >= bloquearDuration)
         {
-            CambiarEstado(Estados.atacar);
+            if (Distance < disSeguir)
+            {
+                CambiarEstado(Estados.atacar);
+            }
+
+            if (Distance > disAtacar + 0.5f)
+            {
+                CambiarEstado(Estados.Seguir);
+            }
+
+            if (Distance < disAtacar)
+            {
+                CambiarEstado(Estados.atacar);
+            }
+
+            else if (Distance > disEscape)
+            {
+                CambiarEstado(Estados.Patrulla);
+            }
+
+
         }
 
-        if (Distance > disAtacar + 0.5f)
-        {
-            CambiarEstado(Estados.Seguir);
-        }
-
-        if (Distance < disAtacar)
-        {
-            CambiarEstado(Estados.atacar);
-        }
-
-        else if (Distance > disEscape)
-        {
-            CambiarEstado(Estados.Patrulla);
-        }
     }
 
 
