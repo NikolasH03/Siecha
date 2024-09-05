@@ -24,17 +24,12 @@ public class Idle : StateMachineBehaviour
             Player.instance.numero_golpesFuertes++;
         }
       
-        if (Player.instance.bloqueando)
+        if (Player.instance.anim.GetBool("blocking"))
         {
             Player.instance.anim.Play("bloqueo");
-            Player.instance.PausarAnimacion(); // Pausar la animación estableciendo la velocidad a 0
+           
             
-        }
-        if (HealthBar.instance.dañoEstamina)
-        {
-            Player.instance.bloqueando = false;
-            Player.instance.anim.Play("Standing Block React");
-        }
+        } 
         if (Player.instance.isDashing)
         {
             Player.instance.anim.Play("dash");
@@ -48,7 +43,7 @@ public class Idle : StateMachineBehaviour
         Player.instance.atacandoDebil = false;
         Player.instance.atacandoFuerte = false;
         Player.instance.isDashing = false;
-        Player.instance.bloqueando = false;
+
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

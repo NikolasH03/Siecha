@@ -79,14 +79,13 @@ public class HealthBar : MonoBehaviour
         
         if (other.gameObject.tag == "hostile")
         {
-            if (player.pausado)
+            if (player.anim.GetBool("blocking"))
             {
 
                 if (estaminaActual > 0)
                 {
                     estaminaActual -= dañoBase;
                     imagenEstamina.fillAmount = estaminaActual / estaminaMax;
-                    player.ReanudarAnimacion();
                     player.anim.Play("Standing Block React");
                     Player.instance.GetComponent<Collider>().enabled = false;
                     
@@ -97,7 +96,6 @@ public class HealthBar : MonoBehaviour
 
                 if (estaminaActual <= 0)
                 {      
-                    player.ReanudarAnimacion();
                     player.anim.Play("Damage");
                     Player.instance.GetComponent<Collider>().enabled = true;
                 }
@@ -105,23 +103,27 @@ public class HealthBar : MonoBehaviour
             }
             else
             {
+   
+                player.canMove = false;
                 vidaActual -= dañoBase;
                 imagenBarraVida.fillAmount = vidaActual / vidaMax;
 
                 if (vidaActual <= 0)
                 {
-                    
-                    GetComponent<Collider>().enabled = false;
-                    player.anim.Play("Death Forward");
 
+                    Player.instance.GetComponent<Collider>().enabled = false;
+                    player.anim.Play("Death Forward");
+                   
 
 
                 }
                 else
                 {
+                    Player.instance.GetComponent<Collider>().enabled = false;
                     player.anim.Play("Damage");
-
+                   
                 }
+                
             }
            
 
@@ -132,6 +134,12 @@ public class HealthBar : MonoBehaviour
     public void playerDead()
     {
         playerDied=true;
+        player.canMove = true;
+    }
+    public void FinishDamage()
+    {
+        Player.instance.GetComponent<Collider>().enabled = true;
+        player.canMove = true;
     }
    
 

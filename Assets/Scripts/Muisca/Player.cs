@@ -11,7 +11,7 @@ public class Player: MonoBehaviour
     [SerializeField] float turnSmoothTime = 0.1f;
     [SerializeField] Transform cam;
     [SerializeField] float turnSmoothVelocity;
-
+    public bool canMove;
     //sprint
     [SerializeField] bool isSprinting;
     [SerializeField] float sprintMultiplier = 1.08f;
@@ -32,24 +32,23 @@ public class Player: MonoBehaviour
     [SerializeField] Collider ColliderArma;
     [SerializeField] Collider ColliderPierna;
 
-    //bloqueo y esquive
-    public bool bloqueando;
-    public bool pausado;
+    //esquive
     public bool isDashing;
 
     //Lock On system
-    //private Transform currentTarget;
-    //public Transform player;
+    private Transform currentTarget;
+    public Transform player;
 
     //instancias y herencias
     public static Player instance;
     [SerializeField] HealthBar healthbar;
-    //[SerializeField] LockOnSystem lockOn;
+    [SerializeField] LockOnSystem lockOn;
 
     private void Start()
     {
         Cursor.visible = false;
         anim = GetComponent<Animator>();
+        canMove = true;
 
         ColliderArma.enabled=false;
         ColliderPierna.enabled = false;
@@ -63,58 +62,68 @@ public class Player: MonoBehaviour
 
     void Update()
     {
-        x = Input.GetAxis("Horizontal");
-        y = Input.GetAxis("Vertical");
-
-        Vector3 direction = new Vector3(x, 0f, y).normalized;
-
-        //if (lockOn.locked)
-        //{
-        //    anim.SetBool("locked",true);
-
-        //    //if (currentTarget != null)
-        //    //{
-        //    //    Vector3 direction2 = (currentTarget.position - player.position).normalized;
-        //    //    Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction2.x, 0, direction2.z));
-        //    //    player.rotation = Quaternion.Slerp(player.rotation, lookRotation, Time.deltaTime * 5f);
-        //    //}
-        //}
-        //else
-        //{
-        //    anim.SetBool("locked", false);
-        //}
-
-        
-        golpeCheck();
-        bloqueoCheck();
-        runCheck();
-
-        if (direction.magnitude >= 0.1f)
+        if (!canMove)
         {
-            
-            
-            float targetAngle = Mathf.Atan2(direction.x, direction.z)*Mathf.Rad2Deg + cam.eulerAngles.y;
+            return; 
+        }
+        else
+        {
 
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            x = Input.GetAxis("Horizontal");
+            y = Input.GetAxis("Vertical");
 
-            Vector3 movDir=Quaternion.Euler(0f,targetAngle, 0f)*Vector3.forward;
+            Vector3 direction = new Vector3(x, 0f, y).normalized;
+
+            //if (lockOn.locked)
+            //{
+            //    anim.SetBool("locked", true);
+
+            //    //if (currentTarget != null)
+            //    //{
+            //    //    Vector3 direction2 = (currentTarget.position - player.position).normalized;
+            //    //    Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction2.x, 0, direction2.z));
+            //    //    player.rotation = Quaternion.Slerp(player.rotation, lookRotation, Time.deltaTime * 5f);
+            //    //}
+            //}
+            //else
+            //{
+            //    anim.SetBool("locked", false);
+            //}
 
 
-        
+            golpeCheck();
+            bloqueoCheck();
+            runCheck();
 
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            if (!atacando && !bloqueando)
+            if (direction.magnitude >= 0.1f && !atacando && !anim.GetBool("blocking"))
             {
-                controller.Move(movDir.normalized * speed * Time.deltaTime * sprintSpeed);
+
+
+                float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+
+                Vector3 movDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+
+
+
+                transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
+
+                move(movDir);
 
                 anim.SetFloat("Velx", x);
                 anim.SetFloat("Vely", y);
 
             }
-         
-
         }
+
+    }
+    public void move(Vector3 movDir)
+    {
+        controller.Move(movDir.normalized * speed * Time.deltaTime * sprintSpeed);
+
     }
 
     //verifica si el usuario oprimió la tecla LeftShift, si lo hizó multiplica la velocidad base
@@ -181,61 +190,41 @@ public class Player: MonoBehaviour
     public void bloqueoCheck()
     {
 
-            if (Input.GetKey(KeyCode.Space))
-            {
-                bloqueando = true;
-            }
-         else
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            bloqueando = false;
-            GetComponent<Collider>().enabled = true;
-            ReanudarAnimacion();
+               
+             anim.SetBool("blocking", true);
         }
-            //if (Input.GetKeyUp(KeyCode.Space))
-            //{
-            //    bloqueando = false;
-            //    GetComponent<Collider>().enabled = true;
-            //    ReanudarAnimacion();
-            //}
         
-       
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            
+            GetComponent<Collider>().enabled = true;
+            anim.SetBool("blocking", false);
+            
+        }
+
+
 
 
     }
     public void bloquearDespuesDeGolpe()
     {
-        bloqueando = true;
         GetComponent<Collider>().enabled = true;
+    }
 
-
-    }
-    //si mantiene oprimida la tecla de bloqueo pausa la animacion
-    public void PausarAnimacion()
-    {
-       
-            //anim.speed = 0f; // Pausar la animación estableciendo la velocidad a 0
-            pausado = true;
-    }
-    public void ReanudarAnimacion()
-    {
-        
-        
-            //anim.speed = 1f; // Reanudar la animación estableciendo la velocidad a 1
-            pausado = false;
-       
-    }
 
     // metodos para el sistema de enfocarse en un enemigo
 
-    //public void SetTarget(Transform target)
-    //{
-    //    currentTarget = target;
-    //}
+    public void SetTarget(Transform target)
+    {
+        currentTarget = target;
+    }
 
-    //public void ClearTarget()
-    //{
-    //    currentTarget = null;
-    //}
+    public void ClearTarget()
+    {
+        currentTarget = null;
+    }
 
 
     //activar colliders de diferentes armas

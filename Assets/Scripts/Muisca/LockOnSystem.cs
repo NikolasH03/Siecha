@@ -8,10 +8,11 @@ public class LockOnSystem : MonoBehaviour
     public CinemachineVirtualCamera lockOnCamera;
     public CinemachineFreeLook freeLookCamera;
     public float lockOnRadius = 20f;
-    public Transform player;  // Reference to the player
+    public Transform player;  
     private Transform currentTarget;
     public bool locked;
-    private LookAtEnemy lookAtEnemy;
+    public float maxLockOnDistance;
+    //private LookAtEnemy lookAtEnemy;
     void Start()
     {
         // Initialize the target group with two slots: one for the player and one for the enemy
@@ -20,7 +21,7 @@ public class LockOnSystem : MonoBehaviour
         locked = false;
         // Add the player to the target group
         targetGroup.m_Targets[0].target = player;
-        targetGroup.m_Targets[0].weight = 1;
+        targetGroup.m_Targets[0].weight = 2;
         targetGroup.m_Targets[0].radius = 2; // Adjust as needed
 
         // Get the LookAtEnemy script component
@@ -49,6 +50,12 @@ public class LockOnSystem : MonoBehaviour
             targetGroup.m_Targets[1].target = currentTarget;
             targetGroup.m_Targets[1].weight = 1;
             targetGroup.m_Targets[1].radius = 2; // Adjust as needed
+
+            float distance = Vector3.Distance(player.position, currentTarget.position);
+            if (distance > maxLockOnDistance)
+            {
+                ClearTarget();  // Desactiva el lock-on si la distancia es mayor que el umbral
+            }
         }
     }
 
@@ -89,7 +96,7 @@ public class LockOnSystem : MonoBehaviour
     {
         targetGroup.m_Targets[1].target = target;
         targetGroup.m_Targets[1].weight = 1;
-        targetGroup.m_Targets[1].radius = 2; // Adjust as needed
+        targetGroup.m_Targets[1].radius = 1; // Adjust as needed
     }
 
     void RemoveTargetFromGroup()
@@ -121,7 +128,7 @@ public class LockOnSystem : MonoBehaviour
         {
             transposer = lockOnCamera.AddCinemachineComponent<CinemachineTransposer>();
         }
-        transposer.m_FollowOffset = new Vector3(0, 2, -4); // Adjust this to position the camera behind the player
+        transposer.m_FollowOffset = new Vector3(0, 2, -3); // Adjust this to position the camera behind the player
 
         var composer = lockOnCamera.GetCinemachineComponent<CinemachineComposer>();
         if (composer == null)
@@ -134,8 +141,9 @@ public class LockOnSystem : MonoBehaviour
         composer.m_HorizontalDamping = 0.5f;
         composer.m_VerticalDamping = 0.5f;
         composer.m_ScreenX = 0.5f;
-        composer.m_ScreenY = 0.5f;
+        composer.m_ScreenY = 0.55f;
     }
+
 }
 
 
