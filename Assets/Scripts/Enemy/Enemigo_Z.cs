@@ -51,8 +51,16 @@ public class Enemigo_Z : Enemy
         if (animator != null) animator.SetBool("Caminando", false);
         if (animator != null) animator.SetBool("Correr", false);
         if(animator != null)animator.SetBool("Atacando", true);
+        if (animator != null) animator.SetBool("Bloquear", false);
         agent.SetDestination(transform.position);
         transform.LookAt(Target.position);
+    }
+
+    public override void EstadoBloquear()
+    {
+        base.EstadoBloquear();
+        if (animator != null) animator.SetBool("Atacando", false);
+        if (animator != null) animator.SetBool("Bloquear", true);
     }
 
     public override void EstadoMuerto()

@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
     public bool Alive = true;
     public float ProbBloqueo = 0.30f;
     private float bloquearTime; 
-    private float bloquearDuration = 1.0f;
+    private float bloquearDuration = 2.5f;
     private float tiempoUltimoBloqueo = 0f;
     private float intervaloBloqueo = 5f;
 
@@ -113,7 +113,7 @@ public class Enemy : MonoBehaviour
         {
             float Bloqueo = UnityEngine.Random.Range(0.0f, 1.0f);
 
-            Debug.Log("Valor de Bloqueo: " + Bloqueo);
+            //Debug.Log("Valor de Bloqueo: " + Bloqueo);
 
             if (Bloqueo <= ProbBloqueo)
             {
