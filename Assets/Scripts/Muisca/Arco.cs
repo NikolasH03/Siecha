@@ -1,62 +1,93 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;  
 
 public class Arco : MonoBehaviour
 {
-    public GameObject flechaPrefab;
-    public Transform puntoDisparo;
+    public GameObject mainCamera;
+    public GameObject aimCamera;
+    public Image aimReticle; 
+    public GameObject bowPosition;
+    public GameObject arrowPrefab;
     public float fuerzaMinima = 10f;
     public float fuerzaMaxima = 50f;
     public float tiempoDeCarga = 2f;
-
     private float tiempoDeApuntar;
-    private bool cargandoFlecha = false;
     private GameObject flechaActual;
+    private bool isAiming;
 
     [SerializeField] Player player;
-
+    private void Start()
+    {
+        aimReticle.enabled = false;
+        aimCamera.SetActive(false);
+    }
     void Update()
     {
-        // Apuntar con el botón derecho
+        // Manejando el valor de apuntado (botón derecho del ratón)
         if (Input.GetMouseButtonDown(1))
         {
-            cargandoFlecha = true;
             tiempoDeApuntar = 0f;
+            mainCamera.SetActive(false);
+            aimCamera.SetActive(true);
+            StartCoroutine(ShowReticle());
+            isAiming = true;
 
-            // Instancia la flecha, pero aún no la dispara
-            flechaActual = Instantiate(flechaPrefab, puntoDisparo.position, puntoDisparo.rotation);
+            // Crear la flecha en la posición del arco
+            flechaActual = Instantiate(arrowPrefab, bowPosition.transform.position, bowPosition.transform.rotation);
             flechaActual.GetComponent<Rigidbody>().isKinematic = true; // Desactiva la física temporalmente
-
             player.anim.Play("shoot");
         }
-
         if (Input.GetMouseButton(1))
         {
             // Aumentar el tiempo de carga mientras se mantiene el botón derecho
             tiempoDeApuntar += Time.deltaTime;
         }
 
-        // Disparar con el botón izquierdo
-        if (Input.GetMouseButtonUp(0) && cargandoFlecha)
+        // Manejando el disparo (botón izquierdo del ratón)
+        if (isAiming && Input.GetMouseButtonDown(0))
         {
-            // Calcula la fuerza en función del tiempo de carga
-            float fuerza = Mathf.Lerp(fuerzaMinima, fuerzaMaxima, tiempoDeApuntar / tiempoDeCarga);
-
-            // Activa la física de la flecha y la dispara
-            flechaActual.GetComponent<Rigidbody>().isKinematic = false;
-            flechaActual.GetComponent<Rigidbody>().AddForce(puntoDisparo.forward * fuerza, ForceMode.Impulse);
-            flechaActual = null; // Resetea la referencia de la flecha
-
-            cargandoFlecha = false;
-
             player.anim.Play("recoil");
+            isAiming = false;
+            ShootArrow();
+            mainCamera.SetActive(true);
+            aimCamera.SetActive(false);
+            StartCoroutine(HideReticle());
         }
-
-        // Cancelar si se suelta el botón derecho sin disparar
-        if (Input.GetMouseButtonUp(1) && cargandoFlecha)
+        if (Input.GetMouseButtonUp(1) && isAiming)
         {
             Destroy(flechaActual); // Elimina la flecha sin dispararla
-            cargandoFlecha = false;
+            isAiming = false;
             player.anim.Play("recoil");
+            mainCamera.SetActive(true);
+            aimCamera.SetActive(false);
+            StartCoroutine(HideReticle());
+        }
+    }
+
+    IEnumerator ShowReticle()
+    {
+        yield return new WaitForSeconds(0.25f);
+        aimReticle.enabled = true; // Activa la retícula
+    }
+    IEnumerator HideReticle()
+    {
+        yield return new WaitForSeconds(0.25f);
+        aimReticle.enabled = false; 
+    }
+
+    void ShootArrow()
+    {
+        
+
+        // Obtener el componente ArrowProjectile y ejecutar la función de disparo
+        Flecha codigoFlecha = flechaActual.GetComponent<Flecha>();
+        if (codigoFlecha != null)
+        {
+            codigoFlecha.Fire();
         }
     }
 }
+
+
+

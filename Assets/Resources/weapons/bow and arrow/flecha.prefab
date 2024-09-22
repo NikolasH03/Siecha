@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4215242007732145779
+--- !u!1001 &4832996062774657115
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
       propertyPath: m_Name
-      value: Elven Long Bow Arrow 1
+      value: flecha
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
       propertyPath: m_LocalScale.x
@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.2998
+      value: 2.31
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
       propertyPath: m_LocalPosition.z
@@ -74,20 +74,26 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5905679411275189755}
+      addedObject: {fileID: 1855055773777565425}
+    - targetCorrespondingSourceObject: {fileID: 100002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4006654300362408807}
+    - targetCorrespondingSourceObject: {fileID: 100002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5542701395425533439}
   m_SourcePrefab: {fileID: 100100000, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
---- !u!1 &4215242007732046033 stripped
+--- !u!1 &4832996062774560505 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100002, guid: 432dd2b7c2581c744a40ca43b1307c17, type: 3}
-  m_PrefabInstance: {fileID: 4215242007732145779}
+  m_PrefabInstance: {fileID: 4832996062774657115}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &5905679411275189755
+--- !u!54 &1855055773777565425
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4215242007732046033}
+  m_GameObject: {fileID: 4832996062774560505}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -108,3 +114,39 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &4006654300362408807
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832996062774560505}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.42709112
+  m_Height: 4.684987
+  m_Direction: 1
+  m_Center: {x: 0.011241436, y: -7.54071, z: -0.9374702}
+--- !u!114 &5542701395425533439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4832996062774560505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45fd9445f1c351e4596add65c58f8e97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force: 50
