@@ -23,7 +23,7 @@ public class Player: MonoBehaviour
     public Animator anim;
 
     //ataque
-
+    [SerializeField] int numeroArma;
     public bool atacando=false;
     public bool atacandoDebil = false;
     public bool atacandoFuerte = false;
@@ -46,6 +46,8 @@ public class Player: MonoBehaviour
     public static Player instance;
     [SerializeField] HealthBar healthbar;
     [SerializeField] LockOnSystem lockOn;
+    [SerializeField] cambiarArma cambioArma;
+    [SerializeField] Arco arco;
 
     private void Start()
     {
@@ -166,26 +168,40 @@ public class Player: MonoBehaviour
     //verifica si el usuario oprimio el click y activa la animacion de golpe
     public void golpeCheck()
     {
+       numeroArma=cambioArma.getterArma();
 
-        if (Input.GetMouseButton(0) && !atacando) 
+        if (numeroArma == 1)
         {
-           
-          atacando = true;
-          atacandoDebil = true;
+            anim.SetBool("arco", false);
+            arco.enabled = false;
+            if (Input.GetMouseButton(0) && !atacando)
+            {
+
+                atacando = true;
+                atacandoDebil = true;
+
+            }
+            if (Input.GetMouseButton(1) && !atacando)
+            {
+
+                atacando = true;
+                atacandoFuerte = true;
+
+            }
+            if (!atacando)
+            {
+                numero_golpesDebiles = 0;
+                numero_golpesFuertes = 0;
+            }
 
         }
-        if (Input.GetMouseButton(1) && !atacando)
+        else if (numeroArma == 2)
         {
-
-         atacando = true;
-         atacandoFuerte = true;
-
+            anim.SetBool("arco", true);
+            arco.enabled = true;
         }
-        if (!atacando)
-        {
-            numero_golpesDebiles = 0;
-            numero_golpesFuertes = 0;
-        }
+
+       
 
     }
    
