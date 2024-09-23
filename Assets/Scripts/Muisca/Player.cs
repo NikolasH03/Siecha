@@ -80,28 +80,11 @@ public class Player: MonoBehaviour
 
             Vector3 direction = new Vector3(x, 0f, y).normalized;
 
-            //if (lockOn.locked)
-            //{
-            //    anim.SetBool("locked", true);
-
-            //    //if (currentTarget != null)
-            //    //{
-            //    //    Vector3 direction2 = (currentTarget.position - player.position).normalized;
-            //    //    Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction2.x, 0, direction2.z));
-            //    //    player.rotation = Quaternion.Slerp(player.rotation, lookRotation, Time.deltaTime * 5f);
-            //    //}
-            //}
-            //else
-            //{
-            //    anim.SetBool("locked", false);
-            //}
-
-
             golpeCheck();
             bloqueoCheck();
             runCheck();
 
-            if (direction.magnitude >= 0.1f && !atacando && !anim.GetBool("blocking"))
+            if (direction.magnitude >= 0.1f && !atacando && !anim.GetBool("blocking") && !arco.isAiming)
             {
 
 
@@ -122,6 +105,17 @@ public class Player: MonoBehaviour
                 anim.SetFloat("Velx", x);
                 anim.SetFloat("Vely", y);
 
+                anim.SetBool("arco", false);
+
+            }
+            else if (arco.isAiming && !atacando && !anim.GetBool("blocking"))
+            {
+                // Mover al jugador sin rotar, manteniendo la dirección actual
+                Vector3 movDir = Quaternion.Euler(0f, transform.eulerAngles.y, 0f) * Vector3.forward;
+                move(movDir);
+
+
+                anim.SetBool("arco", true);
             }
         }
 
@@ -172,7 +166,7 @@ public class Player: MonoBehaviour
 
         if (numeroArma == 1)
         {
-            anim.SetBool("arco", false);
+            
             arco.enabled = false;
             if (Input.GetMouseButton(0) && !atacando)
             {
@@ -197,7 +191,7 @@ public class Player: MonoBehaviour
         }
         else if (numeroArma == 2)
         {
-            anim.SetBool("arco", true);
+           
             arco.enabled = true;
         }
 

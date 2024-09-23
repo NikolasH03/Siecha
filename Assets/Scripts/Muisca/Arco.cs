@@ -14,7 +14,7 @@ public class Arco : MonoBehaviour
     public float tiempoDeCarga = 2f;
     private float tiempoDeApuntar;
     private GameObject flechaActual;
-    private bool isAiming;
+    public bool isAiming;
 
     [SerializeField] Player player;
     private void Start()
@@ -35,6 +35,7 @@ public class Arco : MonoBehaviour
 
             // Crear la flecha en la posición del arco
             flechaActual = Instantiate(arrowPrefab, bowPosition.transform.position, bowPosition.transform.rotation);
+            flechaActual.transform.SetParent(bowPosition.transform);
             flechaActual.GetComponent<Rigidbody>().isKinematic = true; // Desactiva la física temporalmente
             player.anim.Play("shoot");
         }
@@ -78,9 +79,10 @@ public class Arco : MonoBehaviour
 
     void ShootArrow()
     {
-        
+
 
         // Obtener el componente ArrowProjectile y ejecutar la función de disparo
+        flechaActual.transform.SetParent(null);
         Flecha codigoFlecha = flechaActual.GetComponent<Flecha>();
         if (codigoFlecha != null)
         {
