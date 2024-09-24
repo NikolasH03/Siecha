@@ -5,9 +5,7 @@ using UnityEngine;
 public class ObjectLogic : MonoBehaviour
 {
 
-    
-    public bool destruirAutomatico;
-    [SerializeField] Player playerMove1;
+    [SerializeField] Player player;
     [SerializeField] int tipo;
 
     //1. crece
@@ -16,26 +14,22 @@ public class ObjectLogic : MonoBehaviour
 
     void Start()
     {
-        playerMove1=GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player=GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
    public void efecto()
     {
         switch (tipo)
         {
             case 1:
-                playerMove1.gameObject.transform.localScale = new Vector3(3,3,3);
+                player.gameObject.transform.localScale = new Vector3(3,3,3);
                 break;
 
             case 2:
-               float speed1= playerMove1.returnSpeed();
+               float speed1= player.returnSpeed();
                 speed1 += 5;
-                playerMove1.setSpeed(speed1);
+                player.setSpeed(speed1);
                 break;
 
-            case 3:
-                float nMultiplier = 1;
-                playerMove1.setMultiplier(nMultiplier);
-                break;
 
             default:
                 Debug.Log("ningun efecto");
