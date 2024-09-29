@@ -12,6 +12,6 @@ public class menu : MonoBehaviour
     public void Salir()
     {
         Application.Quit();
-        Debug.Log("Aqui se cierra el juego");
+        Debug.Log("Chao mundo");
     }
 }
