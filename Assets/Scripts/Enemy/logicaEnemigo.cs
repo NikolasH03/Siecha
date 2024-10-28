@@ -6,7 +6,6 @@ public class logicaEnemigo : MonoBehaviour
 {
     [SerializeField] float vidaActual;
     [SerializeField] float vidaMax;
-    [SerializeField] int dañoArma;
     [SerializeField] int dañoLigero;
     [SerializeField] int dañoFuerte;
     [SerializeField] string tipoDaño;
@@ -24,10 +23,11 @@ public class logicaEnemigo : MonoBehaviour
     }
     public void OnTriggerEnter(Collider other)
     {
-       
-        
+
+        Debug.Log("detecta un collider");
        if (other.gameObject.tag == "arma")
        {
+            Debug.Log("detecta el collider del arma");
             if (tipoDaño == "ligero")
             {
                 vidaActual -= dañoLigero;

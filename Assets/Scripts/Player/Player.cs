@@ -8,8 +8,8 @@ public class Player: MonoBehaviour
     //movimiento basico
     //[SerializeField] CharacterController controller;
     public Rigidbody rb;
-    [SerializeField] float speed = 5;
-    [SerializeField] float turnSmoothTime = 0.1f;
+    [SerializeField] float speed;
+    [SerializeField] float turnSmoothTime;
     [SerializeField] Transform cam;
     [SerializeField] float turnSmoothVelocity;
     public bool canMove;

@@ -31,7 +31,9 @@ public class detectaAtaque : MonoBehaviour
             player.GetComponent<Collider>().enabled = true;
         player.GetComponent<Rigidbody>().isKinematic = false;
         player.canMove = true;
-        
+        player.isSprinting=false;
+
+
 
     }
     public void canShoot()
