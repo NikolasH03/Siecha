@@ -34,11 +34,20 @@ public class HealthBar : MonoBehaviour
     public bool detectaAtaque;
     private void Awake()
     {
-        instance = this;
         audioManager = GameObject.FindGameObjectWithTag("audio").GetComponent<AudioManager>();
-        
-    }
-    void Start()
+    
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else if (instance != this)
+        {
+            Destroy(gameObject);
+        }
+    
+
+}
+void Start()
     {
 
     
