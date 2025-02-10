@@ -61,6 +61,11 @@ public class Idle : StateMachineBehaviour
             player.GetComponent<Rigidbody>().isKinematic = true;
 
         }
+
+        if (player.PuedeUsarCapoeira()  && Input.GetKeyDown(KeyCode.T))
+        {
+            player.anim.Play("Capoeira");
+        }
     }
 
 

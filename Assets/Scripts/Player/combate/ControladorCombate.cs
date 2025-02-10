@@ -19,9 +19,10 @@ public class ControladorCombate : MonoBehaviour
 
 
 
-    //herencias
+    //referencias 
     [SerializeField] ControladorCambioArmas cambioArma;
     ControladorMovimiento controladorMovimiento;
+    //[SerializeField] HabilidadesJugador habilidadesJugador;
     private void Start()
     {
 
@@ -112,6 +113,11 @@ public class ControladorCombate : MonoBehaviour
     {
         GetComponent<Collider>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
+    }
+
+    public bool PuedeUsarCapoeira()
+    {
+        return HabilidadesJugador.instance.estaDesbloqueada(HabilidadesJugador.TipoHabilidad.Capoeira);
     }
 
 

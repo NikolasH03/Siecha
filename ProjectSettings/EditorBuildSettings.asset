@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Gameplay.unity
     guid: f3bfc12162d57c64094e86af0c26f8ad
+  - enabled: 1
+    path: Assets/Scenes/ArbolHabilidades.unity
+    guid: 2f2ac72108cf21f4e9f1adbdbef52507
   m_configObjects: {}

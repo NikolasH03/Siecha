@@ -21,7 +21,7 @@ public class logicaEnemigo : MonoBehaviour
 
        if (other.gameObject.tag == "arma")
        {
-            Debug.Log("detecta el collider del arma");
+            //Debug.Log("detecta el collider del arma");
             if (tipoDaño == "ligero")
             {
                 vidaActual -= dañoLigero;

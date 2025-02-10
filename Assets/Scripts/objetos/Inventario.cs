@@ -1,4 +1,4 @@
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,31 +7,23 @@ public class Inventario : MonoBehaviour
 
     public static Inventario instance;
 
-    [SerializeField] TextMeshProUGUI dineroUI;
+    
     private int dinero = 0;
 
     private void Awake()
     {
+        transform.parent = null;
 
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else if (instance != this)
         {
             Destroy(gameObject);
         }
 
-    }
-
-    void Start()
-    {
-        dineroUI.text = dinero.ToString();
-    }
-
-    void Update()
-    {
-        dineroUI.text = dinero.ToString();
     }
 
     public int getDinero()
