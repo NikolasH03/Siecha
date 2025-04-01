@@ -44,6 +44,7 @@ public class Idle : StateMachineBehaviour
         if (player.anim.GetBool("dashing"))
         {
             player.anim.Play("dash");
+            //player.anim.SetBool("dashing", false);
             player.GetComponent<Collider>().enabled = false;
             player.GetComponent<Rigidbody>().isKinematic = true;
 
@@ -62,6 +63,7 @@ public class Idle : StateMachineBehaviour
             return;
 
         player.setAtacando(false);
+        
 
     }
 

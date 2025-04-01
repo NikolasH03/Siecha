@@ -222,6 +222,10 @@ public class HealthBar : MonoBehaviour
     {
         recibeDaño = boolDaño;
     }
+    public bool getJugadorMuerto()
+    {
+        return jugadorMuerto;
+    }
     public void setJugadorMuerto(bool boolMuerto)
     {
         jugadorMuerto = boolMuerto;

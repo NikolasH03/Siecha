@@ -16,6 +16,7 @@ public class Escapar : StateMachineBehaviour
         if (player.anim.GetBool("blocking"))
         {
             player.setAtacando(false);
+            player.anim.SetBool("dashing", false);
             player.anim.Play("bloqueando");
 
         }
@@ -23,6 +24,7 @@ public class Escapar : StateMachineBehaviour
         if (player.anim.GetBool("dashing"))
         {
             player.setAtacando(false);
+            player.anim.SetBool("blocking", false);
             player.anim.Play("dash");
             player.GetComponent<Collider>().enabled = false;
             player.GetComponent<Rigidbody>().isKinematic = true;

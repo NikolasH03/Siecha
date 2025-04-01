@@ -45,6 +45,7 @@ public class ControladorMovimiento : MonoBehaviour
 
     //referencias a otro codigos
     private ControladorCombate controladorCombate;
+    private ControladorApuntado controladorApuntado;
     private void Awake()
     {
         if (_mainCamera == null)
@@ -54,20 +55,20 @@ public class ControladorMovimiento : MonoBehaviour
     }
     void Start()
     {
+        Time.timeScale = 1;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+
         canMove = true;
 
         rb = GetComponent<Rigidbody>();
         controladorCombate = GetComponent<ControladorCombate>();
+        controladorApuntado = GetComponent<ControladorApuntado>();
         anim = GetComponent<Animator>();
 
 
     }
 
-    void Update()
-    {
-
-    }
     void FixedUpdate()
     {
         if (!canMove)
@@ -80,10 +81,10 @@ public class ControladorMovimiento : MonoBehaviour
 
 
 
-            if (!controladorCombate.getAtacando() && !anim.GetBool("blocking"))
+            if (!controladorCombate.getAtacando() && !anim.GetBool("blocking") && !anim.GetBool("dashing"))
             {
                 ValoresAnimacionMovimiento();
-                mover();
+
 
                 if (x == 0f && y == 0f)
                 {
@@ -91,6 +92,7 @@ public class ControladorMovimiento : MonoBehaviour
                 }
                 else
                 {
+                    mover();
                     ControladorSonido.instance.playFootstep(anim.GetBool("running"));
 
                 }
@@ -115,12 +117,12 @@ public class ControladorMovimiento : MonoBehaviour
 
     public float CheckEstaCorriendo()
     {
-        if (InputJugador.instance.correr && !controladorCombate.getAtacando() && canMove)
+        if (InputJugador.instance.correr && !controladorCombate.getAtacando() && canMove && !controladorApuntado.GetEstaApuntando())
         {
             anim.SetBool("running", true);
             return VelocidadCorriendo;
         }
-        else if (!InputJugador.instance.correr || controladorCombate.getAtacando() || !canMove)
+        else if (!InputJugador.instance.correr || controladorCombate.getAtacando() || !canMove || anim.GetBool("blocking") || anim.GetBool("dashing") || controladorApuntado.GetEstaApuntando())
         {
             anim.SetBool("running", false);
             return VelocidadCaminando;
@@ -130,8 +132,8 @@ public class ControladorMovimiento : MonoBehaviour
 
     private void mover()
     {
-        CheckGrounded();
-        ApplyGravity();
+        //CheckGrounded();
+        //ApplyGravity();
 
         float targetSpeed = CheckEstaCorriendo();
 
@@ -242,6 +244,11 @@ public class ControladorMovimiento : MonoBehaviour
         {
             _verticalVelocity = 0f;
         }
+    }
+
+    public void PararCorriendo()
+    {
+        anim.SetBool("running", false);
     }
 
     //setters y getters

@@ -24396,7 +24396,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!114 &1442962826
@@ -24492,8 +24492,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   crosshair: {fileID: 868932361}
   terminoAnimacionDisparo: 0
-  controladorCambioArmas: {fileID: 0}
-  controladorMovimiento: {fileID: 0}
+  estaApuntando: 0
 --- !u!1 &1454774153
 GameObject:
   m_ObjectHideFlags: 0
@@ -28246,7 +28245,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &1891072058
@@ -28365,8 +28364,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   crosshair: {fileID: 868932361}
   terminoAnimacionDisparo: 0
-  controladorCambioArmas: {fileID: 0}
-  controladorMovimiento: {fileID: 0}
+  estaApuntando: 0
 --- !u!1 &1891211206
 GameObject:
   m_ObjectHideFlags: 0

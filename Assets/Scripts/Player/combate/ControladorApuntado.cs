@@ -14,10 +14,12 @@ public class ControladorApuntado : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private bool terminoAnimacionDisparo;
+    [SerializeField] bool estaApuntando= false;
 
     //referencias a otros codigos
-    [SerializeField] ControladorCambioArmas controladorCambioArmas;
-    [SerializeField] ControladorMovimiento controladorMovimiento;
+    private ControladorCambioArmas controladorCambioArmas;
+    private ControladorMovimiento controladorMovimiento;
+    private ControladorCombate controladorCombate;
 
     public void Start()
     {
@@ -28,6 +30,7 @@ public class ControladorApuntado : MonoBehaviour
     {
         controladorCambioArmas = GetComponent<ControladorCambioArmas>();
         controladorMovimiento = GetComponent<ControladorMovimiento>();
+        controladorCombate = GetComponent<ControladorCombate>();    
         animator = GetComponent<Animator>();
         int numeroArma = controladorCambioArmas.getterArma();
 
@@ -48,8 +51,8 @@ public class ControladorApuntado : MonoBehaviour
         if (InputJugador.instance.apuntar && numeroArma==2)
         {
 
-            estaApuntando(posicionMouse);
-
+            EstaApuntando(posicionMouse);
+            RealizaAccionMientrasApunta();
             if (InputJugador.instance.disparar)
             {
                 if (terminoAnimacionDisparo)
@@ -67,8 +70,9 @@ public class ControladorApuntado : MonoBehaviour
 
     }
 
-    public void estaApuntando(Vector3 posicionMouse)
+    public void EstaApuntando(Vector3 posicionMouse)
     {
+        estaApuntando = true;
         camaraApuntado.gameObject.SetActive(true);
         crosshair.SetActive(true);
         controladorMovimiento.SetSensibilidad(sensibilidadApuntado);
@@ -83,6 +87,7 @@ public class ControladorApuntado : MonoBehaviour
 
     public void noEstaApuntando()
     {
+        estaApuntando = false;
         camaraApuntado.gameObject.SetActive(false);
         controladorMovimiento.SetSensibilidad(sensibilidadNormal);
         controladorMovimiento.SetRotacionAlMoverse(true);
@@ -105,5 +110,51 @@ public class ControladorApuntado : MonoBehaviour
         animator.SetBool("Disparo", false);
         terminoAnimacionDisparo = true;
         InputJugador.instance.disparar = false;
+    }
+
+    public void RealizaAccionMientrasApunta()
+    {
+        if (HealthBar.instance.getRecibeDaño() || HealthBar.instance.getJugadorMuerto() || controladorCombate.getDashing() || controladorCombate.getBlocking())
+        {
+            // Reducir el Layer de apuntado a 0 en 0.2s
+            StartCoroutine(AdjustLayerWeight(1, 0f, 0.2f));
+
+
+
+        }
+        else if (!HealthBar.instance.getRecibeDaño() && !HealthBar.instance.getJugadorMuerto() && !controladorCombate.getDashing() && !controladorCombate.getBlocking())
+        {
+            // Restaurar el Layer de apuntado 
+            RestoreLayerAfterDamage();
+        }
+   
+    }
+
+    IEnumerator AdjustLayerWeight(int layerIndex, float targetWeight, float duration)
+    {
+        float startWeight = animator.GetLayerWeight(layerIndex);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newWeight = Mathf.Lerp(startWeight, targetWeight, elapsedTime / duration);
+            animator.SetLayerWeight(layerIndex, newWeight);
+            yield return null;
+        }
+
+        animator.SetLayerWeight(layerIndex, targetWeight);
+    }
+
+    public void RestoreLayerAfterDamage()
+    {
+
+        // Volver el Layer de apuntado a su peso normal
+        StartCoroutine(AdjustLayerWeight(1, 1f, 0.2f));
+    }
+
+    public bool GetEstaApuntando()
+    {
+        return estaApuntando;
     }
 }

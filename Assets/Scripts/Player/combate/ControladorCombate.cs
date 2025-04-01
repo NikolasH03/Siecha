@@ -65,16 +65,16 @@ public class ControladorCombate : MonoBehaviour
         if (numeroArma == 1)
         {
 
-            if (Input.GetMouseButton(0) && !atacando && !InputJugador.instance.correr)
+            if (Input.GetMouseButton(0) && !atacando && !InputJugador.instance.correr && !anim.GetBool("dashing"))
             {
-
+                anim.SetBool("running", false);
                 atacando = true;
                 numeroGolpesLigeros = 1;
 
             }
-            if (Input.GetMouseButton(1) && !atacando && !InputJugador.instance.correr)
+            if (Input.GetMouseButton(1) && !atacando && !InputJugador.instance.correr && !anim.GetBool("dashing"))
             {
-
+                anim.SetBool("running", false);
                 atacando = true;
                 numeroGolpesFuertes = 1;
 
@@ -98,6 +98,7 @@ public class ControladorCombate : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            anim.SetBool("running", false);
             anim.SetBool("blocking", true);
         }
 
@@ -111,8 +112,9 @@ public class ControladorCombate : MonoBehaviour
 
     public void dashCheck()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) && !anim.GetBool("dashing"))
         {
+            anim.SetBool("running", false);
             anim.SetBool("dashing", true);
         }
     }
@@ -195,6 +197,14 @@ public class ControladorCombate : MonoBehaviour
     public void setAtacando(bool ataque)
     {
         atacando = ataque;
+    }
+    public bool getDashing()
+    {
+        return anim.GetBool("dashing");
+    }
+    public bool getBlocking()
+    {
+        return anim.GetBool("blocking");
     }
     public GameObject getArmaActual()
     {
