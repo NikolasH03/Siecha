@@ -14,9 +14,8 @@ public class DetectorImpactoMelee : MonoBehaviour
     {
         if (other.CompareTag(tagEnemigo))
         {
-            Vector3 puntoImpacto = other.ClosestPoint(this.transform.position);
-            ControladorVFX.instance.GenerarEfecto(puntoImpacto);
-            ControladorSonido.instance.playAudio(ControladorSonido.instance.slash);
+            player.AnimationEvent_ReproducirVFX(2, 1);
+            player.AnimationEvent_ReproducirSonido(2, 1);
 
             enemigo = other.GetComponent<HealthbarEnemigo>();
             enemigo.recibeDaño(player.EntregarDañoArmaMelee());

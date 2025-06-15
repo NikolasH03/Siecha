@@ -54,7 +54,7 @@ public class ControladorApuntado : MonoBehaviour
             animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
             RealizaAccionMientrasApunta();
 
-            if (InputJugador.instance.apuntar && !HealthBar.instance.getJugadorMuerto())
+            if (InputJugador.instance.apuntar)
             {
                 EstaApuntando(posicionMouse);
                
@@ -113,6 +113,8 @@ public class ControladorApuntado : MonoBehaviour
         Vector3 aimDir = (posicionMouse - spawnPosicionProyectil.position).normalized;
 
         animator.Play("fire");
+        controladorCombate.AnimationEvent_ReproducirVFX(4, 2);
+        controladorCombate.AnimationEvent_ReproducirSonido(4, 2);
         animator.SetBool("Disparo",true);        
         Instantiate(prefabProyectil, spawnPosicionProyectil.position, Quaternion.LookRotation(aimDir, Vector3.up)); 
         estaEnAnimacionDisparo = true;

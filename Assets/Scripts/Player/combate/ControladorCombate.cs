@@ -37,13 +37,29 @@ public class ControladorCombate : MonoBehaviour
     [SerializeField]  int normalLayerIndex;
     [SerializeField] int dodgeLayerIndex;
 
+    //variables y referencias relacionadas con las barras de vida y estamina
+    public EstadisticasCombateSO statsBase;
+    [HideInInspector]
+    public EstadisticasCombate stats;
+
+    private Coroutine regeneracionCoroutine;
+    private float delayRegeneracion = 5f;
+    private float tasaRegeneracion = 3f;
 
 
-    //referencias 
+
+    [Header("Referencias")]
+
+    [SerializeField] private EventosAnimacion eventosAnimacion;
     [SerializeField] ControladorCambioArmas cambioArma;
     ControladorMovimiento controladorMovimiento;
     private CombatStateMachine fsm;
     //[SerializeField] HabilidadesJugador habilidadesJugador;
+
+    void Awake()
+    {
+        stats = new EstadisticasCombate(statsBase);
+    }
     private void Start()
     {
         EquiparArma(armaActual);
@@ -64,15 +80,49 @@ public class ControladorCombate : MonoBehaviour
     }
     public void Update()
     {
-        if (!HealthBar.instance.getJugadorMuerto())
-        {
+       //falta verificar que el jugador no este muerto
             fsm.Update();
-            //bloqueoCheck();
-            //dashCheck();
-        }
+        
 
     }
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "hostile")
+        {
+            JugadorRecibeDano();
+        }
+    }
 
+    public void EmpezarRegeneracionEstamina()
+    {
+        if (regeneracionCoroutine != null) StopCoroutine(regeneracionCoroutine);
+        regeneracionCoroutine = StartCoroutine(RegenerarEstamina());
+    }
+
+    private IEnumerator RegenerarEstamina()
+    {
+        yield return new WaitForSeconds(delayRegeneracion);
+
+        while (stats.EstaminaActual < stats.EstaminaMax)
+        {
+            stats.RegenerarEstamina(tasaRegeneracion * Time.deltaTime);
+            yield return null;
+        }
+
+        regeneracionCoroutine = null;
+    }
+
+    public void JugadorRecibeDano()
+    {
+        if (bloqueando)
+        {
+            fsm.ChangeState(new DanoBloqueandoState(fsm, this));
+        }
+        else
+        {
+            fsm.ChangeState(new DanoState(fsm, this));
+        }
+    }
 
     public int VerificarArmaEquipada()
     {
@@ -114,15 +164,19 @@ public class ControladorCombate : MonoBehaviour
         return armaDistancia.dañoDisparo;
     }
 
-
-    public void bloquearDespuesDeGolpe()
-    {
-        GetComponent<Collider>().enabled = true;
-        GetComponent<Rigidbody>().isKinematic = false;
-    }
     public void LimpiarSecuenciaInputs()
     {
         secuenciaInputs.Clear();
+    }
+
+    public void AnimationEvent_ReproducirVFX(int indexVFX, int indexPivot = 0)
+    {
+            eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
+    }
+
+    public void AnimationEvent_ReproducirSonido(int indexSonido, int indexPivot = 0)
+    {
+            eventosAnimacion.ReproducirSonidoImpacto(indexSonido, indexPivot);
     }
 
     // funciones para los Animation Events
@@ -132,6 +186,21 @@ public class ControladorCombate : MonoBehaviour
         fsm.ChangeState(new IdleState(fsm, this));
         inputBufferCombo = TipoInputCombate.Ninguno;
         LimpiarSecuenciaInputs();
+    }
+    public void TerminarEstadoDano()
+    {
+        controladorMovimiento.GetComponent<Collider>().enabled = true;
+        controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
+        controladorMovimiento.setCanMove(true);
+        fsm.ChangeState(new IdleState(fsm, this));
+
+    }
+    public void TerminarEstadoDanoBloqueando()
+    {
+        controladorMovimiento.GetComponent<Collider>().enabled = true;
+        controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
+        fsm.ChangeState(new BloqueoState(fsm, this));
+
     }
     public void ActivarVentanaCombo()
     {
@@ -150,6 +219,8 @@ public class ControladorCombate : MonoBehaviour
         gameObject.layer = normalLayerIndex;
         fsm.ChangeState(new IdleState(fsm, this));
     }
+
+
     public void activarColliderArma()
     {
         ColliderArma.enabled = true;
@@ -165,6 +236,22 @@ public class ControladorCombate : MonoBehaviour
     public void desactivarColliderPierna()
     {
         ColliderPierna.enabled = false;
+    }
+    public void AnimationEvent_ReproducirPieIzq(int indexVFX)
+    {
+        eventosAnimacion.ReproducirVFX(indexVFX, 3);
+        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 3);
+    }
+    public void AnimationEvent_ReproducirPieDer(int indexVFX)
+    {
+        eventosAnimacion.ReproducirVFX(indexVFX, 4);
+        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 4);
+    }
+
+    public void AnimationEvent_ReproducirBloqueo(int indexVFX)
+    {
+        eventosAnimacion.ReproducirVFX(indexVFX, 0);
+        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 0);
     }
 
 
@@ -205,6 +292,11 @@ public class ControladorCombate : MonoBehaviour
     public int getLayerDodge()
     {
         return dodgeLayerIndex;
+    }
+
+    public void CambiarMovimientoCanMove(bool puedeMov)
+    {
+        controladorMovimiento.setCanMove(puedeMov);
     }
 
 }

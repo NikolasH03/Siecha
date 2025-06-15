@@ -28,9 +28,6 @@ public class ControladorProyectil : MonoBehaviour
         Debug.Log("detecta un trigger");
         if(other.gameObject.tag == "enemy")
         {
-            Vector3 puntoImpacto = other.ClosestPoint(this.transform.position);
-            ControladorVFX.instance.GenerarEfecto(puntoImpacto);
-            ControladorSonido.instance.playAudio(ControladorSonido.instance.slash);
 
             enemigo = other.GetComponent<HealthbarEnemigo>();
             enemigo.recibeDaño(player.EntregarDañoArmaDistancia());

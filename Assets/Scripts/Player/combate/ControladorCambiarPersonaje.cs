@@ -53,12 +53,12 @@ public class ControladorCambiarPersonaje : MonoBehaviour
     {
 
 
-        if (Input.GetKeyDown(KeyCode.G) && espanol.activeSelf && !controladorEspanol.getAtacando() && !HealthBar.instance.getRecibeDaño())
+        if (Input.GetKeyDown(KeyCode.G) && espanol.activeSelf && !controladorEspanol.getAtacando())
         {
             activarMuisca();
         }
 
-        else if (Input.GetKeyDown(KeyCode.G) && muisca.activeSelf && !controladorMuisca.getAtacando() && !HealthBar.instance.getRecibeDaño())
+        else if (Input.GetKeyDown(KeyCode.G) && muisca.activeSelf && !controladorMuisca.getAtacando())
         {
             activarEspanol();
         }
@@ -70,7 +70,6 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         muisca.transform.rotation = espanol.transform.rotation;
         espanol.SetActive(false);
         muisca.SetActive(true);
-        ControladorSonido.instance.playAudio(ControladorSonido.instance.changeProta);
         camaraPrincipal.Follow = objetivoCamaraMuisca;
         camaraApuntado.Follow = objetivoCamaraMuisca;
 
@@ -83,7 +82,6 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         muisca.SetActive(false);
         espanol.SetActive(true);
-        ControladorSonido.instance.playAudio(ControladorSonido.instance.changeProta);
         camaraPrincipal.Follow = objetivoCamaraEspanol;
         camaraApuntado.Follow = objetivoCamaraEspanol;
 
