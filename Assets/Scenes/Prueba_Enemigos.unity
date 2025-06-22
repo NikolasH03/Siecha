@@ -3435,6 +3435,11 @@ MonoBehaviour:
   tiempoEntreAtaques: 1
   rangoDeBloqueo: 4
   probabilidadDeBloqueo: 0.5
+  secuenciaAtaques:
+  - {fileID: 11400000, guid: 0fdaa1ae4c5ca484baa61dd81234bab9, type: 2}
+  - {fileID: 11400000, guid: 36b2e31f29b3a9f4fbe459b361e103f9, type: 2}
+  - {fileID: 11400000, guid: 19043347a6fac4448a1d4338c891d1f8, type: 2}
+  delayEntreAtaques: 2
   duracionDanoRecibido: 1.1
   tiempoDeDesaparicion: 2
 --- !u!114 &521272966
@@ -10320,6 +10325,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 6fad0f59095b65e45aff6df3eadd8858, type: 2}
+    - target: {fileID: 5866666021909216657, guid: adefceec82d3b3642ba5c8d2dc2df490, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6000407479487422213, guid: adefceec82d3b3642ba5c8d2dc2df490, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.000000059604645
