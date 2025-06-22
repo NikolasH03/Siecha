@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : CombatState
+public class IdleMeleeState : CombatState
 {
-    public IdleState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
+    public IdleMeleeState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
     {
     }
 
@@ -16,6 +16,19 @@ public class IdleState : CombatState
     }
     public override void HandleInput()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            combatController.CambiarArmaMelee();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            combatController.CambiarArmaDistancia();
+        }
+        if (combatController.VerificarArmaEquipada() == 2)
+        {
+            stateMachine.ChangeState(new IdleDistanciaState(stateMachine, combatController));
+        }
         if (Input.GetKeyDown(KeyCode.Q) && !combatController.anim.GetBool("dashing")) 
         {
             combatController.DesactivarVentanaCombo();

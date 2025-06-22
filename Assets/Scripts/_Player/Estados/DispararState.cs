@@ -1,0 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DispararState : CombatState
+{
+    private ControladorApuntado apuntado;
+
+    public DispararState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
+    {
+        apuntado = cc.GetComponent<ControladorApuntado>();
+    }
+
+    public override void Enter()
+    {
+        combatController.anim.SetTrigger("Disparo");
+        combatController.ReproducirVFX(4, 2);
+        combatController.ReproducirSonido(4, 2);
+        apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo());
+    }
+    public override void Exit()
+    {
+        InputJugador.instance.disparar = false;
+    }
+}

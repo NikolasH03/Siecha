@@ -6201,9 +6201,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: HealthBar, Assembly-CSharp
-        m_MethodName: revivirJugador
+      - m_Target: {fileID: 1442962837}
+        m_TargetAssemblyTypeName: HUDJugador, Assembly-CSharp
+        m_MethodName: Reaparecer
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6680,7 +6680,6 @@ GameObject:
   - component: {fileID: 714763036}
   - component: {fileID: 714763035}
   - component: {fileID: 714763034}
-  - component: {fileID: 714763037}
   m_Layer: 5
   m_Name: Canvas_HUD_Tisqa
   m_TagString: Untagged
@@ -6774,21 +6773,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &714763037
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714763032}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 932639ada8622ac498be19dbc89714d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  barraVida: {fileID: 94576954}
-  barraEstamina: {fileID: 496657179}
-  controlador: {fileID: 1891072067}
 --- !u!1 &733793276
 GameObject:
   m_ObjectHideFlags: 0
@@ -9307,7 +9291,6 @@ GameObject:
   - component: {fileID: 877407318}
   - component: {fileID: 877407317}
   - component: {fileID: 877407316}
-  - component: {fileID: 877407320}
   m_Layer: 5
   m_Name: Canvas_HUD_Paco
   m_TagString: Untagged
@@ -9401,21 +9384,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &877407320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 877407315}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 932639ada8622ac498be19dbc89714d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  barraVida: {fileID: 1794341539}
-  barraEstamina: {fileID: 1902516163}
-  controlador: {fileID: 1442962834}
 --- !u!1001 &881915375
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24968,6 +24936,9 @@ PrefabInstance:
       addedObject: {fileID: 1442962836}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e99c6b98b9a3112419b9c4e65fb4f24b, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1442962837}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e99c6b98b9a3112419b9c4e65fb4f24b, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1442962825}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e99c6b98b9a3112419b9c4e65fb4f24b, type: 3}
       insertIndex: -1
@@ -25172,6 +25143,8 @@ MonoBehaviour:
   normalLayerIndex: 0
   dodgeLayerIndex: 0
   statsBase: {fileID: 11400000, guid: 0add85526e9f3bc43b91a70e1bf3c8ec, type: 2}
+  muertesActuales: 0
+  muertesMaximas: 5
   eventosAnimacion: {fileID: 1442962836}
   cambioArma: {fileID: 1442962829}
 --- !u!114 &1442962836
@@ -25209,6 +25182,23 @@ MonoBehaviour:
   - {fileID: 2120668658}
   - {fileID: 1684957307}
   - {fileID: 2015070367}
+--- !u!114 &1442962837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442962812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932639ada8622ac498be19dbc89714d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barraVida: {fileID: 1794341539}
+  barraEstamina: {fileID: 1902516163}
+  canvasMuerte: {fileID: 892576866}
+  textoMuertes: {fileID: 1405397273}
+  combatController: {fileID: 1442962834}
 --- !u!4 &1491766027 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2136892406136897381, guid: 5fc2aceae981da14aa70dd0c500d6d10, type: 3}
@@ -29032,6 +29022,9 @@ PrefabInstance:
       addedObject: {fileID: 1891072069}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bd0c357a498d397498ce703ed51e5242, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1891072070}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bd0c357a498d397498ce703ed51e5242, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1891072057}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bd0c357a498d397498ce703ed51e5242, type: 3}
       insertIndex: -1
@@ -29218,6 +29211,8 @@ MonoBehaviour:
   normalLayerIndex: 0
   dodgeLayerIndex: 0
   statsBase: {fileID: 11400000, guid: 7d8b86c67aa2a1943bd89324c414d63f, type: 2}
+  muertesActuales: 0
+  muertesMaximas: 5
   eventosAnimacion: {fileID: 1891072069}
   cambioArma: {fileID: 1891072062}
 --- !u!114 &1891072069
@@ -29255,6 +29250,23 @@ MonoBehaviour:
   - {fileID: 1718836608}
   - {fileID: 2046836688}
   - {fileID: 496963427}
+--- !u!114 &1891072070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891072049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932639ada8622ac498be19dbc89714d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  barraVida: {fileID: 94576954}
+  barraEstamina: {fileID: 496657179}
+  canvasMuerte: {fileID: 892576866}
+  textoMuertes: {fileID: 1255100}
+  combatController: {fileID: 1891072067}
 --- !u!1 &1891211206
 GameObject:
   m_ObjectHideFlags: 0

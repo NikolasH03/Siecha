@@ -25,7 +25,6 @@ public class ControladorProyectil : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("detecta un trigger");
         if(other.gameObject.tag == "enemy")
         {
 

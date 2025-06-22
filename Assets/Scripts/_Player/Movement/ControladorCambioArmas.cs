@@ -21,21 +21,21 @@ public class ControladorCambioArmas : MonoBehaviour
         controladorCombate = GetComponent<ControladorCombate>();
         armaMelee = controladorCombate.getArmaActual();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1) && !controladorCombate.anim.GetBool("Apuntando") && !controladorCombate.anim.GetBool("Disparo"))
-        {
-            armaMelee.SetActive(true); 
-            armaDistancia.SetActive(false);
-            numeroArma = 1;
-        }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            armaMelee.SetActive(false);  
-            armaDistancia.SetActive(true);
-            numeroArma = 2;
-            controladorCombate.setAtacando(false);
+    }
 
-        }
+    public void CambiarArmaMelee()
+    {
+        armaMelee.SetActive(true);
+        armaDistancia.SetActive(false);
+        numeroArma = 1;
+    }
+    public void CambiarArmaDistancia()
+    {
+        armaMelee.SetActive(false);
+        armaDistancia.SetActive(true);
+        numeroArma = 2;
+        controladorCombate.setAtacando(false);
     }
     public int getterArma()
     {

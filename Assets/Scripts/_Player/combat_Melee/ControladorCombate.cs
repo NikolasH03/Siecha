@@ -10,7 +10,6 @@ public class ControladorCombate : MonoBehaviour
     public Animator anim;
 
     //ataque
-    [SerializeField] int numeroArma;
     [SerializeField] bool atacando = false;
     public string tipoAtaque;
 
@@ -37,7 +36,7 @@ public class ControladorCombate : MonoBehaviour
     [SerializeField]  int normalLayerIndex;
     [SerializeField] int dodgeLayerIndex;
 
-    //variables y referencias relacionadas con las barras de vida y estamina
+    //variables y referencias relacionadas con las barras de vida, estamina y numero de muertes
     public EstadisticasCombateSO statsBase;
     [HideInInspector]
     public EstadisticasCombate stats;
@@ -45,6 +44,10 @@ public class ControladorCombate : MonoBehaviour
     private Coroutine regeneracionCoroutine;
     private float delayRegeneracion = 5f;
     private float tasaRegeneracion = 3f;
+
+    public int muertesActuales = 0;
+    public int muertesMaximas = 5;
+
 
 
 
@@ -75,14 +78,16 @@ public class ControladorCombate : MonoBehaviour
         controladorMovimiento = GetComponent<ControladorMovimiento>();
 
         fsm = new CombatStateMachine();
-        fsm.ChangeState(new IdleState(fsm, this));
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
         combos = ComboDatabase.Combos;
+
+        Time.timeScale = 1;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     public void Update()
     {
-       //falta verificar que el jugador no este muerto
-            fsm.Update();
-        
+        fsm.Update();
 
     }
     public void OnTriggerEnter(Collider other)
@@ -168,13 +173,28 @@ public class ControladorCombate : MonoBehaviour
     {
         secuenciaInputs.Clear();
     }
+    public void Revivir()
+    {
+        stats.CurarVida(stats.VidaMax);                                         
+        stats.RegenerarEstamina(stats.EstaminaMax);
+        stats.RecibirDano(0);
+        stats.UsarEstamina(0);
 
-    public void AnimationEvent_ReproducirVFX(int indexVFX, int indexPivot = 0)
+        CambiarMovimientoCanMove(true);
+
+        GetComponent<Collider>().enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
+    }
+
+
+    public void ReproducirVFX(int indexVFX, int indexPivot = 0)
     {
             eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
     }
 
-    public void AnimationEvent_ReproducirSonido(int indexSonido, int indexPivot = 0)
+    public void ReproducirSonido(int indexSonido, int indexPivot = 0)
     {
             eventosAnimacion.ReproducirSonidoImpacto(indexSonido, indexPivot);
     }
@@ -183,7 +203,7 @@ public class ControladorCombate : MonoBehaviour
     public void VolverAIdle()
     {
         puedeHacerCombo = false;
-        fsm.ChangeState(new IdleState(fsm, this));
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
         inputBufferCombo = TipoInputCombate.Ninguno;
         LimpiarSecuenciaInputs();
     }
@@ -192,7 +212,7 @@ public class ControladorCombate : MonoBehaviour
         controladorMovimiento.GetComponent<Collider>().enabled = true;
         controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
         controladorMovimiento.setCanMove(true);
-        fsm.ChangeState(new IdleState(fsm, this));
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
 
     }
     public void TerminarEstadoDanoBloqueando()
@@ -201,6 +221,14 @@ public class ControladorCombate : MonoBehaviour
         controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
         fsm.ChangeState(new BloqueoState(fsm, this));
 
+    }
+    public void TerminarEstadoDisparo()
+    {
+        fsm.ChangeState(new RecargarState(fsm, this));
+    }
+    public void TerminarEstadoRecarga()
+    {
+        fsm.ChangeState(new ApuntarState(fsm, this));
     }
     public void ActivarVentanaCombo()
     {
@@ -217,7 +245,7 @@ public class ControladorCombate : MonoBehaviour
         anim.SetBool("dashing", false);
         anim.SetBool("RecibeDaño", false);
         gameObject.layer = normalLayerIndex;
-        fsm.ChangeState(new IdleState(fsm, this));
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
     }
 
 
@@ -297,6 +325,14 @@ public class ControladorCombate : MonoBehaviour
     public void CambiarMovimientoCanMove(bool puedeMov)
     {
         controladorMovimiento.setCanMove(puedeMov);
+    }
+    public void CambiarArmaMelee()
+    {
+        cambioArma.CambiarArmaMelee();
+    }
+    public void CambiarArmaDistancia()
+    {
+        cambioArma.CambiarArmaDistancia();
     }
 
 }

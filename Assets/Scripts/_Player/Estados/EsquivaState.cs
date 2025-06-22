@@ -16,9 +16,17 @@ public class EsquivaState : CombatState
         combatController.anim.SetBool("running", false);
     }
 
-    public override void Update()
+    public override void HandleInput()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            combatController.CambiarArmaMelee();
+        }
 
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            combatController.CambiarArmaDistancia();
+        }
     }
 
     public override void Exit()

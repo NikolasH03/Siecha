@@ -113,7 +113,7 @@ public class Enemigo_Z : Enemy
     {
         estaAtacando = true;
 
-        Debug.Log("Bloqueado!!!");
+        //Debug.Log("Bloqueado!!!");
 
         yield return new WaitForSeconds(DuracionDeAnimacion());
 

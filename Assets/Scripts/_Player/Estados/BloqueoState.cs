@@ -20,7 +20,7 @@ public class BloqueoState : CombatState
         if (Input.GetKeyUp(KeyCode.Space))
         {
             combatController.GetComponent<Collider>().enabled = true;
-            stateMachine.ChangeState(new IdleState(stateMachine, combatController));
+            stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
         }
     }
 
