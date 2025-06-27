@@ -4,13 +4,13 @@ public class ArcabuzDisparo : MonoBehaviour
 {
     public float rangoDisparo = 5f;
     public float radioImpacto = 3f;
-    ControladorCombate player;
+    private ControladorCombate player;
     public LayerMask capaEnemigos;
     public Transform puntoDisparo;
 
-    public void Update()
+    public void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
+        player = GetComponent<ControladorCombate>();
     }
     public void Disparar()
     {

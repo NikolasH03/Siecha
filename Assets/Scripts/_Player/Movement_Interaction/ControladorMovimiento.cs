@@ -12,20 +12,14 @@ public class ControladorMovimiento : MonoBehaviour
 
     [SerializeField] float sensibilidad = 1f;
 
-    [SerializeField] Rigidbody rb;
-    [SerializeField] bool canMove;
+    private Rigidbody rb;
+    private bool canMove = true;
 
     [SerializeField] float _speed;
     [SerializeField] float _targetRotation = 0.0f;
     [SerializeField] float _rotationVelocity;
     [SerializeField] float _verticalVelocity;
     [SerializeField] GameObject _mainCamera;
-
-    [SerializeField] private float Gravity = -9.81f;
-    [SerializeField] private float GroundCheckDistance = 0.2f; 
-    [SerializeField] private LayerMask GroundLayer; 
-
-    private bool IsGrounded; 
 
     //coordenadas para animaciones de movimiento
     [SerializeField] float x, y;
@@ -52,21 +46,10 @@ public class ControladorMovimiento : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
-    }
-    void Start()
-    {
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        canMove = true;
-
         rb = GetComponent<Rigidbody>();
         controladorCombate = GetComponent<ControladorCombate>();
         controladorApuntado = GetComponent<ControladorApuntado>();
         anim = GetComponent<Animator>();
-
-
     }
 
     void FixedUpdate()
@@ -78,8 +61,6 @@ public class ControladorMovimiento : MonoBehaviour
 
         else
         {
-
-
 
             if (!controladorCombate.getAtacando() && !controladorCombate.getBloqueando() && !anim.GetBool("dashing"))
             {
@@ -106,7 +87,7 @@ public class ControladorMovimiento : MonoBehaviour
     }
     public void ValoresAnimacionMovimiento()
     {
-        x = InputJugador.instance.moverse.x; 
+        x = InputJugador.instance.moverse.x;
         y = InputJugador.instance.moverse.y;
 
 
@@ -127,13 +108,11 @@ public class ControladorMovimiento : MonoBehaviour
             anim.SetBool("running", false);
             return VelocidadCaminando;
         }
-        return VelocidadCaminando; 
+        return VelocidadCaminando;
     }
 
     private void mover()
     {
-        //CheckGrounded();
-        //ApplyGravity();
 
         float targetSpeed = CheckEstaCorriendo();
 
@@ -144,14 +123,14 @@ public class ControladorMovimiento : MonoBehaviour
 
         float speedOffset = 0.5f;
 
-        // Accelerate or decelerate to the target speed
+
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
             currentHorizontalSpeed > targetSpeed + speedOffset)
         {
-            // Smoothly transition to the target speed
+
             _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.deltaTime * SpeedChangeRate);
 
-            // Round the speed to 3 decimal places
+
             _speed = Mathf.Round(_speed * 1000f) / 1000f;
         }
         else
@@ -160,10 +139,10 @@ public class ControladorMovimiento : MonoBehaviour
         }
 
 
-        // Normalize the input direction
+
         Vector3 inputDirection = new Vector3(InputJugador.instance.moverse.x, 0.0f, InputJugador.instance.moverse.y).normalized;
 
-        // Rotate the player if there is movement input
+
         if (InputJugador.instance.moverse != Vector2.zero)
         {
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
@@ -171,18 +150,18 @@ public class ControladorMovimiento : MonoBehaviour
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                 RotationSmoothTime);
 
-            // Rotate to face the input direction relative to the camera
+
             if (rotarAlMoverse)
             {
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
-            
+
         }
 
-        // Calculate the target direction
+
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
-        // Move the player
+
         rb.MovePosition(transform.position +
             (targetDirection.normalized * _speed * Time.deltaTime) +
             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
@@ -217,40 +196,6 @@ public class ControladorMovimiento : MonoBehaviour
 
     }
 
-    private void ApplyGravity()
-    {
-        if (IsGrounded)
-        {
-            // Resetea la velocidad vertical si está en el suelo
-            _verticalVelocity = 0f;
-        }
-        else
-        {
-            // Aplica la gravedad mientras el jugador está en el aire
-            _verticalVelocity += Gravity * Time.deltaTime;
-        }
-    }
-
-    private void CheckGrounded()
-    {
-        // Posición desde donde se realiza la comprobación (ajusta según el modelo del jugador)
-        Vector3 groundCheckPosition = transform.position + Vector3.down * GroundCheckDistance;
-
-        // Verifica si hay colisión con el suelo
-        IsGrounded = Physics.CheckSphere(groundCheckPosition, GroundCheckDistance, GroundLayer);
-
-        // Si está en el suelo y _verticalVelocity es menor que 0, reinicia la velocidad vertical
-        if (IsGrounded && _verticalVelocity < 0)
-        {
-            _verticalVelocity = 0f;
-        }
-    }
-
-    public void PararCorriendo()
-    {
-        anim.SetBool("running", false);
-    }
-
     //setters y getters
 
     public void SetSensibilidad(float nuevaSensibilidad)
@@ -261,11 +206,6 @@ public class ControladorMovimiento : MonoBehaviour
     public void SetRotacionAlMoverse(bool nuevoRotacionAlMoverse)
     {
         rotarAlMoverse = nuevoRotacionAlMoverse;
-    }
-
-    public Animator getAnim()
-    {
-        return anim;
     }
     public bool getCanMove()
     {

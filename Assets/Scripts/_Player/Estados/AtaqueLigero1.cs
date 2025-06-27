@@ -9,8 +9,6 @@ public class AtaqueLigero1 : CombatState
     {
         combatController.tipoAtaque = "ligero";
         combatController.anim.SetTrigger("Ligero1");
-        //combatController.AnimationEvent_ReproducirVFX(6, 1);
-        //combatController.AnimationEvent_ReproducirSonido(6, 1);
         combatController.setAtacando(true);
     }
     public override void HandleInput()

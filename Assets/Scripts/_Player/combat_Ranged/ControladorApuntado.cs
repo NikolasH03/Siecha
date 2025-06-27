@@ -1,35 +1,32 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Cinemachine;
 using System;
 public class ControladorApuntado : MonoBehaviour
 {
-   [SerializeField] private CinemachineVirtualCamera camaraApuntado;
+    //configuracion de sensibilidad y objetos necesarios
+    [SerializeField] private CinemachineVirtualCamera camaraApuntado;
     [SerializeField] private float sensibilidadNormal;
     [SerializeField] private float sensibilidadApuntado;
     [SerializeField] private LayerMask apuntadoColliderLayerMask = new LayerMask();
     [SerializeField] private Transform prefabProyectil;
     [SerializeField] private Transform spawnPosicionProyectil;
-     private Animator animator;
+    private Animator animator;
     [SerializeField] private GameObject crosshair;
     [SerializeField] bool ListoParaRecibirDisparo = false;
 
     //referencias a otros codigos
     private ControladorMovimiento controladorMovimiento;
-    [SerializeField] ArcabuzDisparo arcabuzDisparo;
+    private ArcabuzDisparo arcabuzDisparo;
     [SerializeField] private MinijuegoRecargaUI minijuegoUI;
 
-    public void Start()
+    public void Awake()
     {
         crosshair.SetActive(false);
-    }
-    private void Update()
-    {
-        controladorMovimiento = GetComponent<ControladorMovimiento>(); 
+        controladorMovimiento = GetComponent<ControladorMovimiento>();
+        arcabuzDisparo = GetComponent<ArcabuzDisparo>();
         animator = GetComponent<Animator>();
-
+        camaraApuntado.gameObject.SetActive(false);
     }
 
     public Vector3 ObtenerPosicionObjetivo()
@@ -59,7 +56,7 @@ public class ControladorApuntado : MonoBehaviour
         crosshair.SetActive(true);
         controladorMovimiento.SetSensibilidad(sensibilidadApuntado);
         controladorMovimiento.SetRotacionAlMoverse(false);
-        
+
         Vector3 TargetApuntado = posicionMouse;
         TargetApuntado.y = transform.position.y;
         Vector3 direccionApuntado = (TargetApuntado - transform.position).normalized;
@@ -79,11 +76,14 @@ public class ControladorApuntado : MonoBehaviour
     public void InstanciarBala(Vector3 posicionMouse)
     {
         Vector3 aimDir = (posicionMouse - spawnPosicionProyectil.position).normalized;
-        Instantiate(prefabProyectil, spawnPosicionProyectil.position, Quaternion.LookRotation(aimDir, Vector3.up)); 
+        Instantiate(prefabProyectil, spawnPosicionProyectil.position, Quaternion.LookRotation(aimDir, Vector3.up));
     }
-    public void ConoDeDano()
+    public void EsferaDeDano()
     {
-        arcabuzDisparo.Disparar();
+        if (arcabuzDisparo != null)
+        {
+            arcabuzDisparo.Disparar();
+        }
     }
 
     public void TransicionarLayerPeso(int layerIndex, float pesoObjetivo, float duracion)
@@ -104,7 +104,7 @@ public class ControladorApuntado : MonoBehaviour
             yield return null;
         }
 
-        animator.SetLayerWeight(layerIndex, pesoObjetivo); 
+        animator.SetLayerWeight(layerIndex, pesoObjetivo);
     }
     public void IniciarMinijuegoRecarga(Action<bool> callback)
     {
@@ -112,6 +112,7 @@ public class ControladorApuntado : MonoBehaviour
         minijuegoUI.OnFinRecarga = callback;
     }
 
+    //setters y getters
     public bool GetEstaApuntando()
     {
         return ListoParaRecibirDisparo;

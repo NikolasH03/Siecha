@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class ControladorCombate : MonoBehaviour
 {
-
     public Animator anim;
 
     //ataque
@@ -34,13 +33,12 @@ public class ControladorCombate : MonoBehaviour
     //colliders necesarios para generar daño
     [SerializeField] Collider ColliderArma;
     [SerializeField] Collider ColliderPierna;
-    [SerializeField]  int normalLayerIndex;
-    [SerializeField] int dodgeLayerIndex;
+    private int normalLayerIndex;
+    private int dodgeLayerIndex;
 
     //variables y referencias relacionadas con las barras de vida, estamina y numero de muertes
     public EstadisticasCombateSO statsBase;
-    [HideInInspector]
-    public EstadisticasCombate stats;
+    [HideInInspector] public EstadisticasCombate stats;
 
     private Coroutine regeneracionCoroutine;
     private float delayRegeneracion = 5f;
@@ -49,26 +47,23 @@ public class ControladorCombate : MonoBehaviour
     public int muertesActuales = 0;
     public int muertesMaximas = 5;
 
-
-
-
-    [Header("Referencias")]
-
+    //referencias a otros codigos
     [SerializeField] private EventosAnimacion eventosAnimacion;
     [SerializeField] ControladorCambioArmas cambioArma;
-    ControladorMovimiento controladorMovimiento;
+    private ControladorMovimiento controladorMovimiento;
     private CombatStateMachine fsm;
     //[SerializeField] HabilidadesJugador habilidadesJugador;
 
     void Awake()
     {
         stats = new EstadisticasCombate(statsBase);
+        EquiparArma(armaActual);
     }
     private void Start()
     {
-        EquiparArma(armaActual);
-        ColliderArma = armaInstanciada.GetComponent<Collider>();
         
+        ColliderArma = armaInstanciada.GetComponent<Collider>();
+
         ColliderArma.enabled = false;
         ColliderPierna.enabled = false;
 
@@ -89,7 +84,6 @@ public class ControladorCombate : MonoBehaviour
     public void Update()
     {
         fsm.Update();
-
     }
     public void OnTriggerEnter(Collider other)
     {
@@ -150,7 +144,7 @@ public class ControladorCombate : MonoBehaviour
 
     public int EntregarDañoArmaMelee()
     {
-        if (tipoAtaque=="ligero")
+        if (tipoAtaque == "ligero")
         {
             return armaActual.dañoGolpeLigero;
         }
@@ -162,15 +156,15 @@ public class ControladorCombate : MonoBehaviour
         {
             return armaActual.dañoGolpeLigero;
         }
-       
+
     }
 
     public int EntregarDañoArmaDistancia()
     {
         if (tieneBufoDisparo)
         {
-            tieneBufoDisparo = false; 
-            return Mathf.RoundToInt(armaDistancia.dañoDisparo * 1.5f); 
+            tieneBufoDisparo = false;
+            return Mathf.RoundToInt(armaDistancia.dañoDisparo * 1.5f);
         }
         return armaDistancia.dañoDisparo;
     }
@@ -185,7 +179,7 @@ public class ControladorCombate : MonoBehaviour
     }
     public void Revivir()
     {
-        stats.CurarVida(stats.VidaMax);                                         
+        stats.CurarVida(stats.VidaMax);
         stats.RegenerarEstamina(stats.EstaminaMax);
         stats.RecibirDano(0);
         stats.UsarEstamina(0);
@@ -201,12 +195,12 @@ public class ControladorCombate : MonoBehaviour
 
     public void ReproducirVFX(int indexVFX, int indexPivot = 0)
     {
-            eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
+        eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
     }
 
     public void ReproducirSonido(int indexSonido, int indexPivot = 0)
     {
-            eventosAnimacion.ReproducirSonidoImpacto(indexSonido, indexPivot);
+        eventosAnimacion.ReproducirSonidoImpacto(indexSonido, indexPivot);
     }
 
     // funciones para los Animation Events

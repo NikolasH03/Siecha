@@ -23,7 +23,7 @@ public class DispararState : CombatState
         }
         else
         {
-            apuntado.ConoDeDano();
+            apuntado.EsferaDeDano();
         }
         
     }

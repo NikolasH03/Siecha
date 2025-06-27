@@ -10,10 +10,10 @@ public class TotemMejora : MonoBehaviour
     private bool yaUsoTotem = false;
     private ControladorCombate jugador;
 
-    private void Start()
+    private void Awake()
     {
         canvasInteractuar.SetActive(false);
-        canvasUI.SetActive(false);  
+        canvasUI.SetActive(false);
     }
     private void Update()
     {

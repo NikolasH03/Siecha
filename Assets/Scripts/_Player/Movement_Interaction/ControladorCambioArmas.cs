@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class ControladorCambioArmas : MonoBehaviour
 {
-    [SerializeField] GameObject armaMelee;
-    [SerializeField] GameObject armaDistancia;
+    [SerializeField] private GameObject armaMelee;
+    [SerializeField] private GameObject armaDistancia;
     private int numeroArma;
 
-    ControladorCombate controladorCombate;
-    void Start()
+    private ControladorCombate controladorCombate;
+    private void Awake()
     {
+        controladorCombate = GetComponent<ControladorCombate>();
+    }
+    private void Start()
+    {
+        armaMelee = controladorCombate.getArmaActual();
         armaMelee.SetActive(true);
         armaDistancia.SetActive(false);
         numeroArma = 1;
-    }
-
-    void Update()
-    {
-        controladorCombate = GetComponent<ControladorCombate>();
-        armaMelee = controladorCombate.getArmaActual();
-
 
     }
 

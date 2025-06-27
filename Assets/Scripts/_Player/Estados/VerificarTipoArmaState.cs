@@ -1,7 +1,5 @@
 public class VerificarTipoArmaState : CombatState
 {
-    private ControladorCambioArmas cambioArmas;
-
     public VerificarTipoArmaState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
     {
     }

@@ -973,11 +973,8 @@ MonoBehaviour:
   espanol: {fileID: 1442962812}
   camaraPrincipal: {fileID: 2094488087}
   camaraApuntado: {fileID: 2136892405920649477}
-  controladorMuisca: {fileID: 0}
-  controladorEspanol: {fileID: 0}
-  objetivoCamaraMuisca: {fileID: 0}
-  objetivoCamaraEspanol: {fileID: 0}
-  protagonistaUno: 0
+  HUDMuisca: {fileID: 714763032}
+  HUDEspanol: {fileID: 877407315}
 --- !u!114 &79801886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1758,10 +1755,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -4195,14 +4192,14 @@ RectTransform:
   m_GameObject: {fileID: 520604705}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5190399, y: 0.5190399, z: 0.5190399}
+  m_LocalScale: {x: 1.1978403, y: 1.1978403, z: 1.1978403}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 176068396}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -268, y: 101}
+  m_AnchoredPosition: {x: -795, y: 310}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &520604707
@@ -4234,7 +4231,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
+    rgba: 4278190080
   m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -25780,7 +25777,7 @@ MonoBehaviour:
   SpeedChangeRate: 5
   sensibilidad: 1
   rb: {fileID: 0}
-  canMove: 0
+  canMove: 1
   _speed: 0
   _targetRotation: 0
   _rotationVelocity: 0
@@ -25829,8 +25826,7 @@ MonoBehaviour:
   prefabProyectil: {fileID: 8491930241958505694, guid: 5bb6ea1c2cb0a3446b9f04a785439807, type: 3}
   spawnPosicionProyectil: {fileID: 1987768120}
   crosshair: {fileID: 868932361}
-  estaApuntando: 0
-  arcabuzDisparo: {fileID: 1442962838}
+  ListoParaRecibirDisparo: 0
   minijuegoUI: {fileID: 1094588239}
 --- !u!114 &1442962833
 MonoBehaviour:
@@ -25868,8 +25864,6 @@ MonoBehaviour:
   secuenciaInputs: 
   ColliderArma: {fileID: 0}
   ColliderPierna: {fileID: 15884165}
-  normalLayerIndex: 0
-  dodgeLayerIndex: 0
   statsBase: {fileID: 11400000, guid: 0add85526e9f3bc43b91a70e1bf3c8ec, type: 2}
   muertesActuales: 0
   muertesMaximas: 5
@@ -30179,7 +30173,7 @@ MonoBehaviour:
   SpeedChangeRate: 5
   sensibilidad: 1
   rb: {fileID: 0}
-  canMove: 0
+  canMove: 1
   _speed: 0
   _targetRotation: 0
   _rotationVelocity: 0
@@ -30228,8 +30222,7 @@ MonoBehaviour:
   prefabProyectil: {fileID: 4088112302412980826, guid: ff4cd8184761cf941b80473e31023a1a, type: 3}
   spawnPosicionProyectil: {fileID: 363068134}
   crosshair: {fileID: 868932361}
-  estaApuntando: 0
-  arcabuzDisparo: {fileID: 0}
+  ListoParaRecibirDisparo: 0
   minijuegoUI: {fileID: 1094588239}
 --- !u!114 &1891072066
 MonoBehaviour:
@@ -30267,8 +30260,6 @@ MonoBehaviour:
   secuenciaInputs: 
   ColliderArma: {fileID: 0}
   ColliderPierna: {fileID: 951641500}
-  normalLayerIndex: 0
-  dodgeLayerIndex: 0
   statsBase: {fileID: 11400000, guid: 7d8b86c67aa2a1943bd89324c414d63f, type: 2}
   muertesActuales: 0
   muertesMaximas: 5

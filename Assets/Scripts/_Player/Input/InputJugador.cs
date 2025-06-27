@@ -17,6 +17,7 @@ public class InputJugador : MonoBehaviour
 
     public static InputJugador instance;
 
+    GameObject jugadorActual = ControladorCambiarPersonaje.instance.getJugadorActual();
     ControladorCambioArmas controladorCambioArmas;
     ControladorApuntado controladorApuntado;
 

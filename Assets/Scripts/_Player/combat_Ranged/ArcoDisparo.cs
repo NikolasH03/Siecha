@@ -5,29 +5,22 @@ using UnityEngine;
 public class ArcoDisparo : MonoBehaviour
 {
     private Rigidbody proyectilRB;
-    HealthbarEnemigo enemigo;
-    ControladorCombate player;
+    private float velocidad = 50f;
+    private HealthbarEnemigo enemigo;
+    private ControladorCombate player;
     private void Awake()
     {
         proyectilRB = GetComponent<Rigidbody>();
     }
-
     void Start()
     {
-        float velocidad  = 20f;
         proyectilRB.velocity = transform.forward*velocidad;
-
     }
-    private void Update()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "enemy")
         {
-
+            player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
             enemigo = other.GetComponent<HealthbarEnemigo>();
             enemigo.recibeDaño(player.EntregarDañoArmaDistancia());
             enemigo.setRecibiendoDaño(true);

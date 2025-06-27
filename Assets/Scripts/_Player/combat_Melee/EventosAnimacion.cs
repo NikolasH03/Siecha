@@ -9,7 +9,7 @@ public class EventosAnimacion : MonoBehaviour
     [Header("VFX del personaje")]
     [SerializeField] private List<VFXData> efectos;
 
-    [Header("Puntos de impacto (deben estar asignados en orden o por nombre)")]
+    [Header("Puntos de impacto")]
     [SerializeField] private List<Transform> pivotsImpacto;
 
 
@@ -43,16 +43,6 @@ public class EventosAnimacion : MonoBehaviour
             Debug.LogWarning($"{name}: índice de VFX fuera de rango.");
         }
     }
-
-    ////public void ReproducirPaso(int indexPivot = 0)
-    ////{
-    ////    if (sonidos.Count > 0)
-    ////    {
-    ////        Vector3 posicion = ObtenerPosicionPivot(indexPivot);
-    ////        AudioManager.Instance.PlaySFX(sonidos[0], posicion);
-    ////    }
-    ////}
-
 
 
     // Retorna la posición del pivot solicitado, o la del objeto si no hay pivots.
