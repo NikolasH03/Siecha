@@ -12,7 +12,7 @@ public class EstadoDeEsquivar : EstadoBase
     private bool estaEsquivando;
     private float velocidadBase;
 
-    public EstadoDeEsquivar(Enemigo enemigo, Animator animator, NavMeshAgent agent, HealthComp vidaEnemigo,float distanciaEsquivar, float velocidadDeEsquivo) : base(enemigo, animator)
+    public EstadoDeEsquivar(Enemigo enemigo, Animator animator, NavMeshAgent agent, HealthComp vidaEnemigo, float distanciaEsquivar, float velocidadDeEsquivo) : base(enemigo, animator)
     {
         this.agent  = agent;
         this.vidaEnemigo = vidaEnemigo;

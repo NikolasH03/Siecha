@@ -32,7 +32,7 @@ public class HealthComp : MonoBehaviour
 
     public void recibeDano(int cantidad)
     {
-        if (estaMuerto || estaBloqueado) return;
+        if (estaMuerto || estaBloqueado || estaEsquivando) return;
         
 
         vidaActual -= cantidad;
