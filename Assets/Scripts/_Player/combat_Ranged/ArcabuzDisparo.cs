@@ -22,7 +22,7 @@ public class ArcabuzDisparo : MonoBehaviour
             HealthbarEnemigo salud = enemigo.GetComponent<HealthbarEnemigo>();
             if (salud != null)
             {
-                salud.recibeDaño(player.EntregarDañoArmaDistancia());
+                salud.recibeDaño(player.EntregarDanoArmaDistancia());
                 salud.setRecibiendoDaño(true);
             }
         }

@@ -146,34 +146,34 @@ public class ControladorCombate : MonoBehaviour
         armaActual = nuevaArma;
     }
 
-    public int EntregarDañoArmaMelee()
+    public int EntregarDanoArmaMelee()
     {
         if (tipoAtaque == "ligero")
         {
             CameraShakeManager.instance.ShakeGolpeLigero();
-            return armaActual.dañoGolpeLigero;
+            return armaActual.danoGolpeLigero;
         }
         else if (tipoAtaque == "fuerte")
         {
             CameraShakeManager.instance.ShakeGolpeFuerte();
-            return armaActual.dañoGolpeFuerte;
+            return armaActual.danoGolpeFuerte;
         }
         else
         {
             CameraShakeManager.instance.ShakeGolpeLigero();
-            return armaActual.dañoGolpeLigero;
+            return armaActual.danoGolpeLigero;
         }
 
     }
 
-    public int EntregarDañoArmaDistancia()
+    public int EntregarDanoArmaDistancia()
     {
         if (tieneBufoDisparo)
         {
             tieneBufoDisparo = false;
-            return Mathf.RoundToInt(armaDistancia.dañoDisparo * 1.5f);
+            return Mathf.RoundToInt(armaDistancia.danoDisparo * 1.5f);
         }
-        return armaDistancia.dañoDisparo;
+        return armaDistancia.danoDisparo;
     }
     public void ActivarBufoDisparo()
     {

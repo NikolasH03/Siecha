@@ -15,7 +15,7 @@ public class DetectorImpactoMelee : MonoBehaviour
             player.ReproducirSonido(2, 1);
 
             enemigo = other.GetComponent<HealthbarEnemigo>();
-            enemigo.recibeDaño(player.EntregarDañoArmaMelee());
+            enemigo.recibeDaño(player.EntregarDanoArmaMelee());
             enemigo.setRecibiendoDaño(true);
 
         }
