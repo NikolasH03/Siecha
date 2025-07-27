@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 
@@ -57,5 +58,10 @@ public class PausaUI : MonoBehaviour
     {     
         menuPausa.SetActive(true);
         Coleccionables.SetActive(false);
+    }
+    public void IrArbolHabilidades(string Nivel)
+    {
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_arbol);
+        SceneManager.LoadScene(Nivel);
     }
 }

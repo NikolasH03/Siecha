@@ -1,13 +1,28 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioSource ambienceSource;
+    [SerializeField] private AudioSource voicesSource;
+    [SerializeField] private AudioMixerGroup sfxGroup;
+
+    public SoundData mus_exploracion;
+    public SoundData mus_combate;
+    public SoundData mus_arbol;
+    public SoundData amb_naturaleza;
+    public SoundData efecto_menuPausa;
+    public SoundData efecto_agarrarObjeto;
+    public SoundData efecto_oprimirBoton;
+    //public SoundData efecto_hoverBoton;
 
     public static AudioManager Instance { get; private set; }
 
     private void Awake()
     {
+        transform.parent = null;
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -15,6 +30,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     // Reproduce un SFX en un punto del mundo con variación de pitch y volumen
@@ -24,6 +40,8 @@ public class AudioManager : MonoBehaviour
         tempGO.transform.position = position;
 
         AudioSource audioSource = tempGO.AddComponent<AudioSource>();
+        audioSource.outputAudioMixerGroup = sfxGroup;   
+
         audioSource.clip = data.clip;
 
         float pitch = data.pitch + Random.Range(-data.randomPitchRange, data.randomPitchRange);
@@ -50,29 +68,16 @@ public class AudioManager : MonoBehaviour
         musicSource.loop = data.loop;
         musicSource.Play();
     }
+    public void PlayAmbience(SoundData data)
+    {
+        if (ambienceSource == null) return;
 
-    // Reproduce pasos en bucle (por movimiento, no para Animation Events)
+        ambienceSource.clip = data.clip;
+        ambienceSource.volume = data.volume;
+        ambienceSource.pitch = data.pitch;
+        ambienceSource.loop = data.loop;
+        ambienceSource.Play();
+    }
 
-    ////public void PlayFootstep(bool isSprinting, SoundData walkClip, SoundData runClip)
-    ////{
-    ////    if (footstepsSource == null) return;
-
-    ////    SoundData selected = isSprinting ? runClip : walkClip;
-
-    ////    if (!footstepsSource.isPlaying || footstepsSource.clip != selected.clip)
-    ////    {
-    ////        footstepsSource.clip = selected.clip;
-    ////        footstepsSource.volume = selected.volume;
-    ////        footstepsSource.pitch = selected.pitch;
-    ////        footstepsSource.loop = true;
-    ////        footstepsSource.Play();
-    ////    }
-    ////}
-
-    ////public void StopFootstep()
-    ////{
-    ////    if (footstepsSource != null)
-    ////        footstepsSource.Stop();
-    ////}
 }
 

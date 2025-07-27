@@ -25,6 +25,11 @@ public class BloqueoState : CombatState
         }
     }
 
+    public override void Update()
+    {
+        if (combatController.stats.EstaminaActual <= 0) return;
+    }
+
     public override void Exit()
     {
         combatController.setBloqueando(false);

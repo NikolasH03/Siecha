@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dcce56d0519e094694f29f82d015683, type: 3}
+  m_Name: Capoeira
+  m_EditorClassIdentifier: 
+  id: 1
+  nombre: Capoeira
+  descripcion: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam interdum
+    sollicitudin pulvinar. Ut vehicula mauris nunc, at ultrices lectus mattis ut.
+    Aliquam erat volutpat. Quisque aliquet dui lacus, at volutpat ante eleifend vel.
+    Nunc at enim ut massa accumsan rhoncus. Pellentesque habitant morbi tristique
+    senectus et netus et malesuada fames ac turpis egestas. Etiam mattis hendrerit
+    blandit. Curabitur gravida nibh lorem, eget aliquet dolor dapibus vitae.
+  icono: {fileID: 21300000, guid: 2aec71652117ca147824b7451b00e5b8, type: 3}
+  gifPreview: {fileID: 21300000, guid: 83c974edb00181e4da486c1626583e7c, type: 3}
+  requisito: {fileID: 0}
+  costo: 20

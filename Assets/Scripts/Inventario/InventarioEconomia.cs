@@ -34,9 +34,13 @@ public class InventarioEconomia : MonoBehaviour
     {
         dinero = cont;
     }
-    public void aumentarDinero(int cont)
+    public void AumentarDinero(int cont)
     {
         dinero += cont;
+    }
+    public void RestarDinero(int cont)
+    {
+        dinero -= cont;
     }
 
 
@@ -44,8 +48,8 @@ public class InventarioEconomia : MonoBehaviour
     {
         switch (tipoEnemigo)
         {
-            case 1: aumentarDinero(50); break;
-            case 2: aumentarDinero(200); break;
+            case 1: AumentarDinero(50); break;
+            case 2: AumentarDinero(200); break;
             default: Debug.Log("No existe ese tipo de enemigo"); break;
         }
     }

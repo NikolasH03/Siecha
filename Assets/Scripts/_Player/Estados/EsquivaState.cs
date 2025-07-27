@@ -12,6 +12,7 @@ public class EsquivaState : CombatState
         combatController.anim.SetTrigger("Esquiva");
         combatController.InvulneravilidadDash();
         combatController.anim.SetBool("running", false);
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_combate);
     }
 
     public override void HandleInput()

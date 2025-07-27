@@ -84,6 +84,9 @@ public class ControladorCombate : MonoBehaviour
         Time.timeScale = 1;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_exploracion);
+        AudioManager.Instance.PlayAmbience(AudioManager.Instance.amb_naturaleza);
     }
     public void Update()
     {
@@ -301,10 +304,10 @@ public class ControladorCombate : MonoBehaviour
 
 
     //prueba para el arbol de habilidades
-    public bool PuedeUsarCapoeira()
-    {
-        return HabilidadesJugador.instance.estaDesbloqueada(HabilidadesJugador.TipoHabilidad.Capoeira);
-    }
+    //public bool PuedeUsarCapoeira()
+    //{
+    //    return HabilidadesJugador.instance.estaDesbloqueada(HabilidadesJugador.TipoHabilidad.Capoeira);
+    //}
 
 
     //setters y getters
