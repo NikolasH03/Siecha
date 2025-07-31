@@ -13,6 +13,8 @@ public class HealthComp : MonoBehaviour
     private bool estaMuerto = false;
     private bool estaSiendoDanado = false;
     private bool estaEsquivando = false;
+    private bool danoPendiente = false;
+
 
     public bool EstaMuerto => estaMuerto;
     public bool EstaSiendoDanado => estaSiendoDanado;
@@ -33,10 +35,12 @@ public class HealthComp : MonoBehaviour
     public void recibeDano(int cantidad)
     {
         if (estaMuerto || estaBloqueado || estaEsquivando) return;
-        
 
         vidaActual -= cantidad;
         ActualizarBarra();
+
+        danoPendiente = true;  // <-- marcar daño pendiente
+        estaSiendoDanado = true;
 
         if (vidaActual <= 0f)
         {
@@ -69,12 +73,20 @@ public class HealthComp : MonoBehaviour
     
     public bool EnimigoFueDanado()
     {
-        return estaSiendoDanado && !estaMuerto && !estaBloqueado;
+        if (danoPendiente && !estaMuerto && !estaBloqueado)
+        {
+            danoPendiente = false; // <-- consumir la marca
+            return true;
+        }
+
+        return false;
     }
 
     public bool EnemigoHaMuerto()
     {
         return estaMuerto && vidaActual >= 0f;
     }
+    
+    
 }
 

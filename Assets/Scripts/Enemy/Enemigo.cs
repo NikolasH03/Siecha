@@ -29,6 +29,7 @@ public class Enemigo : MonoBehaviour
     
     [Header("Parametros Para Estado Atacar")]
     [SerializeField] public float tiempoEntreAtaques = 1f;
+    [SerializeField] public float rangoDeAtaque = 1f;
     Temporizador tempParaAtaques;
     
     [Header("Parametros Para Estado de Bloqueo")]
@@ -76,7 +77,7 @@ public class Enemigo : MonoBehaviour
         
         var estadoSeguir = new EstadoSeguirJugador(this, animator, agent, detectarJugador.Player, velocidadEnEstadoSeguir);
         
-        var estadoAtacar = new EstadoAtacarJugador(this, animator, agent, detectarJugador.Player);
+        var estadoAtacar = new EstadoAtacarJugador(this, animator, agent, detectarJugador.Player, rangoDeAtaque);
         
         var estadoRecibirDano = new EstadoRebirDano(this, animator, vidaEnemigo, duracionDanoRecibido);
 
@@ -95,54 +96,53 @@ public class Enemigo : MonoBehaviour
         Desde(estadoSeguir, estadoPatrulla, new FuncPredicate(() => !detectarJugador.SePuedeDetectarAlJugador()));
         
         // Transiciones en el estado atacar normal
-        // Desde(estadoSeguir, estadoAtacar, new FuncPredicate(() => detectarJugador.SePuedeAtacarAlJugador()));
-        // Desde(estadoAtacar, estadoSeguir, new FuncPredicate(() => !detectarJugador.SePuedeAtacarAlJugador()));
+        Desde(estadoSeguir, estadoAtacar, new FuncPredicate(() => detectarJugador.SePuedeAtacarAlJugador()));
+        Desde(estadoAtacar, estadoSeguir, new FuncPredicate(() => !detectarJugador.SePuedeAtacarAlJugador()));
         
         // Transiciones en el estado atacar en secuencia
-        Desde(estadoSeguir, estadoSecuenciaDeAtaques, new FuncPredicate(() =>
-            detectarJugador.SePuedeAtacarAlJugador()));
-        Desde(estadoSecuenciaDeAtaques, estadoSeguir, new FuncPredicate(() =>
-            !detectarJugador.SePuedeAtacarAlJugador()));
+        // Desde(estadoSeguir, estadoSecuenciaDeAtaques, new FuncPredicate(() =>
+        //     detectarJugador.SePuedeAtacarAlJugador()));
+        // Desde(estadoSecuenciaDeAtaques, estadoSeguir, new FuncPredicate(() =>
+        //     !detectarJugador.SePuedeAtacarAlJugador()));
 
         
-        // // Entrar al estado de recibir daño desde cualquier otro estado 
-        // DesdeCualquier(estadoRecibirDano, new FuncPredicate(() => vidaEnemigo.EnimigoFueDanado()));
-        //
-        // // Transiciones para salir del estado de daño a cualquier otro estado
-        // Desde(estadoRecibirDano, estadoPatrulla, new FuncPredicate(() => 
-        //     estadoRecibirDano.TerminoTiempoDano && 
-        //     !detectarJugador.SePuedeDetectarAlJugador()));
-        // Desde(estadoRecibirDano, estadoSeguir, new FuncPredicate(() => 
-        //     estadoRecibirDano.TerminoTiempoDano && 
-        //     detectarJugador.SePuedeDetectarAlJugador()));
-        //
-        // Desde(estadoRecibirDano, estadoAtacar, new FuncPredicate(() => 
-        //     estadoRecibirDano.TerminoTiempoDano && 
-        //     detectarJugador.SePuedeAtacarAlJugador()));
+        // Entrar al estado de recibir daño desde cualquier otro estado 
+        DesdeCualquier(estadoRecibirDano, new FuncPredicate(() => vidaEnemigo.EnimigoFueDanado()));
+        
+        // Transiciones para salir del estado de daño a cualquier otro estado
+        Desde(estadoRecibirDano, estadoPatrulla, new FuncPredicate(() => 
+            estadoRecibirDano.TerminoTiempoDano && 
+            !detectarJugador.SePuedeDetectarAlJugador()));
+        Desde(estadoRecibirDano, estadoSeguir, new FuncPredicate(() => 
+            estadoRecibirDano.TerminoTiempoDano && 
+            detectarJugador.SePuedeDetectarAlJugador()));
+        Desde(estadoRecibirDano, estadoAtacar, new FuncPredicate(() => 
+            estadoRecibirDano.TerminoTiempoDano && 
+            detectarJugador.SePuedeAtacarAlJugador()));
         
         // Entrar al estado de muerte desde cualquier otro estado
         DesdeCualquier(estadoMuerte, new FuncPredicate(() => vidaEnemigo.EnemigoHaMuerto()));
         
-        // // Entrar al estado de bloqueo desde cualquier otro estado (temporal)
-        // DesdeCualquier(estadoBloqueo, new FuncPredicate(JugadorEstaAtacando));
-        //
-        // // Transiciones para salir del estado de bloqueo a cualquier otro estado
-        // Desde(estadoBloqueo, estadoAtacar, new FuncPredicate(() =>
-        //     !JugadorEstaAtacando() && detectarJugador.SePuedeAtacarAlJugador()));
-        //
-        // Desde(estadoBloqueo, estadoSeguir, new FuncPredicate(() =>
-        //     !JugadorEstaAtacando() && detectarJugador.SePuedeDetectarAlJugador() && !detectarJugador.SePuedeAtacarAlJugador()));
-        //
-        // Desde(estadoBloqueo, estadoPatrulla, new FuncPredicate(() =>
-        //     !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
+        // Entrar al estado de bloqueo desde cualquier otro estado (temporal)
+        DesdeCualquier(estadoBloqueo, new FuncPredicate(SePuedeBloquearAlJugador));
+        
+        // Transiciones para salir del estado de bloqueo a cualquier otro estado
+        Desde(estadoBloqueo, estadoAtacar, new FuncPredicate(() =>
+            !JugadorEstaAtacando() && detectarJugador.SePuedeAtacarAlJugador()));
+        
+        Desde(estadoBloqueo, estadoSeguir, new FuncPredicate(() =>
+            !JugadorEstaAtacando() && detectarJugador.SePuedeDetectarAlJugador() && !detectarJugador.SePuedeAtacarAlJugador()));
+        
+        Desde(estadoBloqueo, estadoPatrulla, new FuncPredicate(() =>
+            !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
         //
         
-        // Entra al estado de Esquivar ataques desde cualquier estado
-        DesdeCualquier(estadoEsquivarAtaques, new FuncPredicate(JugadorEstaAtacando));
-        
-        Desde(estadoEsquivarAtaques, estadoSecuenciaDeAtaques, new FuncPredicate(() => !JugadorEstaAtacando() && detectarJugador.SePuedeAtacarAlJugador()));
-        Desde(estadoEsquivarAtaques, estadoSeguir, new FuncPredicate(() => !JugadorEstaAtacando() && detectarJugador.SePuedeDetectarAlJugador() && !detectarJugador.SePuedeAtacarAlJugador()));
-        Desde(estadoEsquivarAtaques, estadoPatrulla, new FuncPredicate(() => !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
+        // // Entra al estado de Esquivar ataques desde cualquier estado
+        // DesdeCualquier(estadoEsquivarAtaques, new FuncPredicate(JugadorEstaAtacando));
+        //
+        // Desde(estadoEsquivarAtaques, estadoSecuenciaDeAtaques, new FuncPredicate(() => !JugadorEstaAtacando() && detectarJugador.SePuedeAtacarAlJugador()));
+        // Desde(estadoEsquivarAtaques, estadoSeguir, new FuncPredicate(() => !JugadorEstaAtacando() && detectarJugador.SePuedeDetectarAlJugador() && !detectarJugador.SePuedeAtacarAlJugador()));
+        // Desde(estadoEsquivarAtaques, estadoPatrulla, new FuncPredicate(() => !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
         
         maquinaDeEstados.SetEstado(estadoPatrulla);
     }
@@ -181,5 +181,32 @@ public class Enemigo : MonoBehaviour
     
         float distancia = Vector3.Distance(transform.position, detectarJugador.Player.position);
         return ataquesDeJugador.getAtacando() && distancia <= rangoDeBloqueo;
+    }
+    
+    private bool intentoBloquear = false;
+
+    public bool SePuedeBloquearAlJugador()
+    {
+        var ataquesDeJugador = controladorDeCombate.GetComponent<ControladorCombate>();
+        if (ataquesDeJugador == null || detectarJugador == null) return false;
+
+        float distancia = Vector3.Distance(transform.position, detectarJugador.Player.position);
+        bool estaEnRango = distancia <= rangoDeBloqueo;
+        bool jugadorAtacando = ataquesDeJugador.getAtacando();
+
+        if (jugadorAtacando && estaEnRango)
+        {
+            if (!intentoBloquear)
+            {
+                intentoBloquear = true;
+                return Random.value <= probabilidadDeBloqueo;
+            }
+        }
+        else
+        {
+            intentoBloquear = false;
+        }
+
+        return false;
     }
 }
