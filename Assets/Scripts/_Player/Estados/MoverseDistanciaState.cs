@@ -1,32 +1,35 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class IdleDistanciaState : CombatState
+public class MoverseDistanciaState : CombatState
 {
+    private Rigidbody rb;
+    private Animator anim;
+    private ControladorMovimiento movimiento;
 
-    public IdleDistanciaState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
+    public MoverseDistanciaState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
     {
-
+        movimiento = combatController.GetComponent<ControladorMovimiento>();
+        rb = combatController.GetComponent<Rigidbody>();
+        anim = combatController.anim;
     }
 
     public override void Enter()
     {
         combatController.anim.Play("movimientoArmaDistancia");
-        combatController.anim.SetFloat("Velx", 0);
-        combatController.anim.SetFloat("Vely", 0);
-        combatController.anim.SetBool("running", false);
-        combatController.setAtacando(false);
+
+        anim.SetBool("running", false);
+        movimiento.setCanMove(true);
     }
 
     public override void HandleInput()
     {
-        if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        // en caso de volver a idle
+        if (InputJugador.instance.moverse.sqrMagnitude < 0.01f)
         {
-
-                stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
-                return;
+            stateMachine.ChangeState(new IdleDistanciaState(stateMachine, combatController));
         }
 
+        // otros inputs que puede hacer
         if (InputJugador.instance.cambiarArmaMelee)
         {
             combatController.CambiarArmaMelee();
@@ -41,6 +44,7 @@ public class IdleDistanciaState : CombatState
         {
             ControladorCambiarPersonaje.instance.CambiarProtagonista();
         }
+
         if (InputJugador.instance.apuntar)
         {
             stateMachine.ChangeState(new ApuntarState(stateMachine, combatController));
@@ -50,9 +54,12 @@ public class IdleDistanciaState : CombatState
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
             return;
         }
-
-
     }
 
+    public override void Exit()
+    {
+        anim.SetBool("running", false);
+        movimiento.setCanMove(false);
+    }
 }
 

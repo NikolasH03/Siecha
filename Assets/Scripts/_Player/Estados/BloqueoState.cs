@@ -10,7 +10,6 @@ public class BloqueoState : CombatState
     {
         if (combatController.stats.EstaminaActual <= 0) return;
 
-        combatController.anim.SetBool("running", false);
         combatController.setBloqueando(true);
         combatController.OrientarJugador();
         combatController.anim.SetTrigger("Bloqueo");

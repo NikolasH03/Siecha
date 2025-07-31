@@ -7,10 +7,8 @@ public class DanoBloqueandoState : CombatState
     public override void Enter()
     {
 
-        combatController.GetComponent<Collider>().enabled = false;
-        combatController.GetComponent<Rigidbody>().isKinematic = true;
+        combatController.InvulneravilidadJugador();
         combatController.stats.UsarEstamina(combatController.stats.DanoBase);
-        combatController.EmpezarRegeneracionEstamina();
 
         if (combatController.stats.EstaminaActual <= 0)
         {
@@ -18,7 +16,20 @@ public class DanoBloqueandoState : CombatState
         }
         combatController.OrientarJugador();
         combatController.anim.SetTrigger("DanoBloqueando");
-
+        combatController.EmpezarRegeneracionEstamina();
 
     }
+    public override void Update()
+    {
+        if (combatController.stats.EstaminaActual > 0)
+        {
+            if (!InputJugador.instance.bloquear)
+            {
+                combatController.TerminarInvulnerabilidad();
+                stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
+            }
+
+        }
+    }
+
 }

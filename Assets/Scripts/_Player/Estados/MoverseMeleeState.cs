@@ -1,30 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleMeleeState : CombatState
+public class MoverseMeleeState : CombatState
 {
-    public IdleMeleeState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
-    {
+    private Rigidbody rb;
+    private Animator anim;
+    private ControladorMovimiento movimiento;
+    private bool comboDetectado = false;
 
+    public MoverseMeleeState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
+    {
+        movimiento = combatController.GetComponent<ControladorMovimiento>();
+        rb = combatController.GetComponent<Rigidbody>();
+        anim = combatController.anim;
     }
 
-    private bool comboDetectado = false;
     public override void Enter()
     {
+
         combatController.anim.Play("movimiento Basico");
-        combatController.anim.SetFloat("Velx", 0);
-        combatController.anim.SetFloat("Vely", 0);
-        combatController.anim.SetBool("running", false);
-        combatController.setAtacando(false);
+
+        anim.SetBool("running", false);
+        movimiento.setCanMove(true);
     }
+
     public override void HandleInput()
     {
-        if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        // en caso de volver a idle
+        if (InputJugador.instance.moverse.sqrMagnitude < 0.01f)
         {
+            stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
+        }
 
-            stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
-            return;
-
+        // otros inputs que puede hacer
+        if (InputJugador.instance.cambiarProtagonista)
+        {
+            ControladorCambiarPersonaje.instance.CambiarProtagonista();
         }
 
         if (InputJugador.instance.cambiarArmaDistancia)
@@ -96,6 +107,7 @@ public class IdleMeleeState : CombatState
 
         return true;
     }
+
     public override void Update()
     {
         if (combatController.VerificarArmaEquipada() == 2) return;
@@ -117,6 +129,12 @@ public class IdleMeleeState : CombatState
             default:
                 break;
         }
+    }
+
+    public override void Exit()
+    {
+        anim.SetBool("running", false);
+        movimiento.setCanMove(false);
     }
 }
 

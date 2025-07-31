@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PacoStats
   m_EditorClassIdentifier: 
   vidaBase: 20
-  estaminaBase: 20
+  estaminaBase: 30
   danoBase: 10
   curacionEstamina: 5

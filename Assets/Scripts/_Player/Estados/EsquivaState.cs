@@ -10,7 +10,7 @@ public class EsquivaState : CombatState
     {
         combatController.anim.SetBool("dashing", true);
         combatController.anim.SetTrigger("Esquiva");
-        combatController.InvulneravilidadDash();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetBool("running", false);
         AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_combate);
     }
@@ -26,5 +26,9 @@ public class EsquivaState : CombatState
         {
             combatController.CambiarArmaDistancia();
         }
+    }
+    public override void Exit()
+    {
+        combatController.anim.SetBool("dashing", false);
     }
 }

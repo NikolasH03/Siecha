@@ -233,10 +233,8 @@ public class ControladorCombate : MonoBehaviour
     }
     public void TerminarEstadoDanoBloqueando()
     {
-        controladorMovimiento.GetComponent<Collider>().enabled = true;
-        controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
+        gameObject.layer = normalLayerIndex;
         fsm.ChangeState(new BloqueoState(fsm, this));
-
     }
     public void TerminarEstadoDisparo()
     {
@@ -256,15 +254,18 @@ public class ControladorCombate : MonoBehaviour
         inputBufferCombo = TipoInputCombate.Ninguno;
         LimpiarSecuenciaInputs();
     }
-    public void InvulneravilidadDash()
+    public void InvulneravilidadJugador()
     {
         gameObject.layer = esquivarLayerIndex;
     }
-    public void terminarDash()
+    public void TerminarDash()
     {
-        anim.SetBool("dashing", false);
         gameObject.layer = normalLayerIndex;
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
+    }
+    public void TerminarInvulnerabilidad()
+    {
+        gameObject.layer = normalLayerIndex;
     }
 
 
