@@ -19,12 +19,12 @@ public class ArcabuzDisparo : MonoBehaviour
 
         foreach (Collider enemigo in enemigosImpactados)
         {
-            //HealthbarEnemigo salud = enemigo.GetComponent<HealthbarEnemigo>();
-            //if (salud != null)
-            //{
-            //    salud.recibeDaño(player.EntregarDanoArmaDistancia());
-            //    salud.setRecibiendoDaño(true);
-            //}
+            HealthComp salud = enemigo.GetComponent<HealthComp>();
+            if (salud != null)
+            {
+                salud.recibeDano(player.EntregarDanoArmaDistancia());
+                //salud.setRecibiendoDaño(true);
+            }
         }
 
     }
