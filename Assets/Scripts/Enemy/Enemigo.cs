@@ -18,6 +18,9 @@ public class Enemigo : MonoBehaviour
     HealthComp vidaEnemigo;
     private GameObject controladorDeCombate;
     
+    private bool atacando = false;
+    private bool disponibleParaAtacar = true;
+    
     [Header("Parametros Para Estado Patrulla")]
     [SerializeField] public float tiempoDeEspera = 1.5f;
     [SerializeField] public float radioDePatrulla = 8f;
@@ -70,9 +73,8 @@ public class Enemigo : MonoBehaviour
 
     void Start()
     {
-        
         maquinaDeEstados = new MaquinaDeEstados();
-
+        
         var estadoPatrulla = new EstadoPatrullaEnemigo(this, animator, agent, radioDePatrulla, tiempoDeEspera);
         
         var estadoSeguir = new EstadoSeguirJugador(this, animator, agent, detectarJugador.Player, velocidadEnEstadoSeguir);
@@ -84,7 +86,7 @@ public class Enemigo : MonoBehaviour
         var estadoMuerte = new EstadoMuerte(this, animator, vidaEnemigo, tiempoDeDesaparicion);
 
         var estadoBloqueo = new EstadoDeBloqueo(this, animator, agent, vidaEnemigo);
-
+        
         var estadoSecuenciaDeAtaques = new EstadoSecuenciaDeAtaques(this, animator, agent, detectarJugador.Player,
             secuenciaAtaques, tempParaSecuencia, delayEntreAtaques);
 
@@ -92,6 +94,9 @@ public class Enemigo : MonoBehaviour
             new EstadoDeEsquivar(this, animator, agent, vidaEnemigo, distanciaEsquivar, velocidadEsquivar);
 
         var estadoRompeGuardia = new EstadoRomperGuardia(this, animator, agent, vidaEnemigo);
+        
+        var estadoRodear = new EstadoRodearJugador(this, animator, agent, detectarJugador.Player);
+        
         
         // Transiciones entre estados de Patrulla, Persecución y Ataque
         Desde(estadoPatrulla, estadoSeguir, new FuncPredicate(() => detectarJugador.SePuedeDetectarAlJugador()));
@@ -141,6 +146,12 @@ public class Enemigo : MonoBehaviour
         // Estado de guardia rota
         Desde(estadoBloqueo, estadoRompeGuardia, new FuncPredicate(() => vidaEnemigo.EnGuardBreak));
         
+        // Rodear Jugador
+        
+        Desde(estadoSeguir, estadoRodear, new FuncPredicate(() => !EstaAtacando() && detectarJugador.SePuedeDetectarAlJugador()));
+        Desde(estadoRodear, estadoAtacar, new FuncPredicate(() => atacando));
+        Desde(estadoAtacar, estadoRodear, new FuncPredicate(() => !atacando && detectarJugador.SePuedeDetectarAlJugador()));
+        
         //
         
         // // Entra al estado de Esquivar ataques desde cualquier estado
@@ -151,6 +162,23 @@ public class Enemigo : MonoBehaviour
         // Desde(estadoEsquivarAtaques, estadoPatrulla, new FuncPredicate(() => !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
         
         maquinaDeEstados.SetEstado(estadoPatrulla);
+    }
+    
+    
+    //Métodos para el EnemyManager.cs
+    public bool EstaDisponibleParaAtacar() => disponibleParaAtacar && !vidaEnemigo.EstaMuerto;
+    public bool EstaAtacando() => atacando;
+    
+    public void OrdenarAtacar()
+    {
+        disponibleParaAtacar = false;
+        atacando = true;
+    }
+    
+    public void TerminarAtaque()
+    {
+        atacando = false;
+        disponibleParaAtacar = true;
     }
     
     //Métodos Auxiliares
@@ -191,7 +219,7 @@ public class Enemigo : MonoBehaviour
         return ataquesDeJugador.getAtacando() && distancia <= rangoDeBloqueo;
     }
     
-    private bool intentoBloquear = false;
+    // private bool intentoBloquear = false;
 
     public bool SePuedeBloquearAlJugador()
     {
@@ -209,7 +237,6 @@ public class Enemigo : MonoBehaviour
         // 4. No está en guard break
         return jugadorAtacando && estaEnRango && vidaEnemigo.DebeBloquear() && !vidaEnemigo.EnGuardBreak;
     }
-
 
 
 

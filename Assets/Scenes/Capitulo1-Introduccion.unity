@@ -5042,6 +5042,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 194289850}
+  - component: {fileID: 194289851}
   m_Layer: 0
   m_Name: Enemy Manager
   m_TagString: Untagged
@@ -5069,6 +5070,19 @@ Transform:
   - {fileID: 579818667}
   m_Father: {fileID: 260608655}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &194289851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194289849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d6e408fa0aa4ec4a88c9a24c5ff3ecf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tiempoEntreDecisiones: 1
 --- !u!1 &208361257
 GameObject:
   m_ObjectHideFlags: 0
@@ -5729,6 +5743,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vidaMax: 20
   imagenBarraVida: {fileID: 970513890}
+  golpesAntesDeBloquear: 5
+  staminaMax: 100
+  costoBloqueo: 20
+  regeneracionStamina: 10
+  duracionGuardBreak: 2
 --- !u!114 &330285326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30309,6 +30328,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vidaMax: 20
   imagenBarraVida: {fileID: 2084221077}
+  golpesAntesDeBloquear: 5
+  staminaMax: 100
+  costoBloqueo: 20
+  regeneracionStamina: 10
+  duracionGuardBreak: 2
 --- !u!114 &1851321636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30441,6 +30465,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vidaMax: 20
   imagenBarraVida: {fileID: 208361259}
+  golpesAntesDeBloquear: 5
+  staminaMax: 100
+  costoBloqueo: 20
+  regeneracionStamina: 10
+  duracionGuardBreak: 2
 --- !u!114 &1868303680
 MonoBehaviour:
   m_ObjectHideFlags: 0

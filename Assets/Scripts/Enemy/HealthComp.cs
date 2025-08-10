@@ -115,7 +115,7 @@ public class HealthComp : MonoBehaviour
 
     public bool EnemigoHaMuerto()
     {
-        return estaMuerto && vidaActual >= 0f;
+        return estaMuerto;
     }
     
     // Eventos Relacionados a la stamina
