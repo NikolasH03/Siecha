@@ -6,9 +6,23 @@ public class HealthComp : MonoBehaviour
     [Header("Vida")]
     [SerializeField] private float vidaMax = 20f;
     [SerializeField] private Image imagenBarraVida;
-
     private float vidaActual;
     
+    [Header("Golpes Para Empezar A Bloquear")]
+    [SerializeField] private int golpesAntesDeBloquear = 5;
+    private int golpesRecibidos = 0;
+    
+    [Header("Stamina")]
+    [SerializeField] private float staminaMax = 100f;
+    [SerializeField] private float costoBloqueo = 20f;
+    [SerializeField] private float regeneracionStamina = 10f; // Por segundo
+    [SerializeField] private float duracionGuardBreak = 2f;
+
+    private float staminaActual;
+    private bool enGuardBreak = false;
+    private Temporizador timerGuardBreak;
+
+    [Header("Booleanos Adicionales")]
     private bool estaBloqueado;
     private bool estaMuerto = false;
     private bool estaSiendoDanado = false;
@@ -23,6 +37,9 @@ public class HealthComp : MonoBehaviour
     private void Start()
     {
         vidaActual = vidaMax;
+        staminaActual = staminaMax;
+        timerGuardBreak = new Temporizador(duracionGuardBreak);
+        timerGuardBreak.OnTimerStop += RecuperarGuardBreak;
         ActualizarBarra();
     }
 
@@ -34,8 +51,16 @@ public class HealthComp : MonoBehaviour
 
     public void recibeDano(int cantidad)
     {
-        if (estaMuerto || estaBloqueado || estaEsquivando) return;
+        if (estaMuerto || estaEsquivando) return;
 
+        // Si está bloqueando, no recibe daño, pero gasta stamina
+        if (estaBloqueado)
+        {
+            ConsumirStaminaPorBloqueo();
+            return;
+        }
+
+        golpesRecibidos++;
         vidaActual -= cantidad;
         ActualizarBarra();
 
@@ -48,6 +73,7 @@ public class HealthComp : MonoBehaviour
         }
     }
 
+
     public void setRecibiendoDano(bool valor)
     {
         estaSiendoDanado = valor;
@@ -57,6 +83,11 @@ public class HealthComp : MonoBehaviour
     {
         estaBloqueado = valor;
         setRecibiendoDano(false);
+    }
+    
+    public bool DebeBloquear()
+    {
+        return golpesRecibidos >= golpesAntesDeBloquear;
     }
 
     public void setEsquivando(bool valor)
@@ -87,6 +118,43 @@ public class HealthComp : MonoBehaviour
         return estaMuerto && vidaActual >= 0f;
     }
     
+    // Eventos Relacionados a la stamina
+    
+    public void ConsumirStaminaPorBloqueo()
+    {
+        staminaActual -= costoBloqueo;
+        staminaActual = Mathf.Clamp(staminaActual, 0, staminaMax);
+        Debug.Log(staminaActual);
+
+        if (staminaActual <= 0 && !enGuardBreak)
+        {
+            Debug.Log("Guardia Rota!!!");
+            enGuardBreak = true;
+            timerGuardBreak.Empezar();
+        }
+    }
+    
+    public void TickTimers(float deltaTime)
+    {
+        timerGuardBreak.Tick(deltaTime);
+    }
+    
+    public bool EnGuardBreak => enGuardBreak;
+
+    private void RecuperarGuardBreak()
+    {
+        enGuardBreak = false;
+        staminaActual = staminaMax * 0.5f;
+    }
+    
+    public void RegenerarStamina(float deltaTime)
+    {
+        if (!enGuardBreak && staminaActual < staminaMax)
+        {
+            staminaActual += regeneracionStamina * deltaTime;
+            staminaActual = Mathf.Clamp(staminaActual, 0, staminaMax);
+        }
+    }
     
 }
 

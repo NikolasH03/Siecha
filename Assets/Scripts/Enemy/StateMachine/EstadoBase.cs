@@ -15,6 +15,7 @@ public abstract class EstadoBase : IEstado
     protected static readonly int SecuenceHash = Animator.StringToHash("Secuencia");
     protected static readonly int DodgeHash = Animator.StringToHash("Esquivar Izquierda");
     protected static readonly int DeathHash = Animator.StringToHash("Falling Back Death");
+    protected static readonly int GuardBreakHash = Animator.StringToHash("Rompe Guardia");
 
     protected const float duracionTransicion = 0.1f;
 

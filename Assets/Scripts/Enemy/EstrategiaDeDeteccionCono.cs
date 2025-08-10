@@ -16,14 +16,26 @@ public class EstrategiaDeDeteccionCono : IEstrategiaDeDeteccion
     public bool Ejecutar(Transform player, Transform detector, Temporizador temporizador)
     {
         if (temporizador.EstaCorriendo) return false;
-        
+
         var direccionAJugador = player.position - detector.position;
+        var distancia = direccionAJugador.magnitude;
         var anguloAJugador = Vector3.Angle(direccionAJugador, detector.forward);
-        
-        if (!(anguloAJugador <= _angulo / 2f) || !(direccionAJugador.magnitude < _radioInternoDeDeteccion) && !(direccionAJugador.magnitude < _radio))
-            return false;
-        
-        temporizador.Empezar();
-        return true;
+
+        // Si está en el radio interno, detectar siempre
+        if (distancia <= _radioInternoDeDeteccion)
+        {
+            temporizador.Empezar();
+            return true;
+        }
+
+        // Si no está en el radio interno, comprobar cono de visión
+        if (distancia <= _radio && anguloAJugador <= _angulo / 2f)
+        {
+            temporizador.Empezar();
+            return true;
+        }
+
+        return false;
     }
+
 }

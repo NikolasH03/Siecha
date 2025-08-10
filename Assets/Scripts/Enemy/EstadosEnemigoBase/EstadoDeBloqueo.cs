@@ -15,8 +15,9 @@ public class EstadoDeBloqueo : EstadoBase
     public override void OnEnter()
     {
         Debug.Log("Bloqueo!!!");
-        animator.CrossFade(BlockHash, duracionTransicion);
         vidaEnemigo.setBloqueado(true);
+        animator.CrossFade(BlockHash, duracionTransicion);
+        vidaEnemigo.ConsumirStaminaPorBloqueo();
     }
 
     public override void Update()

@@ -7,7 +7,7 @@ public class DetectarJugador : MonoBehaviour
     [Header("Ajustes de Detección de Jugador")]
     [SerializeField] private float anguloDeDeteccion = 60f; //cono de visión del enemigo
     [SerializeField] float radioDeDeteccion = 15f; //este valor debe ser el mismo del rango de patrulla del enemigo
-    [SerializeField] private float radioDeDeteccionAutomatica = 5f;
+    [SerializeField] private float radioDeDeteccionAutomatica = 10f;
     [SerializeField] private float rangoDeAtaque = 3f;
     [SerializeField] private float tiempoPorDeteccion = 1f;
     

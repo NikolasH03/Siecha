@@ -90,6 +90,8 @@ public class Enemigo : MonoBehaviour
 
         var estadoEsquivarAtaques =
             new EstadoDeEsquivar(this, animator, agent, vidaEnemigo, distanciaEsquivar, velocidadEsquivar);
+
+        var estadoRompeGuardia = new EstadoRomperGuardia(this, animator, agent, vidaEnemigo);
         
         // Transiciones entre estados de Patrulla, Persecución y Ataque
         Desde(estadoPatrulla, estadoSeguir, new FuncPredicate(() => detectarJugador.SePuedeDetectarAlJugador()));
@@ -135,6 +137,10 @@ public class Enemigo : MonoBehaviour
         
         Desde(estadoBloqueo, estadoPatrulla, new FuncPredicate(() =>
             !JugadorEstaAtacando() && !detectarJugador.SePuedeDetectarAlJugador()));
+        
+        // Estado de guardia rota
+        Desde(estadoBloqueo, estadoRompeGuardia, new FuncPredicate(() => vidaEnemigo.EnGuardBreak));
+        
         //
         
         // // Entra al estado de Esquivar ataques desde cualquier estado
@@ -159,6 +165,8 @@ public class Enemigo : MonoBehaviour
     {
         maquinaDeEstados.Update();
         tempParaAtaques.Tick(Time.deltaTime);
+        vidaEnemigo.TickTimers(Time.deltaTime);
+        vidaEnemigo.RegenerarStamina(Time.deltaTime);
     }
 
     void FixedUpdate()
@@ -194,19 +202,15 @@ public class Enemigo : MonoBehaviour
         bool estaEnRango = distancia <= rangoDeBloqueo;
         bool jugadorAtacando = ataquesDeJugador.getAtacando();
 
-        if (jugadorAtacando && estaEnRango)
-        {
-            if (!intentoBloquear)
-            {
-                intentoBloquear = true;
-                return Random.value <= probabilidadDeBloqueo;
-            }
-        }
-        else
-        {
-            intentoBloquear = false;
-        }
-
-        return false;
+        // Bloquear solo si:
+        // 1. Está en rango
+        // 2. El jugador ataca
+        // 3. El enemigo ya recibió los golpes necesarios para bloquear
+        // 4. No está en guard break
+        return jugadorAtacando && estaEnRango && vidaEnemigo.DebeBloquear() && !vidaEnemigo.EnGuardBreak;
     }
+
+
+
+
 }
