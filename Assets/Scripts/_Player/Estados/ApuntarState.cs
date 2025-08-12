@@ -15,7 +15,9 @@ public class ApuntarState : CombatState
     {
         combatController.anim.SetTrigger("Apuntar");
         apuntado.TransicionarLayerPeso(1, 1f, 0.2f);
- 
+        combatController.CambiarMovimientoCanMove(true);
+
+
     }
 
     public override void HandleInput()
@@ -53,6 +55,7 @@ public class ApuntarState : CombatState
         
         saltarTransicionLayer = false;
         apuntado.SetEstaApuntando(false);
-        
+
+
     }
 }

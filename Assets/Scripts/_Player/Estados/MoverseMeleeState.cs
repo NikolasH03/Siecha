@@ -33,11 +33,6 @@ public class MoverseMeleeState : CombatState
         }
 
         // otros inputs que puede hacer
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
-
         if (InputJugador.instance.cambiarArmaDistancia)
         {
             combatController.CambiarArmaDistancia();
@@ -64,6 +59,14 @@ public class MoverseMeleeState : CombatState
             combatController.DesactivarVentanaCombo();
             stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
             return;
+        }
+        if (InputJugador.instance.atacarLigero && combatController.anim.GetBool("running"))
+        {
+            combatController.inputBufferCombo = TipoInputCombate.CorriendoLigero;
+        }
+        if (InputJugador.instance.atacarFuerte && combatController.anim.GetBool("running"))
+        {
+            combatController.inputBufferCombo = TipoInputCombate.CorriendoFuerte;
         }
 
         if (InputJugador.instance.atacarLigero && !combatController.anim.GetBool("running"))
@@ -124,6 +127,15 @@ public class MoverseMeleeState : CombatState
             case TipoInputCombate.Fuerte:
                 combatController.inputBufferCombo = TipoInputCombate.Ninguno;
                 stateMachine.ChangeState(new AtaqueFuerte1(stateMachine, combatController));
+                break;
+
+            case TipoInputCombate.CorriendoLigero:
+                combatController.inputBufferCombo = TipoInputCombate.Ninguno;
+                stateMachine.ChangeState(new AtaqueCorriendoLigero(stateMachine, combatController));
+                break;
+            case TipoInputCombate.CorriendoFuerte:
+                combatController.inputBufferCombo = TipoInputCombate.Ninguno;
+                stateMachine.ChangeState(new AtaqueCorriendoFuerte(stateMachine, combatController));
                 break;
 
             default:

@@ -225,11 +225,8 @@ public class ControladorCombate : MonoBehaviour
     }
     public void TerminarEstadoDano()
     {
-        controladorMovimiento.GetComponent<Collider>().enabled = true;
-        controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
-        controladorMovimiento.setCanMove(true);
+        gameObject.layer = normalLayerIndex;
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
-
     }
     public void TerminarEstadoDanoBloqueando()
     {

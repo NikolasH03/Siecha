@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 public class ResolutionController : MonoBehaviour
 {
@@ -8,16 +9,15 @@ public class ResolutionController : MonoBehaviour
     public Toggle fullscreenToggle;
 
     private Resolution[] resolutions;
-    private int currentResolutionIndex = 0;
 
     void Start()
     {
         resolutions = Screen.resolutions;
         resolutionDropdown.ClearOptions();
 
-        int savedResolutionIndex = 0;
+        int currentResolutionIndex = 0;
 
-        var options = new System.Collections.Generic.List<string>();
+        List<string> options = new List<string>();
         for (int i = 0; i < resolutions.Length; i++)
         {
             string option = resolutions[i].width + " x " + resolutions[i].height;

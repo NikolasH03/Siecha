@@ -19,7 +19,7 @@ public class IdleMeleeState : CombatState
     }
     public override void HandleInput()
     {
-        if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        if (InputJugador.instance.moverse.sqrMagnitude > 0.5f)
         {
 
             stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));

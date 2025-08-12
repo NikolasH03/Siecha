@@ -16,7 +16,7 @@ public class AtaqueFuerte1 : CombatState
     }
     public override void HandleInput()
     {
-        if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
+        if (InputJugador.instance.esquivar)
         {
             combatController.DesactivarVentanaCombo();
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
@@ -75,7 +75,6 @@ public class AtaqueFuerte1 : CombatState
     }
     public override void Update()
     {
-
         if (comboDetectado) return;
 
         switch (combatController.inputBufferCombo)

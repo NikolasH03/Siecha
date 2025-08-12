@@ -13,7 +13,6 @@ public class MuerteTemporalState : CombatState
 
         combatController.GetComponent<Collider>().enabled = false;
         combatController.GetComponent<Rigidbody>().isKinematic = true;
-        combatController.CambiarMovimientoCanMove(false);
 
         tiempoActual = 0f;
 

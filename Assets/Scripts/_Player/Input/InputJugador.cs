@@ -7,7 +7,7 @@ public class InputJugador : MonoBehaviour
     public static InputJugador instance;
 
     private PlayerInput playerInput;
-    public Vector2 moverse { get; private set; }
+    public Vector2 moverse; /*{ get; private set; }*/
     public Vector2 mirar { get; private set; }
 
     public bool correr { get; private set; }

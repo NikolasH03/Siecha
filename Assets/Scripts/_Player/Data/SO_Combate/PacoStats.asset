@@ -16,3 +16,5 @@ MonoBehaviour:
   estaminaBase: 30
   danoBase: 10
   curacionEstamina: 5
+  maxAtaquesLigeros: 5
+  maxAtaquesFuertes: 4

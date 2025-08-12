@@ -11,7 +11,6 @@ public class EsquivaState : CombatState
         combatController.anim.SetBool("dashing", true);
         combatController.anim.SetTrigger("Esquiva");
         combatController.InvulneravilidadJugador();
-        combatController.anim.SetBool("running", false);
         AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_combate);
     }
 
