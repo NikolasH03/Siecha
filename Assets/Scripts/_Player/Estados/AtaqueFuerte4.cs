@@ -9,11 +9,12 @@ public class AtaqueFuerte4 : CombatState
     {
         combatController.tipoAtaque = "fuerte";
         combatController.OrientarJugador();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Fuerte4");
         combatController.setAtacando(true);
     }
     public override void Exit()
     {
-        combatController.setAtacando(false);
+        combatController.TerminarInvulnerabilidad();
     }
 }

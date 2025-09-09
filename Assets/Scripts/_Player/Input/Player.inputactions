@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "AbrirMenuPausa",
+                    "type": "Button",
+                    "id": "081bf024-f80d-43b9-856d-f068ae9d9ac1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Mirar",
                     "type": "Value",
                     "id": "a0d1e451-fc17-406c-8871-d03f3137daee",
@@ -47,13 +56,22 @@
                     "id": "6189bc37-3898-4375-9280-e854fe961fc2",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap(pressPoint=0.8),Hold(duration=1,pressPoint=0.8)",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Recargar",
                     "type": "Button",
                     "id": "add5b8de-4551-4832-97a1-965a6da8aacb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interactuar",
+                    "type": "Button",
+                    "id": "60aca047-dc9a-4503-9371-c3a4776f49ef",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -373,6 +391,50 @@
                     "action": "CambiarProtagonista",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bae026ca-ec7a-4d78-a113-e7173462125f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Interactuar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9cbc40e0-0fdc-48d9-8241-49d1beb3b957",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "Interactuar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e284c783-8cab-43f0-8919-56a45eb33478",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "AbrirMenuPausa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3917e2b6-3190-4d84-8f3d-6f28c8b8db2c",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "AbrirMenuPausa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -413,7 +475,7 @@
                     "id": "addc9f4f-17bf-4c35-8a5b-308bc30bd91a",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Tap(pressPoint=0.8),Hold(duration=1,pressPoint=0.8)",
                     "initialStateCheck": false
                 },
                 {
@@ -439,6 +501,24 @@
                     "type": "PassThrough",
                     "id": "1033e655-2ffc-4e68-a1d3-466ce3edd7e6",
                     "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Interactuar",
+                    "type": "Button",
+                    "id": "be71b761-c21f-4c11-b4b7-0b920c15f712",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "AbrirMenuPausa",
+                    "type": "Button",
+                    "id": "96013c8e-fa37-4db5-a8e9-0ae7c4d2b9e5",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -746,6 +826,50 @@
                     "processors": "",
                     "groups": "Console",
                     "action": "CambiarProtagonista",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "99224e02-7af3-4ac4-8a86-741fa369c689",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "Interactuar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f102cf0-7ce0-4934-91b2-ace9e76e4cd7",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "Interactuar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "41a6aef7-76d2-45bc-a469-7815b71210f5",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "AbrirMenuPausa",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2936df88-6067-4e83-8e45-7f8c18b7b3cd",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "AbrirMenuPausa",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

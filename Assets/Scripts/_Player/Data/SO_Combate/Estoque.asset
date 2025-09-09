@@ -15,6 +15,7 @@ MonoBehaviour:
   nombre: Estoque
   "da\xF1oGolpeFuerte": 8
   "da\xF1oGolpeLigero": 4
+  "da\xF1oGolpeCargado": 12
   "da\xF1oGolpeFuerteGuardia": 4
   "da\xF1oGolpeLigeroGuardia": 2
   prefabArmaPrincipal: {fileID: 422111958330211089, guid: 58b8a663f441f04468094a9205298dd6, type: 3}

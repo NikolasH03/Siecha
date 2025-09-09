@@ -13,9 +13,11 @@ public class DanoBloqueandoState : CombatState
         if (combatController.stats.EstaminaActual <= 0)
         {
             stateMachine.ChangeState(new PerderGuardiaState(stateMachine, combatController));
+            return;
         }
         combatController.OrientarJugador();
         combatController.anim.SetTrigger("DanoBloqueando");
+        combatController.ReproducirVFX(0, 0);
         combatController.EmpezarRegeneracionEstamina();
 
     }

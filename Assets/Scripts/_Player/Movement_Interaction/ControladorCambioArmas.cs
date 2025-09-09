@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ControladorCambioArmas : MonoBehaviour
 {
-    private List<GameObject> armasMelee;
+    public List<GameObject> armasMelee;
     [SerializeField] private GameObject armaDistancia;
-    private int numeroArma;
+    public int numeroArma;
 
     private ControladorCombate controladorCombate;
     private void Awake()

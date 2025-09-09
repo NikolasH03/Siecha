@@ -10,10 +10,15 @@ public class HealthbarEnemigo : MonoBehaviour
     [SerializeField] Image imagenBarraVida;
     [SerializeField] bool EnemigoMuerto;
     [SerializeField] bool RecibiendoDaño;
+    [SerializeField] GameObject BarraVidaUI;
+    [SerializeField] GameObject FinisherUI;
+    public bool enemigoBloqueando = false;
+    public bool enemigoStunned = false;
     public void Start()
     {
         vidaActual = vidaMax;
         EnemigoMuerto = false;
+        FinisherUI.SetActive(false);
     }
 
     public void Update()
@@ -40,6 +45,11 @@ public class HealthbarEnemigo : MonoBehaviour
 
             }
 
+        }
+        if (enemigoStunned)
+        {
+            BarraVidaUI.SetActive(false);
+            FinisherUI.SetActive(true);
         }
             
 

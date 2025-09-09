@@ -6,9 +6,10 @@ public class InventarioEconomia : MonoBehaviour
 {
 
     public static InventarioEconomia instance;
-
+    [SerializeField] UIEconomia uiEconomia;
     
-    [SerializeField] private int dinero = 0;
+    private int dineroPaco = 0;
+    private int dineroTisqa = 0;
 
     private void Awake()
     {
@@ -23,24 +24,26 @@ public class InventarioEconomia : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
 
     public int getDinero()
     {
-        return dinero;
-    }
-    public void setDinero(int cont)
-    {
-        dinero = cont;
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { return dineroTisqa; }
+        else { return dineroPaco; }      
     }
     public void AumentarDinero(int cont)
     {
-        dinero += cont;
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { dineroTisqa += cont; }
+        else { dineroPaco += cont; }
+
+        uiEconomia.RefrescarUI();
     }
     public void RestarDinero(int cont)
     {
-        dinero -= cont;
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { dineroTisqa -= cont; }
+        else { dineroPaco -= cont; }
+
+        uiEconomia.RefrescarUI();
     }
 
 

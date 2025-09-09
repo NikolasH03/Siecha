@@ -10,6 +10,7 @@ public class Combo3 : CombatState
     {
         combatController.tipoAtaque = "fuerte";
         combatController.OrientarJugador();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Combo3");
         combatController.setAtacando(true);
     }
@@ -17,5 +18,6 @@ public class Combo3 : CombatState
     public override void Exit()
     {
         combatController.setAtacando(false);
+        combatController.TerminarInvulnerabilidad();
     }
 }

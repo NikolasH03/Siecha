@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class MoverseDistanciaState : CombatState
 {
-    private Rigidbody rb;
     private Animator anim;
     private ControladorMovimiento movimiento;
 
     public MoverseDistanciaState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
     {
         movimiento = combatController.GetComponent<ControladorMovimiento>();
-        rb = combatController.GetComponent<Rigidbody>();
         anim = combatController.anim;
     }
 
@@ -33,13 +31,10 @@ public class MoverseDistanciaState : CombatState
         if (InputJugador.instance.cambiarArmaMelee)
         {
             combatController.CambiarArmaMelee();
+            InputJugador.instance.CambiarInputMelee();
+            stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
         }
 
-        if (combatController.VerificarArmaEquipada() == 1)
-        {
-            InputJugador.instance.CambiarInputMelee();
-            stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
-        }
         if (InputJugador.instance.cambiarProtagonista)
         {
             ControladorCambiarPersonaje.instance.CambiarProtagonista();

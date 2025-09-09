@@ -7,13 +7,14 @@ public class AtaqueLigero6 : CombatState
     {
         combatController.tipoAtaque = "ligero";
         combatController.OrientarJugador();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Ligero6");
         combatController.setAtacando(true);
     }
 
     public override void Exit()
     {
-        combatController.setAtacando(false);
+        combatController.TerminarInvulnerabilidad();
     }
 }
 

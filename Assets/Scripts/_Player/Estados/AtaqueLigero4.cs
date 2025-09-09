@@ -8,12 +8,15 @@ public class AtaqueLigero4 : CombatState
     {
         combatController.tipoAtaque = "ligero";
         combatController.OrientarJugador();
+        if (combatController.statsBase.maxAtaquesLigeros <= 4) combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Ligero4");
         combatController.setAtacando(true);
     }
     public override void HandleInput()
     {
         if (combatController.statsBase.maxAtaquesLigeros <= 4) return;
+
+        if (TryExecuteFinisher()) return;
 
         if (InputJugador.instance.esquivar)
         {
@@ -30,15 +33,23 @@ public class AtaqueLigero4 : CombatState
 
         if (!combatController.puedeHacerCombo) return;
 
-
-
-        if (InputJugador.instance.atacarLigero)
+        if (InputJugador.instance.AtaqueLigero)
         {
             combatController.inputBufferCombo = TipoInputCombate.Ligero;
         }
-        else if (InputJugador.instance.atacarFuerte)
+
+        if (InputJugador.instance.atacarFuerte)
         {
             combatController.inputBufferCombo = TipoInputCombate.Fuerte;
+        }
+
+        if (InputJugador.instance.holdStart)
+        {
+            stateMachine.ChangeState(new CargandoAtaque(stateMachine, combatController));
+        }
+        if (combatController.inputBufferCombo != TipoInputCombate.Ninguno)
+        {
+            combatController.secuenciaInputs.Add(combatController.inputBufferCombo);
         }
     }
     public override void Update()
@@ -66,7 +77,9 @@ public class AtaqueLigero4 : CombatState
 
     public override void Exit()
     {
-        combatController.setAtacando(false);
+        combatController.DesactivarTodosLosTrails();
+        combatController.DesactivarTodosLosCollider();
+        combatController.TerminarInvulnerabilidad();
     }
 }
 

@@ -8,7 +8,7 @@ public class LlaveColeccionable : MonoBehaviour
 
     public void Update()
     {
-        if (jugadorCerca && Input.GetKeyDown(KeyCode.E))
+        if (jugadorCerca && InputJugador.instance.Interactuar)
         {
             canvasInteractuar.SetActive(false);
             InventarioColeccionables.instance.Desbloquear(idColeccionable);

@@ -13,6 +13,8 @@ public class AtaqueLigero5 : CombatState
     }
     public override void HandleInput()
     {
+        if (TryExecuteFinisher()) return;
+
         if (InputJugador.instance.esquivar)
         {
             combatController.DesactivarVentanaCombo();
@@ -28,15 +30,23 @@ public class AtaqueLigero5 : CombatState
 
         if (!combatController.puedeHacerCombo) return;
 
-
-
-        if (InputJugador.instance.atacarLigero)
+        if (InputJugador.instance.AtaqueLigero)
         {
             combatController.inputBufferCombo = TipoInputCombate.Ligero;
         }
-        else if (InputJugador.instance.atacarFuerte)
+
+        if (InputJugador.instance.atacarFuerte)
         {
             combatController.inputBufferCombo = TipoInputCombate.Fuerte;
+        }
+
+        if (InputJugador.instance.holdStart)
+        {
+            stateMachine.ChangeState(new CargandoAtaque(stateMachine, combatController));
+        }
+        if (combatController.inputBufferCombo != TipoInputCombate.Ninguno)
+        {
+            combatController.secuenciaInputs.Add(combatController.inputBufferCombo);
         }
     }
     public override void Update()
@@ -63,7 +73,8 @@ public class AtaqueLigero5 : CombatState
 
     public override void Exit()
     {
-        combatController.setAtacando(false);
+        combatController.DesactivarTodosLosTrails();
+        combatController.DesactivarTodosLosCollider();
     }
 }
 

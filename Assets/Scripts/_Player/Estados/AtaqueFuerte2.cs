@@ -16,6 +16,8 @@ public class AtaqueFuerte2 : CombatState
     }
     public override void HandleInput()
     {
+        if (TryExecuteFinisher()) return;
+
         if (InputJugador.instance.esquivar)
         {
             combatController.DesactivarVentanaCombo();
@@ -31,14 +33,19 @@ public class AtaqueFuerte2 : CombatState
 
         if (!combatController.puedeHacerCombo) return;
 
-
-        if (InputJugador.instance.atacarLigero)
+        if (InputJugador.instance.AtaqueLigero)
         {
             combatController.inputBufferCombo = TipoInputCombate.Ligero;
         }
-        else if (InputJugador.instance.atacarFuerte)
+
+        if (InputJugador.instance.atacarFuerte)
         {
             combatController.inputBufferCombo = TipoInputCombate.Fuerte;
+        }
+
+        if (InputJugador.instance.holdStart)
+        {
+            stateMachine.ChangeState(new CargandoAtaque(stateMachine, combatController));
         }
 
         if (combatController.inputBufferCombo != TipoInputCombate.Ninguno)
@@ -101,6 +108,8 @@ public class AtaqueFuerte2 : CombatState
     public override void Exit()
     {
         comboDetectado = false;
-        combatController.setAtacando(false);
+        combatController.DesactivarTodosLosTrails();
+        combatController.DesactivarTodosLosCollider();
+
     }
 }

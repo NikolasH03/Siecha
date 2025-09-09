@@ -19,7 +19,6 @@ public class BloqueoState : CombatState
     {
         if (!InputJugador.instance.bloquear)
         {
-            combatController.GetComponent<Collider>().enabled = true;
             stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
         }
     }

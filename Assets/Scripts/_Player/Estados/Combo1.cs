@@ -10,6 +10,7 @@ public class Combo1 : CombatState
     {
         combatController.tipoAtaque = "fuerte";
         combatController.OrientarJugador();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Combo1");
         combatController.setAtacando(true);
     }
@@ -17,6 +18,7 @@ public class Combo1 : CombatState
     public override void Exit()
     {
         combatController.setAtacando(false);
+        combatController.TerminarInvulnerabilidad();
     }
 }
 

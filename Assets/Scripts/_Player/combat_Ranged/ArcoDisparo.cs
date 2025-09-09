@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArcoDisparo : MonoBehaviour
 {
     private Rigidbody proyectilRB;
-    private float velocidad = 50f;
+    private float velocidad = 150f;
     private HealthbarEnemigo enemigo;
     private ControladorCombate player;
     private void Awake()
