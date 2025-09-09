@@ -19,7 +19,7 @@ public class PausaUI : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (InputJugador.instance.AbrirMenuPausa)
         {
 
             if (!pausado)

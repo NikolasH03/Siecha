@@ -15,6 +15,8 @@ MonoBehaviour:
   nombre: Macana
   "da\xF1oGolpeFuerte": 5
   "da\xF1oGolpeLigero": 2
+  "da\xF1oGolpeCargado": 8
   "da\xF1oGolpeFuerteGuardia": 8
   "da\xF1oGolpeLigeroGuardia": 4
-  prefab: {fileID: 5256997645918239544, guid: 48599c11f7299be46ae52652367aaa9a, type: 3}
+  prefabArmaPrincipal: {fileID: 7851186996590361636, guid: 48599c11f7299be46ae52652367aaa9a, type: 3}
+  prefabArmaSecundaria: {fileID: 5738111807428807382, guid: 2eb92ea025a14864eb91b144038557b6, type: 3}

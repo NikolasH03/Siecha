@@ -1,8 +1,10 @@
+using Cinemachine;
 using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class ControladorCombate : MonoBehaviour
 {
@@ -11,14 +13,18 @@ public class ControladorCombate : MonoBehaviour
     //ataque
     [SerializeField] bool atacando = false;
     public string tipoAtaque;
-
     //bloqueo y dash
     [SerializeField] bool bloqueando = false;
 
     //intanciar arma melee
     [SerializeField] private ArmaData armaActual;
-    [SerializeField] private Transform puntoSujecion;
+    [SerializeField] private Transform puntoSujecionArmaPrincipal;
+    [SerializeField] private Transform puntoSujecionArmaSecundaria;
     private GameObject armaInstanciada;
+    private GameObject armaSecundariaInstanciada;
+    public ArmaVFX vfxPrincipal;
+    private ArmaVFX vfxSecundaria;
+    public CinemachineVirtualCamera camaraFinisher;
 
     //Daño del arma a distancia
     [SerializeField] private ArmaDistanciaData armaDistancia;
@@ -31,12 +37,13 @@ public class ControladorCombate : MonoBehaviour
     public Dictionary<string, Combo> combos;
 
     //colliders necesarios para generar daño
-    [SerializeField] Collider ColliderArma;
+    private Collider ColliderArma;
+    private Collider ColliderArmaSecundaria;
     [SerializeField] Collider ColliderPierna;
 
     //layers para invulnerabilidad en el dash
     private int normalLayerIndex;
-    private int esquivarLayerIndex;
+    private int InvulnerabilidadLayerIndex;
 
     //variables y referencias relacionadas con las barras de vida, estamina y numero de muertes
     public EstadisticasCombateSO statsBase;
@@ -66,12 +73,14 @@ public class ControladorCombate : MonoBehaviour
     {
         
         ColliderArma = armaInstanciada.GetComponent<Collider>();
+        ColliderArmaSecundaria = armaSecundariaInstanciada.GetComponent<Collider>();
 
         ColliderArma.enabled = false;
+        ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
 
         normalLayerIndex = LayerMask.NameToLayer("Default");
-        esquivarLayerIndex = LayerMask.NameToLayer("Esquivar");
+        InvulnerabilidadLayerIndex = LayerMask.NameToLayer("JugadorInvulnerable");
 
         anim = GetComponent<Animator>();
         controladorMovimiento = GetComponent<ControladorMovimiento>();
@@ -141,42 +150,98 @@ public class ControladorCombate : MonoBehaviour
         if (nuevaArma == null) return;
 
 
-        armaInstanciada = Instantiate(nuevaArma.prefab, puntoSujecion);
+        armaInstanciada = Instantiate(nuevaArma.prefabArmaPrincipal, puntoSujecionArmaPrincipal);
         armaInstanciada.transform.localPosition = Vector3.zero;
         armaInstanciada.transform.localRotation = Quaternion.identity;
         armaInstanciada.transform.localScale = Vector3.one;
 
+        armaSecundariaInstanciada = Instantiate(nuevaArma.prefabArmaSecundaria, puntoSujecionArmaSecundaria);
+        armaSecundariaInstanciada.transform.localPosition = Vector3.zero;
+        armaSecundariaInstanciada.transform.localRotation = Quaternion.identity;
+        armaSecundariaInstanciada.transform.localScale = Vector3.one;
+
+        vfxPrincipal = armaInstanciada.GetComponent<ArmaVFX>();
+        vfxSecundaria = armaSecundariaInstanciada.GetComponent<ArmaVFX>();
+
+        vfxPrincipal?.DesactivarTrail();
+        vfxSecundaria?.DesactivarTrail();
+
         armaActual = nuevaArma;
     }
 
-    public int EntregarDanoArmaMelee()
+    public int EntregarDañoArmaMelee(bool enemigoBloqueando)
     {
-        if (tipoAtaque == "ligero")
+        if (!enemigoBloqueando)
         {
-            CameraShakeManager.instance.ShakeGolpeLigero();
-            return armaActual.danoGolpeLigero;
-        }
-        else if (tipoAtaque == "fuerte")
-        {
-            CameraShakeManager.instance.ShakeGolpeFuerte();
-            return armaActual.danoGolpeFuerte;
+            if (tipoAtaque == "ligero")
+            {
+                CameraShakeManager.instance.ShakeGolpeLigero();
+                return armaActual.dañoGolpeLigero;
+            }
+            else if (tipoAtaque == "fuerte")
+            {
+                CameraShakeManager.instance.ShakeGolpeFuerte();
+                return armaActual.dañoGolpeFuerte;
+            }
+            else if (tipoAtaque == "cargado")
+            {
+                CameraShakeManager.instance.ShakeGolpeFuerte();
+                return armaActual.dañoGolpeCargado;
+            }
+            else
+            {
+                CameraShakeManager.instance.ShakeGolpeLigero();
+                return armaActual.dañoGolpeLigero;
+            }
         }
         else
         {
-            CameraShakeManager.instance.ShakeGolpeLigero();
-            return armaActual.danoGolpeLigero;
+            if (tipoAtaque == "ligero")
+            {
+                CameraShakeManager.instance.ShakeGolpeLigero();
+                return armaActual.dañoGolpeLigeroGuardia;
+            }
+            else if (tipoAtaque == "fuerte")
+            {
+                CameraShakeManager.instance.ShakeGolpeFuerte();
+                return armaActual.dañoGolpeFuerteGuardia;
+            }
+            else if (tipoAtaque == "cargado")
+            {
+                CameraShakeManager.instance.ShakeGolpeFuerte();
+                return armaActual.dañoGolpeCargado;
+            }
+            else
+            {
+                CameraShakeManager.instance.ShakeGolpeLigero();
+                return armaActual.dañoGolpeLigeroGuardia;
+            }
+        }
+    }
+    public HealthbarEnemigo DetectarEnemigoStunned(float rango)
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, rango, LayerMask.GetMask("Enemigo"));
+
+        foreach (var hit in hits)
+        {
+            var enemy = hit.GetComponent<HealthbarEnemigo>();
+            if (enemy != null && enemy.enemigoStunned)
+            {
+                return enemy;
+            }
         }
 
+        return null;
     }
 
-    public int EntregarDanoArmaDistancia()
+    public int EntregarDañoArmaDistancia()
     {
         if (tieneBufoDisparo)
         {
             tieneBufoDisparo = false;
-            return Mathf.RoundToInt(armaDistancia.danoDisparo * 1.5f);
+            return Mathf.RoundToInt(armaDistancia.dañoDisparo * 1.5f);
         }
-        return armaDistancia.danoDisparo;
+        return armaDistancia.dañoDisparo;
     }
     public void ActivarBufoDisparo()
     {
@@ -194,7 +259,7 @@ public class ControladorCombate : MonoBehaviour
         stats.RecibirDano(0);
         stats.UsarEstamina(0);
 
-        CambiarMovimientoCanMove(true);
+        CambiarCanMove(true);
 
         GetComponent<Collider>().enabled = true;
         GetComponent<Rigidbody>().isKinematic = false;
@@ -218,18 +283,18 @@ public class ControladorCombate : MonoBehaviour
     // funciones para los Animation Events
     public void VolverAIdle()
     {
-        puedeHacerCombo = false;
+        DesactivarVentanaCombo();
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
-        inputBufferCombo = TipoInputCombate.Ninguno;
-        LimpiarSecuenciaInputs();
+    }
+    public void TerminarAtaqueCargado()
+    {
+        DesactivarVentanaCombo();
+        fsm.ChangeState(new CooldownCargadoState(fsm, this, 0.5f));
     }
     public void TerminarEstadoDano()
     {
-        controladorMovimiento.GetComponent<Collider>().enabled = true;
-        controladorMovimiento.GetComponent<Rigidbody>().isKinematic = false;
-        controladorMovimiento.setCanMove(true);
+        gameObject.layer = normalLayerIndex;
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
-
     }
     public void TerminarEstadoDanoBloqueando()
     {
@@ -244,6 +309,10 @@ public class ControladorCombate : MonoBehaviour
     {
         fsm.ChangeState(new ApuntarState(fsm, this));
     }
+    public void EntrarCooldownDisparo()
+    {
+        fsm.ChangeState(new CooldownDisparoCargado(fsm, this, 0.5f));
+    }
     public void ActivarVentanaCombo()
     {
         puedeHacerCombo = true;
@@ -256,7 +325,7 @@ public class ControladorCombate : MonoBehaviour
     }
     public void InvulneravilidadJugador()
     {
-        gameObject.layer = esquivarLayerIndex;
+        gameObject.layer = InvulnerabilidadLayerIndex;
     }
     public void TerminarDash()
     {
@@ -277,12 +346,27 @@ public class ControladorCombate : MonoBehaviour
     {
         ColliderArma.enabled = false;
     }
+    public void activarColliderArmaSecundaria()
+    {
+        ColliderArmaSecundaria.enabled = true;
+    }
+    public void desactivarColliderArmaSecundaria()
+    {
+        ColliderArmaSecundaria.enabled = false;
+    }
     public void activarColliderPierna()
     {
         ColliderPierna.enabled = true;
     }
     public void desactivarColliderPierna()
     {
+        ColliderPierna.enabled = false;
+    }
+
+    public void DesactivarTodosLosCollider()
+    {
+        ColliderArma.enabled = false;
+        ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
     }
     public void AnimationEvent_ReproducirPieIzq(int indexVFX)
@@ -301,7 +385,29 @@ public class ControladorCombate : MonoBehaviour
         eventosAnimacion.ReproducirVFX(indexVFX, 0);
         eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 0);
     }
+    public void ActivarTrailArmaPrincipal()
+    {
+        vfxPrincipal?.ActivarTrail();
+    }
+    public void DesactivarTrailArmaPrincipal()
+    {
+        vfxPrincipal?.DesactivarTrail();
+    }
 
+    public void ActivarTrailArmaSecundaria()
+    {
+        vfxSecundaria?.ActivarTrail();
+    }
+    public void DesactivarTrailArmaSecundaria()
+    {
+        vfxSecundaria?.DesactivarTrail();
+    }
+
+    public void DesactivarTodosLosTrails()
+    {
+        vfxPrincipal?.DesactivarTrail();
+        vfxSecundaria?.DesactivarTrail();
+    }
 
 
     //prueba para el arbol de habilidades
@@ -333,16 +439,20 @@ public class ControladorCombate : MonoBehaviour
     {
         bloqueando = block;
     }
-    public GameObject getArmaActual()
+    public List<GameObject> getArmaActual()
     {
-        return armaInstanciada;
+        List<GameObject> armas = new List<GameObject>();
+        armas.Add(armaInstanciada);
+        armas.Add(armaSecundariaInstanciada);
+
+        return armas;
     }
     public int getLayerDodge()
     {
-        return esquivarLayerIndex;
+        return InvulnerabilidadLayerIndex;
     }
 
-    public void CambiarMovimientoCanMove(bool puedeMov)
+    public void CambiarCanMove(bool puedeMov)
     {
         controladorMovimiento.setCanMove(puedeMov);
     }

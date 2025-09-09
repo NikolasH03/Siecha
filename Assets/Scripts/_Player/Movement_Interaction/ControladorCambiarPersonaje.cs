@@ -13,8 +13,6 @@ public class ControladorCambiarPersonaje : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera camaraApuntado;
     [SerializeField] private GameObject HUDMuisca;
     [SerializeField] private GameObject HUDEspanol;
-    private ControladorCombate controladorMuisca;
-    private ControladorCombate controladorEspanol;
     private Transform objetivoCamaraMuisca;
     private Transform objetivoCamaraEspanol;
 
@@ -32,9 +30,6 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        controladorMuisca = muisca.GetComponent<ControladorCombate>();
-        controladorEspanol = espanol.GetComponent<ControladorCombate>();
 
         objetivoCamaraMuisca = muisca.transform.Find("camaraTarget");
         objetivoCamaraEspanol = espanol.transform.Find("camaraTarget");

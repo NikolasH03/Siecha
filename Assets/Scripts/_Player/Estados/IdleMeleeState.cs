@@ -16,10 +16,13 @@ public class IdleMeleeState : CombatState
         combatController.anim.SetFloat("Vely", 0);
         combatController.anim.SetBool("running", false);
         combatController.setAtacando(false);
+        combatController.DesactivarVentanaCombo();
+        combatController.DesactivarTodosLosTrails();
+        combatController.DesactivarTodosLosCollider();
     }
     public override void HandleInput()
     {
-        if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        if (InputJugador.instance.moverse.sqrMagnitude > 0.5f)
         {
 
             stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
@@ -30,12 +33,9 @@ public class IdleMeleeState : CombatState
         if (InputJugador.instance.cambiarArmaDistancia)
         {
             combatController.CambiarArmaDistancia();
+            stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
-        if (combatController.VerificarArmaEquipada() == 2)
-        {
-            InputJugador.instance.CambiarInputDistancia();
-            stateMachine.ChangeState(new IdleDistanciaState(stateMachine, combatController));
-        }
+
         if (InputJugador.instance.cambiarProtagonista)
         {
             ControladorCambiarPersonaje.instance.CambiarProtagonista();
@@ -55,46 +55,25 @@ public class IdleMeleeState : CombatState
             return;
         }
 
-        if (InputJugador.instance.atacarLigero && !combatController.anim.GetBool("running"))
+        if (TryExecuteFinisher()) return;
+
+        if (InputJugador.instance.AtaqueLigero && !combatController.anim.GetBool("running"))
         {
             combatController.inputBufferCombo = TipoInputCombate.Ligero;
         }
-        else if (InputJugador.instance.atacarFuerte && !combatController.anim.GetBool("running"))
+        if (InputJugador.instance.atacarFuerte && !combatController.anim.GetBool("running"))
         {
             combatController.inputBufferCombo = TipoInputCombate.Fuerte;
+        }
+        if (InputJugador.instance.holdStart && !combatController.anim.GetBool("running"))
+        {
+            stateMachine.ChangeState(new CargandoAtaque(stateMachine, combatController));
         }
 
         if (combatController.inputBufferCombo != TipoInputCombate.Ninguno)
         {
             combatController.secuenciaInputs.Add(combatController.inputBufferCombo);
-            VerificarCombo();
         }
-    }
-    private void VerificarCombo()
-    {
-        if (combatController.secuenciaInputs.Count < 3) return;
-
-        foreach (var combo in combatController.combos.Values)
-        {
-            if (SecuenciaCoincide(combo.secuencia, combatController.secuenciaInputs))
-            {
-                comboDetectado = true;
-                stateMachine.ChangeState(combo.crearEstado(stateMachine, combatController));
-                combatController.LimpiarSecuenciaInputs();
-                return;
-            }
-        }
-    }
-    private bool SecuenciaCoincide(List<TipoInputCombate> a, List<TipoInputCombate> b)
-    {
-        if (a.Count != b.Count) return false;
-
-        for (int i = 0; i < a.Count; i++)
-        {
-            if (a[i] != b[i]) return false;
-        }
-
-        return true;
     }
     public override void Update()
     {

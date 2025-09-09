@@ -14,6 +14,7 @@ public class RecargarState : CombatState
 
     public override void Enter()
     {
+
         combatController.anim.SetTrigger("Recarga");
 
         if (!ControladorCambiarPersonaje.instance.getEsMuisca())
@@ -40,5 +41,9 @@ public class RecargarState : CombatState
     public override void Exit()
     {
         combatController.anim.speed = 1f;
+        apuntado.TransicionarLayerPeso(1, 0f, 0.2f);
+        apuntado.NoEstaApuntando();
+        combatController.CambiarCanMove(false);
+
     }
 }

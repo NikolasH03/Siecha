@@ -4,10 +4,7 @@ using UnityEngine;
 public class IdleDistanciaState : CombatState
 {
 
-    public IdleDistanciaState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
-    {
-
-    }
+    public IdleDistanciaState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
 
     public override void Enter()
     {
@@ -23,20 +20,16 @@ public class IdleDistanciaState : CombatState
         if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
         {
 
-                stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
-                return;
+            stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
+            return;
         }
 
         if (InputJugador.instance.cambiarArmaMelee)
         {
             combatController.CambiarArmaMelee();
+            stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
 
-        if (combatController.VerificarArmaEquipada() == 1)
-        {
-            InputJugador.instance.CambiarInputMelee();
-            stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
-        }
         if (InputJugador.instance.cambiarProtagonista)
         {
             ControladorCambiarPersonaje.instance.CambiarProtagonista();

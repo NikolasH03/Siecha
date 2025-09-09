@@ -5,14 +5,19 @@ using TMPro;
 
 public class UIEconomia : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI dineroUI;
+    [SerializeField] TextMeshProUGUI dineroPacoUI;
+    [SerializeField] TextMeshProUGUI dineroTisqaUI;
     void Start()
     {
-        dineroUI.text = InventarioEconomia.instance.getDinero().ToString();
+        dineroTisqaUI.text = InventarioEconomia.instance.getDinero().ToString();
+        dineroPacoUI.text = InventarioEconomia.instance.getDinero().ToString();
     }
 
-    void Update()
+    public void RefrescarUI()
     {
-        dineroUI.text = InventarioEconomia.instance.getDinero().ToString();
+        if (ControladorCambiarPersonaje.instance.getEsMuisca())
+            dineroTisqaUI.text = InventarioEconomia.instance.getDinero().ToString();
+        else
+            dineroPacoUI.text = InventarioEconomia.instance.getDinero().ToString();
     }
 }

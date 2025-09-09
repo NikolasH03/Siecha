@@ -19,7 +19,7 @@ public class TotemMejora : MonoBehaviour
     {
         if (yaUsoTotem) return;
 
-        if (jugadorCerca && Input.GetKeyDown(KeyCode.E))
+        if (jugadorCerca && InputJugador.instance.Interactuar)
         {
             canvasUI.SetActive(true);
             HUDJugador.SetActive(false);
