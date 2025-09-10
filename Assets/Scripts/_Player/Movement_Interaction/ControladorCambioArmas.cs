@@ -21,6 +21,8 @@ public class ControladorCambioArmas : MonoBehaviour
 
     public void CambiarArmaMelee()
     {
+        //Debug.Log($"Cambiando a arma melee en {gameObject.name}");
+
         SetListaActiva(armasMelee, true);
         armaDistancia.SetActive(false);
         numeroArma = 1;
@@ -28,6 +30,8 @@ public class ControladorCambioArmas : MonoBehaviour
 
     public void CambiarArmaDistancia()
     {
+        //Debug.Log($"Cambiando a arma distancia en {gameObject.name}");
+
         SetListaActiva(armasMelee, false);
         armaDistancia.SetActive(true);
         numeroArma = 2;
@@ -39,6 +43,7 @@ public class ControladorCambioArmas : MonoBehaviour
     }
     private void SetListaActiva(List<GameObject> lista, bool estado)
     {
+
         foreach (GameObject arma in lista)
         {
             if (arma != null)

@@ -18,6 +18,7 @@ public class FinisherState : CombatState
 
         combatController.camaraFinisher.gameObject.SetActive(true);
         combatController.camaraFinisher.LookAt = target.transform;
+        combatController.camaraFinisher.Follow = target.transform;
 
         combatController.transform.position = target.transform.position + (-target.transform.forward * 2f);
         combatController.transform.LookAt(target.transform.position);

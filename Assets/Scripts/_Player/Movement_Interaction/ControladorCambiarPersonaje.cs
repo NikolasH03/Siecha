@@ -55,7 +55,7 @@ public class ControladorCambiarPersonaje : MonoBehaviour
             activarEspanol();
             enemigos.ActualizarJugador();
         }
-
+        SincronizarInputConPersonajeActivo();
     }
     public void activarMuisca()
     {
@@ -84,7 +84,26 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         esMuisca = false;
     }
+    private void SincronizarInputConPersonajeActivo()
+    {
+        GameObject personajeActivo = esMuisca ? muisca : espanol;
+        ControladorCambioArmas controladorArmas = personajeActivo.GetComponent<ControladorCambioArmas>();
 
+        if (controladorArmas != null)
+        {
+            int armaActual = controladorArmas.getterArma();
+            //Debug.Log($"Sincronizando input para {(esMuisca ? "Muisca" : "Español")} - Arma: {armaActual}");
+
+            if (armaActual == 1)
+            {
+                InputJugador.instance.CambiarInputMelee();
+            }
+            else if (armaActual == 2)
+            {
+                InputJugador.instance.CambiarInputDistancia();
+            }
+        }
+    }
     public bool getEsMuisca()
     {
         return esMuisca;
