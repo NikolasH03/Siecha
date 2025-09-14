@@ -14,11 +14,7 @@ public class IdleMeleeState : CombatState
         combatController.anim.Play("movimiento Basico");
         combatController.anim.SetFloat("Velx", 0);
         combatController.anim.SetFloat("Vely", 0);
-        combatController.anim.SetBool("running", false);
-        combatController.setAtacando(false);
-        combatController.DesactivarVentanaCombo();
-        combatController.DesactivarTodosLosTrails();
-        combatController.DesactivarTodosLosCollider();
+        combatController.ResetCompleto();
     }
     public override void HandleInput()
     {

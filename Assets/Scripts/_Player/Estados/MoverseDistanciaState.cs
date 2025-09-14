@@ -40,14 +40,24 @@ public class MoverseDistanciaState : CombatState
             ControladorCambiarPersonaje.instance.CambiarProtagonista();
         }
 
-        if (InputJugador.instance.apuntar)
+        if (InputJugador.instance.apuntar && !anim.GetBool("running"))
         {
             stateMachine.ChangeState(new ApuntarState(stateMachine, combatController));
         }
-        else if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
+        else if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing") && !anim.GetBool("running"))
         {
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
             return;
+        }
+        if (InputJugador.instance.correr)
+        {
+            anim.SetBool("running", true);
+            movimiento.CambiarVelocidad(true);
+        }
+        if (!InputJugador.instance.correr)
+        {
+            anim.SetBool("running", false);
+            movimiento.CambiarVelocidad(false);
         }
     }
 

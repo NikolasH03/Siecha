@@ -65,5 +65,16 @@ public class MinijuegoRecargaUI : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+    public void CancelarMinijuego()
+    {
+        if (!activo) return;
+
+        Debug.Log("Minijuego de recarga cancelado");
+        activo = false;
+
+        OnFinRecarga = null;
+
+        gameObject.SetActive(false);
+    }
 }
 

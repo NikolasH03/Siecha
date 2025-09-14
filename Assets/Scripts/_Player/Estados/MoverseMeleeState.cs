@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MoverseMeleeState : CombatState
@@ -56,6 +57,16 @@ public class MoverseMeleeState : CombatState
             combatController.DesactivarVentanaCombo();
             stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
             return;
+        }
+        if (InputJugador.instance.correr)
+        {
+            anim.SetBool("running", true);
+            movimiento.CambiarVelocidad(true);
+        }
+        if (!InputJugador.instance.correr)
+        {
+            anim.SetBool("running", false);
+            movimiento.CambiarVelocidad(false);
         }
 
         if (TryExecuteFinisher()) return;

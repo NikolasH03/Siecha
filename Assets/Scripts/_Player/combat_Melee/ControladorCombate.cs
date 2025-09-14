@@ -79,7 +79,7 @@ public class ControladorCombate : MonoBehaviour
         ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
 
-        normalLayerIndex = LayerMask.NameToLayer("Default");
+        normalLayerIndex = LayerMask.NameToLayer("Player");
         InvulnerabilidadLayerIndex = LayerMask.NameToLayer("JugadorInvulnerable");
 
         anim = GetComponent<Animator>();
@@ -136,6 +136,12 @@ public class ControladorCombate : MonoBehaviour
         }
         else
         {
+            if (fsm.GetCurrentState() is RecargarState recargarState)
+            {
+                recargarState.MarcarComoInterrumpido();
+            }
+
+            ResetCompleto();
             fsm.ChangeState(new DanoState(fsm, this));
         }
     }
@@ -307,7 +313,22 @@ public class ControladorCombate : MonoBehaviour
     }
     public void TerminarEstadoRecarga()
     {
-        fsm.ChangeState(new ApuntarState(fsm, this));
+        anim.speed = 1f;
+
+        if (InputJugador.instance.apuntar)
+        {
+            fsm.ChangeState(new ApuntarState(fsm, this));
+        }
+        else if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        {
+            ResetCompleto();
+            fsm.ChangeState(new MoverseDistanciaState(fsm, this));
+        }
+        else
+        {
+            ResetCompleto();
+            fsm.ChangeState(new IdleDistanciaState(fsm, this));
+        }
     }
     public void EntrarCooldownDisparo()
     {
@@ -336,7 +357,34 @@ public class ControladorCombate : MonoBehaviour
     {
         gameObject.layer = normalLayerIndex;
     }
+    public void ResetCompleto()
+    {
+        // Ataques/Combate
+        DesactivarVentanaCombo();
+        DesactivarTodosLosTrails();
+        DesactivarTodosLosCollider();
+        setAtacando(false);
+        inputBufferCombo = TipoInputCombate.Ninguno;
+        puedeHacerCombo = false;
 
+        // Apuntado/Distancia
+        ControladorApuntado apuntado = GetComponent<ControladorApuntado>();
+        if (apuntado != null)
+        {
+            apuntado.TransicionarLayerPeso(1, 0f, 0.1f);
+            apuntado.NoEstaApuntando();
+            apuntado.SetEstaApuntando(false);
+            apuntado.CancelarMinijuegoRecarga();
+        }
+
+        CambiarCanMove(false);
+
+        // Animador
+        anim.speed = 1f;
+        anim.SetBool("running", false);
+        anim.SetBool("dashing", false);
+        bloqueando = false;
+    }
 
     public void activarColliderArma()
     {

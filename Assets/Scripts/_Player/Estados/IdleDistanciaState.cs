@@ -11,8 +11,7 @@ public class IdleDistanciaState : CombatState
         combatController.anim.Play("movimientoArmaDistancia");
         combatController.anim.SetFloat("Velx", 0);
         combatController.anim.SetFloat("Vely", 0);
-        combatController.anim.SetBool("running", false);
-        combatController.setAtacando(false);
+        combatController.ResetCompleto();
     }
 
     public override void HandleInput()
