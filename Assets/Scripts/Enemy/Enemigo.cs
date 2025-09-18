@@ -183,6 +183,7 @@ public class Enemigo : MonoBehaviour
     //Métodos para el EnemyManager.cs
     public bool EstaDisponibleParaAtacar() => disponibleParaAtacar && !vidaEnemigo.EstaMuerto;
     public bool EstaAtacando() => atacando;
+    public bool EstaMuerto() => vidaEnemigo != null && vidaEnemigo.EstaMuerto;
     
     public void OrdenarAtacar()
     {

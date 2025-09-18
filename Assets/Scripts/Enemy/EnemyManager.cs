@@ -25,29 +25,29 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
-        // Esperar un frame para dar tiempo a que todos los enemigos terminen su Start
         StartCoroutine(IniciarDespuesDeUnFrame());
     }
+
     public void ActualizarJugador()
     {
         foreach (var enemigo in enemigos)
         {
+            if (enemigo == null) continue;
             enemigo.BuscarJugador(); 
-            DetectarJugador detector = enemigo.gameObject.GetComponent<DetectarJugador>();
-            detector.BuscarJugador();
+            DetectarJugador detector = enemigo.GetComponent<DetectarJugador>();
+            if (detector != null) detector.BuscarJugador();
         }
     }
+
     private IEnumerator IniciarDespuesDeUnFrame()
     {
-        yield return null; // espera 1 frame
+        yield return null; // esperar un frame
 
-        // Buscar todos los enemigos en la escena
         enemigos.Clear();
         enemigos.AddRange(FindObjectsOfType<Enemigo>());
 
         Debug.Log($"[EnemyManager] Enemigos detectados: {enemigos.Count}");
 
-        // Arrancar la IA
         if (aiLoopCoroutine != null) StopCoroutine(aiLoopCoroutine);
         aiLoopCoroutine = StartCoroutine(AILoop());
     }
@@ -58,24 +58,25 @@ public class EnemyManager : MonoBehaviour
         {
             yield return new WaitForSeconds(tiempoEntreDecisiones);
 
-            // Seleccionar un enemigo disponible
             Enemigo candidato = SeleccionarEnemigoDisponible();
             if (candidato == null) continue;
 
-            // Ordenar ataque
             candidato.OrdenarAtacar();
 
-            // Esperar a que termine el ataque
-            yield return new WaitUntil(() => !candidato.EstaAtacando());
+            // Esperar hasta que deje de atacar O muera O sea destruido
+            yield return new WaitUntil(() =>
+                candidato == null || !candidato.EstaAtacando() || candidato.EstaMuerto()
+            );
 
-            // Pequeña pausa antes de la siguiente decisión
             yield return new WaitForSeconds(Random.Range(0.15f, 0.6f));
         }
     }
 
     private Enemigo SeleccionarEnemigoDisponible()
     {
-        var disponibles = enemigos.FindAll(e => e != null && e.EstaDisponibleParaAtacar());
+        enemigos.RemoveAll(e => e == null || e.EstaMuerto()); // limpiar muertos
+
+        var disponibles = enemigos.FindAll(e => e.EstaDisponibleParaAtacar());
         if (disponibles.Count == 0) return null;
 
         return disponibles[Random.Range(0, disponibles.Count)];
