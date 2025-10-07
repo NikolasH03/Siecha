@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class TotemMejora : MonoBehaviour
 {
-    [SerializeField] private GameObject canvasUI;
     [SerializeField] private GameObject canvasInteractuar;
     [SerializeField] private GameObject HUDJugador;
     private bool jugadorCerca = false;
@@ -13,7 +12,6 @@ public class TotemMejora : MonoBehaviour
     private void Awake()
     {
         canvasInteractuar.SetActive(false);
-        canvasUI.SetActive(false);
     }
     private void Update()
     {
@@ -21,11 +19,8 @@ public class TotemMejora : MonoBehaviour
 
         if (jugadorCerca && InputJugador.instance.Interactuar)
         {
-            canvasUI.SetActive(true);
+            MenuManager.Instance.MostrarPanelTotem();
             HUDJugador.SetActive(false);
-            Time.timeScale = 0;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
             canvasInteractuar.SetActive(false);
         }
     }
@@ -49,7 +44,6 @@ public class TotemMejora : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canvasInteractuar.SetActive(false);
-            canvasUI.SetActive(false);
             jugadorCerca = false;
             jugador = null;
         }
@@ -58,11 +52,7 @@ public class TotemMejora : MonoBehaviour
     public void AumentarVida()
     {
         jugador?.AumentarVidaTotem(100f);
-        canvasUI.SetActive(false);
         HUDJugador.SetActive(true);
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         jugador.setAtacando(false);
         yaUsoTotem = true;
     }
@@ -70,11 +60,7 @@ public class TotemMejora : MonoBehaviour
     public void AumentarEstamina()
     {
         jugador?.AumentarEstaminaTotem(100f);
-        canvasUI.SetActive(false);
         HUDJugador.SetActive(true);
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
         jugador.setAtacando(false);
         yaUsoTotem = true;
     }

@@ -6,7 +6,6 @@ public class HUDJugador : MonoBehaviour
     [SerializeField] private Image barraVida;
     [SerializeField] private Image barraEstamina;
 
-    [SerializeField] private GameObject canvasMuerte;
     [SerializeField] private TextMeshProUGUI textoMuertes;
 
     [SerializeField] private ControladorCombate combatController;
@@ -25,7 +24,6 @@ public class HUDJugador : MonoBehaviour
             ActualizarEstamina(combatController.stats.EstaminaActual / combatController.stats.EstaminaMax);
         }
 
-        OcultarCanvasMuerte();
         ActualizarContadorMuertes();
     }
 
@@ -48,25 +46,6 @@ public class HUDJugador : MonoBehaviour
         }
     }
 
-    public void MostrarCanvasMuerte()
-    {
-        Time.timeScale = 0;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-
-        canvasMuerte.SetActive(true);
-        ActualizarContadorMuertes();
-    }
-
-    public void OcultarCanvasMuerte()
-    {
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        canvasMuerte.SetActive(false);
-    }
-
     public void ActualizarContadorMuertes()
     {
         if (textoMuertes != null && combatController != null)
@@ -77,7 +56,6 @@ public class HUDJugador : MonoBehaviour
 
     public void Reaparecer()
     {
-        OcultarCanvasMuerte();
         combatController.Revivir();
     }
 }

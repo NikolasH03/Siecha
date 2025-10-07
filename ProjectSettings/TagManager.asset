@@ -11,6 +11,7 @@ TagManager:
   - enemy
   - audio
   - Habilidades
+  - Totem
   layers:
   - Default
   - TransparentFX

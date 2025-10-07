@@ -14,7 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Capitulo1-Introduccion.unity
     guid: 6f6f9f25611e46340ab8c601b027394e
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ArbolHabilidades.unity
     guid: 2f2ac72108cf21f4e9f1adbdbef52507
   m_configObjects: {}
