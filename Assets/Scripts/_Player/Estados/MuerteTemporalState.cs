@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MuerteTemporalState : CombatState
 {
-    private float tiempoEspera = 3f;
+    private float tiempoEspera = 2f;
     private float tiempoActual;
     public MuerteTemporalState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
 
@@ -13,7 +13,6 @@ public class MuerteTemporalState : CombatState
 
         combatController.GetComponent<Collider>().enabled = false;
         combatController.GetComponent<Rigidbody>().isKinematic = true;
-        combatController.CambiarMovimientoCanMove(false);
 
         tiempoActual = 0f;
 
@@ -24,11 +23,15 @@ public class MuerteTemporalState : CombatState
 
         if (tiempoActual >= tiempoEspera)
         {
-            HUDJugador hud = combatController.GetComponent<HUDJugador>();
-            if (hud != null)
+            if (ControladorCambiarPersonaje.instance.getEsMuisca())
             {
-                hud.MostrarCanvasMuerte();
+                MenuManager.Instance.MostrarPanelMuerteTisqa();
             }
+            else
+            {
+                MenuManager.Instance.MostrarPanelMuertePaco();
+            }
+
         }
     }
 }

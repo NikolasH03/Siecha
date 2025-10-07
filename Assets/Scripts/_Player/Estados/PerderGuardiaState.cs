@@ -6,13 +6,15 @@ public class PerderGuardiaState : CombatState
 
     public override void Enter()
     {
-        combatController.CambiarMovimientoCanMove(false);
-        combatController.anim.SetBool("running", false);
         combatController.OrientarJugador();
+        combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Dano");
         combatController.ReproducirVFX(7, 5);
-        Debug.Log("Le rompieron la guardia");
 
+    }
+    public override void Exit()
+    {
+        combatController.TerminarInvulnerabilidad();
     }
 
 }

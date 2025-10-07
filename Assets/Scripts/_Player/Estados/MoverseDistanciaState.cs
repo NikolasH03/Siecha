@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class MoverseDistanciaState : CombatState
 {
-    private Rigidbody rb;
     private Animator anim;
     private ControladorMovimiento movimiento;
 
     public MoverseDistanciaState(CombatStateMachine fsm, ControladorCombate combatController) : base(fsm, combatController)
     {
         movimiento = combatController.GetComponent<ControladorMovimiento>();
-        rb = combatController.GetComponent<Rigidbody>();
         anim = combatController.anim;
     }
 
@@ -33,26 +31,33 @@ public class MoverseDistanciaState : CombatState
         if (InputJugador.instance.cambiarArmaMelee)
         {
             combatController.CambiarArmaMelee();
+            InputJugador.instance.CambiarInputMelee();
+            stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
         }
 
-        if (combatController.VerificarArmaEquipada() == 1)
-        {
-            InputJugador.instance.CambiarInputMelee();
-            stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
-        }
         if (InputJugador.instance.cambiarProtagonista)
         {
             ControladorCambiarPersonaje.instance.CambiarProtagonista();
         }
 
-        if (InputJugador.instance.apuntar)
+        if (InputJugador.instance.apuntar && !anim.GetBool("running"))
         {
             stateMachine.ChangeState(new ApuntarState(stateMachine, combatController));
         }
-        else if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
+        else if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing") && !anim.GetBool("running"))
         {
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
             return;
+        }
+        if (InputJugador.instance.correr && InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        {
+            anim.SetBool("running", true);
+            movimiento.CambiarVelocidad(true);
+        }
+        if (!InputJugador.instance.correr || InputJugador.instance.moverse.sqrMagnitude < 0.01f)
+        {
+            anim.SetBool("running", false);
+            movimiento.CambiarVelocidad(false);
         }
     }
 

@@ -9,8 +9,8 @@ public class HealthComp : MonoBehaviour
     private float vidaActual;
     
     [Header("Golpes Para Empezar A Bloquear")]
-    [SerializeField] private int golpesAntesDeBloquear = 5;
-    private int golpesRecibidos = 0;
+    [SerializeField] private int golpesAntesDeBloquear = 2;
+    [SerializeField] private int golpesRecibidos = 0;
     
     [Header("Stamina")]
     [SerializeField] private float staminaMax = 100f;
@@ -92,11 +92,20 @@ public class HealthComp : MonoBehaviour
         estaBloqueado = valor;
         setRecibiendoDano(false);
     }
+    public bool getBloqueando()
+    {
+        return estaBloqueado;
+    }
     
     public bool DebeBloquear() => golpesRecibidos >= golpesAntesDeBloquear;
 
     public void setEsquivando(bool valor) => estaEsquivando = valor;
 
+    public void SetFinisher()
+    {
+        vidaActual = 0f;
+        estaMuerto = true;
+    }
     public void Eliminar()
     {
         InventarioEconomia.instance.enemigoMuerto(1);

@@ -10,23 +10,15 @@ public class DetectorImpactoMelee : MonoBehaviour
     {
         if (other.CompareTag(tagEnemigo))
         {
-            Debug.Log($"Impacto contra: {other.name}");
-
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
-            enemigo = other.GetComponentInParent<HealthComp>();
+            player.ReproducirVFX(2, 1);
+            player.ReproducirSonido(2, 1);
 
-            if (enemigo != null)
-            {
-                int dano = player.EntregarDanoArmaMelee();
-                Debug.Log($"Daño entregado: {dano}");
-                enemigo.recibeDano(dano);
-            }
-            else
-            {
-                Debug.LogWarning("No se encontró HealthComp en el objetivo.");
-            }
+            enemigo = other.GetComponent<HealthComp>();
+            enemigo.recibeDano(player.EntregarDa�oArmaMelee(enemigo.getBloqueando()));
+            enemigo.setRecibiendoDano(true);
+
         }
     }
-
 }
 

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Arco
   m_EditorClassIdentifier: 
   nombre: Arco
-  "da\xF1oDisparo": 8
+  danoDisparo: 8
   "da\xF1oDisparoGuardia": 4
   prefab: {fileID: 0}

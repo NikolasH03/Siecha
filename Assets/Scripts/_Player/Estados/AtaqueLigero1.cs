@@ -11,10 +11,13 @@ public class AtaqueLigero1 : CombatState
         combatController.OrientarJugador();
         combatController.anim.SetTrigger("Ligero1");
         combatController.setAtacando(true);
+
     }
     public override void HandleInput()
     {
-        if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
+        if (TryExecuteFinisher()) return;
+
+        if (InputJugador.instance.esquivar)
         {
             combatController.DesactivarVentanaCombo();
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
@@ -29,52 +32,25 @@ public class AtaqueLigero1 : CombatState
 
         if (!combatController.puedeHacerCombo) return;
 
-        
-
-        if (InputJugador.instance.atacarLigero)
+        if (InputJugador.instance.AtaqueLigero)
         {
             combatController.inputBufferCombo = TipoInputCombate.Ligero;
         }
-        else if (InputJugador.instance.atacarFuerte)
+
+        if (InputJugador.instance.atacarFuerte)
         {
             combatController.inputBufferCombo = TipoInputCombate.Fuerte;
         }
-        
 
+        if (InputJugador.instance.holdStart)
+        {
+            stateMachine.ChangeState(new CargandoAtaque(stateMachine, combatController));
+        }
         if (combatController.inputBufferCombo != TipoInputCombate.Ninguno)
         {
             combatController.secuenciaInputs.Add(combatController.inputBufferCombo);
-            VerificarCombo();
         }
     }
-    private void VerificarCombo()
-    {
-        if (combatController.secuenciaInputs.Count < 3) return;
-
-
-        foreach (var combo in combatController.combos.Values)
-        {
-            if (SecuenciaCoincide(combo.secuencia, combatController.secuenciaInputs))
-            {
-                comboDetectado = true;
-                stateMachine.ChangeState(combo.crearEstado(stateMachine, combatController));
-                combatController.LimpiarSecuenciaInputs();
-                return;
-            }
-        }
-    }
-    private bool SecuenciaCoincide(List<TipoInputCombate> a, List<TipoInputCombate> b)
-    {
-        if (a.Count != b.Count) return false;
-
-        for (int i = 0; i < a.Count; i++)
-        {
-            if (a[i] != b[i]) return false;
-        }
-
-        return true;
-    }
-
     public override void Update()
     {
         if (comboDetectado) return;
@@ -101,7 +77,8 @@ public class AtaqueLigero1 : CombatState
     public override void Exit()
     {
         comboDetectado = false;
-        combatController.setAtacando(false);
+        combatController.DesactivarTodosLosTrails();
+        combatController.DesactivarTodosLosCollider();
     }
 }
 

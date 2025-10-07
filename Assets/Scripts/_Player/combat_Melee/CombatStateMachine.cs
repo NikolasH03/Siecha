@@ -19,4 +19,8 @@ public class CombatStateMachine
         currentState?.HandleInput();
         currentState?.Update();
     }
+    public CombatState GetCurrentState()
+    {
+        return currentState;
+    }
 }

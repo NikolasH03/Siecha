@@ -27,7 +27,16 @@ public static class ComboDatabase
             (fsm, cc) => new Combo2(fsm, cc)
         ));
 
-        
+        Combos.Add("Combo3", new Combo(
+         new List<TipoInputCombate> {
+                TipoInputCombate.Ligero,
+                TipoInputCombate.Ligero,
+                TipoInputCombate.Ligero,
+                TipoInputCombate.Fuerte
+    },
+    (fsm, cc) => new Combo3(fsm, cc)
+));
+
     }
 }
 

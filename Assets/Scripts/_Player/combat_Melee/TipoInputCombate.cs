@@ -3,5 +3,6 @@ public enum TipoInputCombate
     Ninguno,
     Ligero,
     Fuerte,
-    EspecialBajo,
+    CorriendoLigero,
+    CorriendoFuerte,
 }

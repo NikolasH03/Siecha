@@ -10,15 +10,15 @@ public class DetectarJugador : MonoBehaviour
     [SerializeField] private float radioDeDeteccionAutomatica = 10f;
     [SerializeField] private float rangoDeAtaque = 3f;
     [SerializeField] private float tiempoPorDeteccion = 1f;
-    
-    public Transform Player {get; private set;}
+
+    public Transform Player { get; private set; }
     Temporizador temporizadorDeDetectarJugador;
     
     IEstrategiaDeDeteccion estrategiaDeDeteccion;
 
     void Awake()
     {
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        BuscarJugador();
     }
     void Start()
     {
@@ -29,6 +29,10 @@ public class DetectarJugador : MonoBehaviour
 
     void Update() => temporizadorDeDetectarJugador.Tick(Time.deltaTime);
 
+    public void BuscarJugador()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
     public bool SePuedeDetectarAlJugador()
     {
         return temporizadorDeDetectarJugador.EstaCorriendo || estrategiaDeDeteccion.Ejecutar(Player, transform, temporizadorDeDetectarJugador);

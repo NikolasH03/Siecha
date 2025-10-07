@@ -12,8 +12,6 @@ public class EventosAnimacion : MonoBehaviour
     [Header("Puntos de impacto")]
     [SerializeField] private List<Transform> pivotsImpacto;
 
-
-
     // Reproduce un sonido desde un punto de impacto específico.
     public void ReproducirSonidoImpacto(int indexSonido, int indexPivot = 0)
     {
@@ -68,6 +66,8 @@ public class EventosAnimacion : MonoBehaviour
 
         return transform.rotation;
     }
+
+
 }
 
 

@@ -17,16 +17,12 @@ public class BloqueoState : CombatState
 
     public override void HandleInput()
     {
+        if (combatController.stats.EstaminaActual <= 0) return;
+
         if (!InputJugador.instance.bloquear)
         {
-            combatController.GetComponent<Collider>().enabled = true;
             stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
         }
-    }
-
-    public override void Update()
-    {
-        if (combatController.stats.EstaminaActual <= 0) return;
     }
 
     public override void Exit()

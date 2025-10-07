@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Arcabuz
   m_EditorClassIdentifier: 
   nombre: Arcabuz
-  "da\xF1oDisparo": 10
+  danoDisparo: 4
   "da\xF1oDisparoGuardia": 8
   prefab: {fileID: 0}

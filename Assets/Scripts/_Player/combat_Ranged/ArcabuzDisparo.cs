@@ -23,7 +23,7 @@ public class ArcabuzDisparo : MonoBehaviour
             if (salud != null)
             {
                 salud.recibeDano(player.EntregarDanoArmaDistancia());
-                //salud.setRecibiendoDaño(true);
+                salud.setRecibiendoDano(true);
             }
         }
 

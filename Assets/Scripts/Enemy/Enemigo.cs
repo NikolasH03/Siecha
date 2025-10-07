@@ -66,8 +66,12 @@ public class Enemigo : MonoBehaviour
         this.agent = this.GetComponent<NavMeshAgent>();
         this.animator = this.GetComponentInChildren<Animator>();
         this.vidaEnemigo = GetComponent<HealthComp>();
-        this.controladorDeCombate = GameObject.FindGameObjectWithTag("Player");
+        BuscarJugador();
         tempParaAtaques = new Temporizador(tiempoEntreAtaques);
+    }
+    public void BuscarJugador()
+    {
+        this.controladorDeCombate = GameObject.FindGameObjectWithTag("Player");
     }
 
     private void OnValidate()
@@ -179,6 +183,7 @@ public class Enemigo : MonoBehaviour
     //Métodos para el EnemyManager.cs
     public bool EstaDisponibleParaAtacar() => disponibleParaAtacar && !vidaEnemigo.EstaMuerto;
     public bool EstaAtacando() => atacando;
+    public bool EstaMuerto() => vidaEnemigo != null && vidaEnemigo.EstaMuerto;
     
     public void OrdenarAtacar()
     {

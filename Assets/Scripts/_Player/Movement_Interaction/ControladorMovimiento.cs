@@ -6,6 +6,7 @@ public class ControladorMovimiento : MonoBehaviour
 
     public float VelocidadCaminando = 200f;
     public float VelocidadCorriendo = 600f;
+    public float VelocidadActual;
     [Range(0.0f, 0.3f)]
     public float RotationSmoothTime = 0.3f;
     [SerializeField] float SpeedChangeRate = 50f;
@@ -50,6 +51,7 @@ public class ControladorMovimiento : MonoBehaviour
         controladorCombate = GetComponent<ControladorCombate>();
         controladorApuntado = GetComponent<ControladorApuntado>();
         anim = GetComponent<Animator>();
+        VelocidadActual = VelocidadCaminando;
     }
 
     void FixedUpdate()
@@ -77,26 +79,22 @@ public class ControladorMovimiento : MonoBehaviour
         anim.SetFloat("Vely", y);
 
     }
-
-    public float CheckEstaCorriendo()
+    public void CambiarVelocidad(bool EstaCorriendo)
     {
-        if (InputJugador.instance.correr && !controladorCombate.getAtacando() && canMove && !controladorApuntado.GetEstaApuntando())
+        if (EstaCorriendo)
         {
-            anim.SetBool("running", true);
-            return VelocidadCorriendo;
+            VelocidadActual = VelocidadCorriendo;
         }
-        else if (!InputJugador.instance.correr || controladorCombate.getAtacando() || !canMove || controladorCombate.getBloqueando() || anim.GetBool("dashing") || controladorApuntado.GetEstaApuntando())
+        else
         {
-            anim.SetBool("running", false);
-            return VelocidadCaminando;
+            VelocidadActual = VelocidadCaminando;
         }
-        return VelocidadCaminando;
     }
 
     public void mover()
     {
 
-        float targetSpeed = CheckEstaCorriendo();
+        float targetSpeed = VelocidadActual;
 
         if (InputJugador.instance.moverse == Vector2.zero) targetSpeed = 0.0f;
 
