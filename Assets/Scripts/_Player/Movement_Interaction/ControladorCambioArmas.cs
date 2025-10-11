@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class ControladorCambioArmas : MonoBehaviour
 {
-    [SerializeField] private GameObject armaMelee;
+    public List<GameObject> armasMelee;
     [SerializeField] private GameObject armaDistancia;
-    private int numeroArma;
+    [SerializeField] private int numeroArma;
 
     private ControladorCombate controladorCombate;
     private void Awake()
@@ -15,29 +15,40 @@ public class ControladorCambioArmas : MonoBehaviour
     }
     private void Start()
     {
-        armaMelee = controladorCombate.getArmaActual();
-        armaMelee.SetActive(true);
-        armaDistancia.SetActive(false);
-        numeroArma = 1;
-
+        armasMelee = controladorCombate.getArmaActual();
+        CambiarArmaMelee();
     }
 
     public void CambiarArmaMelee()
     {
-        armaMelee.SetActive(true);
+        //Debug.Log($"Cambiando a arma melee en {gameObject.name}");
+
+        SetListaActiva(armasMelee, true);
         armaDistancia.SetActive(false);
         numeroArma = 1;
     }
+
     public void CambiarArmaDistancia()
     {
-        armaMelee.SetActive(false);
+        //Debug.Log($"Cambiando a arma distancia en {gameObject.name}");
+
+        SetListaActiva(armasMelee, false);
         armaDistancia.SetActive(true);
         numeroArma = 2;
-        controladorCombate.setAtacando(false);
     }
+
     public int getterArma()
     {
         return numeroArma;
+    }
+    private void SetListaActiva(List<GameObject> lista, bool estado)
+    {
+
+        foreach (GameObject arma in lista)
+        {
+            if (arma != null)
+                arma.SetActive(estado);
+        }
     }
 }
 

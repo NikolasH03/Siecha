@@ -111,6 +111,14 @@ public class ControladorApuntado : MonoBehaviour
         minijuegoUI.gameObject.SetActive(true);
         minijuegoUI.OnFinRecarga = callback;
     }
+    public void CancelarMinijuegoRecarga()
+    {
+        if (minijuegoUI != null && minijuegoUI.gameObject.activeInHierarchy)
+        {
+            Debug.Log("Cancelando minijuego de recarga");
+            minijuegoUI.CancelarMinijuego(); 
+        }
+    }
 
     //setters y getters
     public bool GetEstaApuntando()

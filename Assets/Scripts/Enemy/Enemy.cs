@@ -15,11 +15,14 @@ public class Enemy : MonoBehaviour
     public float Distance;
     public bool Alive = true;
     public float ProbBloqueo = 0.30f;
-    private float bloquearTime; 
-    private float bloquearDuration = 2.5f;
+    private float bloquearTime;
+    protected float bloquearDuration = 2.5f;  // Cambiado a protected para que la clase derivada pueda acceder
     private float tiempoUltimoBloqueo = 0f;
     private float intervaloBloqueo = 5f;
     public ControladorCombate player;
+
+    // Variable para controlar el estado anterior
+    private Estados estadoAnterior;
 
     public void Start()
     {
@@ -28,14 +31,19 @@ public class Enemy : MonoBehaviour
             Target = GameObject.FindGameObjectWithTag("Player").transform;
         }
         StartCoroutine(CalcularDistancia());
+        estadoAnterior = Estado;
     }
 
     private void LateUpdate()
     {
-        if (autoselectTarget)
+        if (autoselectTarget && Target == null)
         {
-            Target = GameObject.FindGameObjectWithTag("Player").transform;
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+            {
+                Target = playerObj.transform;
+                player = playerObj.GetComponent<ControladorCombate>();
+            }
         }
 
         CheckEstado();
@@ -43,7 +51,7 @@ public class Enemy : MonoBehaviour
 
     private void CheckEstado()
     {
-        switch(Estado)
+        switch (Estado)
         {
             case Estados.Patrulla:
                 EstadoPatrulla();
@@ -65,11 +73,19 @@ public class Enemy : MonoBehaviour
 
     public void CambiarEstado(Estados state)
     {
+        estadoAnterior = Estado;
         Estado = state;
 
-        switch(Estado) 
+        switch (Estado)
         {
             case Estados.Patrulla:
+                // Reiniciar variables de patrulla en la subclase
+                Enemigo_Z enemigo = GetComponent<Enemigo_Z>();
+                if (enemigo != null)
+                {
+                    enemigo.rutina = 0;
+                    enemigo.cronometro = 0;
+                }
                 break;
             case Estados.Seguir:
                 break;
@@ -84,15 +100,16 @@ public class Enemy : MonoBehaviour
             default:
                 break;
         }
+
+        Debug.Log($"Cambiando estado de {estadoAnterior} a {Estado}");
     }
 
     public virtual void EstadoPatrulla()
     {
-          if(Distance < disSeguir)
+        if (Distance < disSeguir)
         {
-            CambiarEstado (Estados.atacar);
+            CambiarEstado(Estados.Seguir);
         }
-
     }
 
     public virtual void EstadoSeguir()
@@ -101,83 +118,66 @@ public class Enemy : MonoBehaviour
         {
             CambiarEstado(Estados.atacar);
         }
-        else if(Distance > disEscape)
+        else if (Distance > disEscape)
         {
             CambiarEstado(Estados.Patrulla);
         }
-
-
     }
 
     public virtual void EstadoAtacar()
     {
         if (Distance > disAtacar + 0.5f)
         {
-            CambiarEstado (Estados.Seguir);
+            CambiarEstado(Estados.Seguir);
         }
 
-        if (player.getAtacando() && Time.time - tiempoUltimoBloqueo > intervaloBloqueo)
+        if (player != null && player.getAtacando() && Time.time - tiempoUltimoBloqueo > intervaloBloqueo)
         {
             float Bloqueo = UnityEngine.Random.Range(0.0f, 1.0f);
-
-            //Debug.Log("Valor de Bloqueo: " + Bloqueo);
+            Debug.Log("Valor de Bloqueo: " + Bloqueo);
 
             if (Bloqueo <= ProbBloqueo)
             {
                 CambiarEstado(Estados.Bloquear);
             }
 
-            tiempoUltimoBloqueo = Time.time; 
+            tiempoUltimoBloqueo = Time.time;
         }
     }
 
     public virtual void EstadoBloquear()
     {
-
         bloquearTime += Time.deltaTime;
-
-        //Debug.Log("Bloqueado!!!");
 
         if (bloquearTime >= bloquearDuration)
         {
-            if (Distance < disSeguir)
-            {
-                CambiarEstado(Estados.atacar);
-            }
-
-            if (Distance > disAtacar + 0.5f)
-            {
-                CambiarEstado(Estados.Seguir);
-            }
-
+            // Simplificamos la transición después del bloqueo
             if (Distance < disAtacar)
             {
                 CambiarEstado(Estados.atacar);
             }
-
-            else if (Distance > disEscape)
+            else
             {
-                CambiarEstado(Estados.Patrulla);
+                CambiarEstado(Estados.Seguir);
             }
-
-
         }
-
     }
-
 
     public virtual void EstadoMuerto()
     {
-
     }
 
     IEnumerator CalcularDistancia()
     {
-        while (Alive) 
-        { 
-            if(Target !=  null)
+        while (Alive)
+        {
+            if (Target != null)
             {
                 Distance = Vector3.Distance(transform.position, Target.position);
+                yield return new WaitForSeconds(0.3f);
+            }
+            else
+            {
                 yield return new WaitForSeconds(0.3f);
             }
         }

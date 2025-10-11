@@ -4,10 +4,11 @@ using UnityEngine;
 public class ControladorMovimiento : MonoBehaviour
 {
 
-    [SerializeField] float VelocidadCaminando = 200f;
-    [SerializeField] float VelocidadCorriendo = 600f;
+    public float VelocidadCaminando = 200f;
+    public float VelocidadCorriendo = 600f;
+    public float VelocidadActual;
     [Range(0.0f, 0.3f)]
-    [SerializeField] float RotationSmoothTime;
+    public float RotationSmoothTime = 0.3f;
     [SerializeField] float SpeedChangeRate = 50f;
 
     [SerializeField] float sensibilidad = 1f;
@@ -15,14 +16,14 @@ public class ControladorMovimiento : MonoBehaviour
     private Rigidbody rb;
     private bool canMove = true;
 
-    [SerializeField] float _speed;
-    [SerializeField] float _targetRotation = 0.0f;
-    [SerializeField] float _rotationVelocity;
-    [SerializeField] float _verticalVelocity;
-    [SerializeField] GameObject _mainCamera;
+    private float _speed;
+    private float _targetRotation = 0.0f;
+    private float _rotationVelocity;
+    private float _verticalVelocity;
+    private GameObject _mainCamera;
 
     //coordenadas para animaciones de movimiento
-    [SerializeField] float x, y;
+    private float x, y;
     private Animator anim;
 
     //rotacion de la camara
@@ -50,35 +51,18 @@ public class ControladorMovimiento : MonoBehaviour
         controladorCombate = GetComponent<ControladorCombate>();
         controladorApuntado = GetComponent<ControladorApuntado>();
         anim = GetComponent<Animator>();
+        VelocidadActual = VelocidadCaminando;
     }
 
     void FixedUpdate()
     {
-        if (!canMove)
-        {
-            return;
-        }
+        if (!canMove) return;
 
-        else
-        {
+        ValoresAnimacionMovimiento();
 
-            if (!controladorCombate.getAtacando() && !controladorCombate.getBloqueando() && !anim.GetBool("dashing"))
-            {
-                ValoresAnimacionMovimiento();
+        mover();
 
 
-                if (x == 0f && y == 0f)
-                {
-                    anim.SetBool("running", false);
-                }
-                else
-                {
-                    mover();
-
-                }
-            }
-
-        }
     }
 
     private void LateUpdate()
@@ -95,26 +79,22 @@ public class ControladorMovimiento : MonoBehaviour
         anim.SetFloat("Vely", y);
 
     }
-
-    public float CheckEstaCorriendo()
+    public void CambiarVelocidad(bool EstaCorriendo)
     {
-        if (InputJugador.instance.correr && !controladorCombate.getAtacando() && canMove && !controladorApuntado.GetEstaApuntando())
+        if (EstaCorriendo)
         {
-            anim.SetBool("running", true);
-            return VelocidadCorriendo;
+            VelocidadActual = VelocidadCorriendo;
         }
-        else if (!InputJugador.instance.correr || controladorCombate.getAtacando() || !canMove || controladorCombate.getBloqueando() || anim.GetBool("dashing") || controladorApuntado.GetEstaApuntando())
+        else
         {
-            anim.SetBool("running", false);
-            return VelocidadCaminando;
+            VelocidadActual = VelocidadCaminando;
         }
-        return VelocidadCaminando;
     }
 
-    private void mover()
+    public void mover()
     {
 
-        float targetSpeed = CheckEstaCorriendo();
+        float targetSpeed = VelocidadActual;
 
         if (InputJugador.instance.moverse == Vector2.zero) targetSpeed = 0.0f;
 
@@ -214,6 +194,18 @@ public class ControladorMovimiento : MonoBehaviour
     public void setCanMove(bool mover)
     {
         canMove = mover;
+    }
+    public bool getEstaMoviendose()
+    {
+        if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+     
     }
 }
 

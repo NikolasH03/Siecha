@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CombatStateMachine : MonoBehaviour
+public class CombatStateMachine
 {
     private CombatState currentState;
     public void ChangeState(CombatState newState)
@@ -18,5 +18,9 @@ public class CombatStateMachine : MonoBehaviour
     {
         currentState?.HandleInput();
         currentState?.Update();
+    }
+    public CombatState GetCurrentState()
+    {
+        return currentState;
     }
 }

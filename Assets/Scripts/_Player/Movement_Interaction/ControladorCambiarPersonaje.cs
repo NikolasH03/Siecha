@@ -13,13 +13,14 @@ public class ControladorCambiarPersonaje : MonoBehaviour
     [SerializeField] private CinemachineVirtualCamera camaraApuntado;
     [SerializeField] private GameObject HUDMuisca;
     [SerializeField] private GameObject HUDEspanol;
-    private ControladorCombate controladorMuisca;
-    private ControladorCombate controladorEspanol;
     private Transform objetivoCamaraMuisca;
     private Transform objetivoCamaraEspanol;
 
     //logica para cambiar el personaje
     private bool esMuisca;
+
+    //otras referencias
+    [SerializeField] EnemyManager enemigos;
 
     private void Awake()
     {
@@ -33,9 +34,6 @@ public class ControladorCambiarPersonaje : MonoBehaviour
             Destroy(gameObject);
         }
 
-        controladorMuisca = muisca.GetComponent<ControladorCombate>();
-        controladorEspanol = espanol.GetComponent<ControladorCombate>();
-
         objetivoCamaraMuisca = muisca.transform.Find("camaraTarget");
         objetivoCamaraEspanol = espanol.transform.Find("camaraTarget");
     }
@@ -44,19 +42,21 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         activarEspanol();
     }
 
-    void Update()
+    public void CambiarProtagonista()
     {
-        if (InputJugador.instance.cambiarProtagonista && espanol.activeSelf && !controladorEspanol.getAtacando())
+        if (espanol.activeSelf)
         {
             activarMuisca();
+            enemigos.ActualizarJugador();
         }
 
-        else if (InputJugador.instance.cambiarProtagonista && muisca.activeSelf && !controladorMuisca.getAtacando())
+        else
         {
             activarEspanol();
+            enemigos.ActualizarJugador();
         }
+        SincronizarInputConPersonajeActivo();
     }
-
     public void activarMuisca()
     {
         muisca.transform.position = espanol.transform.position;
@@ -84,14 +84,28 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         esMuisca = false;
     }
+    private void SincronizarInputConPersonajeActivo()
+    {
+        GameObject personajeActivo = esMuisca ? muisca : espanol;
+        ControladorCambioArmas controladorArmas = personajeActivo.GetComponent<ControladorCambioArmas>();
 
+        if (controladorArmas != null)
+        {
+            int armaActual = controladorArmas.getterArma();
+            //Debug.Log($"Sincronizando input para {(esMuisca ? "Muisca" : "Español")} - Arma: {armaActual}");
+
+            if (armaActual == 1)
+            {
+                InputJugador.instance.CambiarInputMelee();
+            }
+            else if (armaActual == 2)
+            {
+                InputJugador.instance.CambiarInputDistancia();
+            }
+        }
+    }
     public bool getEsMuisca()
     {
         return esMuisca;
-    }
-    public GameObject getJugadorActual()
-    {
-        if (esMuisca) return muisca;
-        else return espanol;
     }
 }

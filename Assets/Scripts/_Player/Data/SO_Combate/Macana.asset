@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ddf640d6616efa418000a4e9a967c9b, type: 3}
+  m_Name: Macana
+  m_EditorClassIdentifier: 
+  nombre: Macana
+  "da\xF1oGolpeFuerte": 5
+  "da\xF1oGolpeLigero": 2
+  "da\xF1oGolpeCargado": 8
+  "da\xF1oGolpeFuerteGuardia": 8
+  "da\xF1oGolpeLigeroGuardia": 4
+  prefabArmaPrincipal: {fileID: 7851186996590361636, guid: 48599c11f7299be46ae52652367aaa9a, type: 3}
+  prefabArmaSecundaria: {fileID: 5738111807428807382, guid: 2eb92ea025a14864eb91b144038557b6, type: 3}

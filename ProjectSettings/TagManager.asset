@@ -15,13 +15,13 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Esquivar
+  - JugadorInvulnerable
   - Water
   - UI
   - Enemigo
-  - 
-  - 
-  - 
+  - Coleccionable
+  - Player
+  - Proyectil
   - 
   - 
   - 

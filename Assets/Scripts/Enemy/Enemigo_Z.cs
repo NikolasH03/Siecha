@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,34 +16,53 @@ public class Enemigo_Z : Enemy
     public float grado;
     public float speedWalk = 2;
     public bool estaAtacando = false;
-    public bool establoqueando = false;
-
-    //private void Awake()
-    //{
-    //    base.Start();
-    //    agent = GetComponent<NavMeshAgent>();
-
-    //}
 
     private void Start()
     {
         base.Start();
         agent = GetComponent<NavMeshAgent>();
+        // Asegúrate de que todas las animaciones están desactivadas al inicio
+        if (animator != null)
+        {
+            animator.SetBool("Caminando", false);
+            animator.SetBool("Correr", false);
+            animator.SetBool("Atacando", false);
+            animator.SetBool("Bloquear", false);
+        }
+
+        DebugAnimationNames();
     }
+
     public override void EstadoPatrulla()
     {
         base.EstadoPatrulla();
-        if (animator != null) animator.SetBool("Atacando", false);
-        if (animator != null) animator.SetBool("Correr", false);
+        if (animator != null)
+        {
+            animator.SetBool("Atacando", false);
+            animator.SetBool("Correr", false);
+            animator.SetBool("Bloquear", false);
+        }
+
+        // Asegurarse de que el NavMeshAgent esté activo
+        if (!agent.enabled) agent.enabled = true;
+
         Comportamiento_Enemigo();
     }
 
     public override void EstadoSeguir()
     {
         base.EstadoSeguir();
-        if (animator != null) animator.SetBool("Caminando", false);
-        if (animator != null) animator.SetBool("Atacando", false);
-        if (animator != null) animator.SetBool("Correr", true);
+        if (animator != null)
+        {
+            animator.SetBool("Caminando", false);
+            animator.SetBool("Atacando", false);
+            animator.SetBool("Correr", true);
+            animator.SetBool("Bloquear", false);
+        }
+
+        // Asegurarse de que el NavMeshAgent esté activo
+        if (!agent.enabled) agent.enabled = true;
+
         agent.SetDestination(Target.position);
         transform.LookAt(Target.position);
     }
@@ -54,23 +72,64 @@ public class Enemigo_Z : Enemy
         if (estaAtacando) return;
         base.EstadoAtacar();
         StartCoroutine(EjecutarAtaque());
-        if (animator != null) animator.SetBool("Caminando", false);
-        if (animator != null) animator.SetBool("Correr", false);
-        if (animator != null) animator.SetBool("Atacando", true);
-        if (animator != null) animator.SetBool("Bloquear", false);
+        if (animator != null)
+        {
+            animator.SetBool("Caminando", false);
+            animator.SetBool("Correr", false);
+            animator.SetBool("Atacando", true);
+            animator.SetBool("Bloquear", false);
+        }
         agent.SetDestination(transform.position);
         transform.LookAt(Target.position);
-
-
     }
 
     public override void EstadoBloquear()
     {
-        if (establoqueando) return;
         base.EstadoBloquear();
-        StartCoroutine(EjecutarBloqueo());
-        if (animator != null) animator.SetBool("Atacando", false);
-        if (animator != null) animator.SetBool("Bloquear", true);
+        if (animator != null)
+        {
+            // Resetear todos los parámetros primero
+            animator.SetBool("Caminando", false);
+            animator.SetBool("Correr", false);
+            animator.SetBool("Atacando", false);
+            animator.SetBool("Bloquear", true);
+
+            // Forzar la entrada inmediata al estado de bloqueo en el Animator
+            // Intenta con el nombre exacto de la animación en tu Animator Controller
+            try
+            {
+                animator.Play("Standing Block", 0, 0f);
+            }
+            catch
+            {
+                // Si "Bloqueo" no funciona, intenta otras variantes comunes
+                try
+                {
+                    animator.Play("Standing Block", 0, 0f);
+                }
+                catch
+                {
+                    try
+                    {
+                        // Otra alternativa es buscar cualquier animación que contenga "bloqueo" o "block"
+                        foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+                        {
+                            if (clip.name.ToLower().Contains("bloqueo") || clip.name.ToLower().Contains("block"))
+                            {
+                                animator.Play(clip.name, 0, 0f);
+                                break;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Debug.LogError("No se pudo encontrar la animación de bloqueo");
+                    }
+                }
+            }
+
+            Debug.Log("Activando animación de bloqueo");
+        }
     }
 
     public override void EstadoMuerto()
@@ -82,11 +141,10 @@ public class Enemigo_Z : Enemy
 
     public void Comportamiento_Enemigo()
     {
-
         cronometro += 1 * Time.deltaTime;
         if (cronometro >= 3)
         {
-            rutina = UnityEngine.Random.Range(0, 2);
+            rutina = Random.Range(0, 2);
             cronometro = 0;
         }
         switch (rutina)
@@ -96,7 +154,7 @@ public class Enemigo_Z : Enemy
                 break;
 
             case 1:
-                grado = UnityEngine.Random.Range(0, 360);
+                grado = Random.Range(0, 360);
                 angulo = Quaternion.Euler(0, grado, 0);
                 rutina++;
                 break;
@@ -113,8 +171,6 @@ public class Enemigo_Z : Enemy
     {
         estaAtacando = true;
 
-        //Debug.Log("Bloqueado!!!");
-
         yield return new WaitForSeconds(DuracionDeAnimacion());
 
         estaAtacando = false;
@@ -124,34 +180,6 @@ public class Enemigo_Z : Enemy
             CambiarEstado(Estados.Seguir);
         }
     }
-    private IEnumerator EjecutarBloqueo()
-    {
-        establoqueando = true;
-        yield return new WaitForSeconds(DuracionDeAnimacion());
-        establoqueando = false;
-
-        if (Distance < disSeguir)
-        {
-            CambiarEstado(Estados.atacar);
-        }
-
-        if (Distance > disAtacar + 0.5f)
-        {
-            CambiarEstado(Estados.Seguir);
-        }
-
-        if (Distance < disAtacar)
-        {
-            CambiarEstado(Estados.atacar);
-        }
-
-        else if (Distance > disEscape)
-        {
-            CambiarEstado(Estados.Patrulla);
-        }
-
-    }
-
 
     private float DuracionDeAnimacion()
     {
@@ -159,4 +187,14 @@ public class Enemigo_Z : Enemy
         return infoAnim.length;
     }
 
+    void DebugAnimationNames()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            {
+                Debug.Log("Animación disponible: " + clip.name);
+            }
+        }
+    }
 }

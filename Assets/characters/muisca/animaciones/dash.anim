@@ -89427,8 +89427,8 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events:
-  - time: 1.8
-    functionName: terminarDash
+  - time: 1.7666667
+    functionName: TerminarDash
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

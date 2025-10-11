@@ -14,11 +14,9 @@ public class DispararState : CombatState
     public override void Enter()
     {
         combatController.anim.SetTrigger("Disparo");
+        combatController.InvulneravilidadJugador();
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo()); }
 
-        if (ControladorCambiarPersonaje.instance.getEsMuisca())
-        {
-            apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo());
-        }
         else
         {
             apuntado.EsferaDeDano();
@@ -27,5 +25,9 @@ public class DispararState : CombatState
             CameraShakeManager.instance.ShakeExplosion();
         }
         
+    }
+    public override void Exit()
+    {
+        combatController.TerminarInvulnerabilidad();
     }
 }

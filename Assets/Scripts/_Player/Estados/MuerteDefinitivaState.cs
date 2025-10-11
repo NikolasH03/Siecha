@@ -12,7 +12,6 @@ public class MuerteDefinitivaState : CombatState
 
         combatController.GetComponent<Collider>().enabled = false;
         combatController.GetComponent<Rigidbody>().isKinematic = true;
-        combatController.CambiarMovimientoCanMove(false);
 
         combatController.StartCoroutine(VolverMenu());
     }
