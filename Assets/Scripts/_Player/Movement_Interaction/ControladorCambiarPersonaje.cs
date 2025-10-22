@@ -47,14 +47,13 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         if (espanol.activeSelf)
         {
             activarMuisca();
-            enemigos.ActualizarJugador();
         }
 
         else
         {
             activarEspanol();
-            enemigos.ActualizarJugador();
         }
+        enemigos.ActualizarJugador();
         SincronizarInputConPersonajeActivo();
     }
     public void activarMuisca()
@@ -83,6 +82,22 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         HUDMuisca.SetActive(false);
 
         esMuisca = false;
+    }
+    public void OcultarTodosLosHUD()
+    {
+        HUDEspanol.SetActive(false);
+        HUDMuisca.SetActive(false);
+    }
+    public void ActivarHUDPausa()
+    {
+        if (esMuisca)
+        {
+            HUDMuisca.SetActive(true);
+        }
+        else
+        {
+            HUDEspanol.SetActive(true);
+        }
     }
     private void SincronizarInputConPersonajeActivo()
     {

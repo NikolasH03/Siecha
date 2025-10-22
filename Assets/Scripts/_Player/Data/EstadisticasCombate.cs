@@ -8,8 +8,6 @@ public class EstadisticasCombate
 
     public float VidaMax { get; private set; }
     public float EstaminaMax { get; private set; }
-
-    public float DanoBase { get; private set; }
     public float CuracionEstamina { get; private set; }
 
 
@@ -20,7 +18,6 @@ public class EstadisticasCombate
     {
         VidaMax = statsBase.vidaBase;
         EstaminaMax = statsBase.estaminaBase;
-        DanoBase = statsBase.danoBase;
         CuracionEstamina = statsBase.curacionEstamina;
 
         VidaActual = VidaMax;

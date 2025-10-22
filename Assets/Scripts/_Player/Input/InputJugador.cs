@@ -40,6 +40,7 @@ public class InputJugador : MonoBehaviour
 
     // ========== UI INPUTS ==========
     public Vector2 Navegar { get; private set; }
+    public Vector2 Visualizar { get; private set; }
     public bool Confirmar { get; private set; }
     public bool Cancelar { get; private set; }
     public Vector2 Point { get; private set; }
@@ -49,6 +50,7 @@ public class InputJugador : MonoBehaviour
 
     private InputAction navegarAction;
     private InputAction pointAction;
+    private InputAction visualizarAction;
 
     //Variables necesarias para el finisher
 
@@ -81,6 +83,7 @@ public class InputJugador : MonoBehaviour
 
         navegarAction = uiMap?.FindAction("Navegar", true);
         pointAction = uiMap?.FindAction("Point", true);
+        visualizarAction = uiMap?.FindAction("Visualizar", true);
     }
     private void Update()
     {
@@ -91,6 +94,9 @@ public class InputJugador : MonoBehaviour
 
             if (pointAction != null)
                 Point = pointAction.ReadValue<Vector2>();
+
+            if (visualizarAction != null)
+                Visualizar = visualizarAction.ReadValue<Vector2>();
         }
     }
     public void OnMoverse(InputValue value) => moverse = value.Get<Vector2>();

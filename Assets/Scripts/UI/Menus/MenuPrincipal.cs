@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class MenuPrincipal : MenuBaseConNavegacion
 {
@@ -32,7 +31,9 @@ public class MenuPrincipal : MenuBaseConNavegacion
     public void Jugar()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Capitulo1-Introduccion");
+        MenuManager.Instance.CloseAllMenus();
+        SceneLoader.Instance.LoadScene(1);
+        GameFlowManager.Instance.StartGameplayFlow();
     }
 
     public void AbrirOpciones()

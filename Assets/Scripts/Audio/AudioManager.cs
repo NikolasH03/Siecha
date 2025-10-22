@@ -10,11 +10,17 @@ public class AudioManager : MonoBehaviour
 
     public SoundData mus_exploracion;
     public SoundData mus_combate;
-    public SoundData mus_arbol;
+    public SoundData mus_bossFight;
+    public SoundData mus_menu;
+    public SoundData mus_death;
+    public SoundData mus_EndBossFight;
     public SoundData amb_naturaleza;
+    public SoundData amb_fire;
+    public SoundData amb_cascada;
     public SoundData efecto_menuPausa;
     public SoundData efecto_agarrarObjeto;
     public SoundData efecto_oprimirBoton;
+    public SoundData voice_Amenazar;
     //public SoundData efecto_hoverBoton;
 
     public static AudioManager Instance { get; private set; }
@@ -56,6 +62,14 @@ public class AudioManager : MonoBehaviour
         audioSource.Play();
         Destroy(tempGO, data.clip.length / audioSource.pitch + 0.1f);
     }
+    public void PlayRandomSFX(RandomSoundSet soundSet, Vector3 position)
+    {
+        if (soundSet == null) return;
+        SoundData randomSound = soundSet.GetRandomSound();
+        if (randomSound != null)
+            PlaySFX(randomSound, position);
+    }
+
 
     // Reproduce música de fondo
     public void PlayMusic(SoundData data)
@@ -77,6 +91,16 @@ public class AudioManager : MonoBehaviour
         ambienceSource.pitch = data.pitch;
         ambienceSource.loop = data.loop;
         ambienceSource.Play();
+    }
+    public void PlayVoiceLine(SoundData data)
+    {
+        if (voicesSource == null) return;
+
+        voicesSource.clip = data.clip;
+        voicesSource.volume = data.volume;
+        voicesSource.pitch = data.pitch;
+        voicesSource.loop = data.loop;
+        voicesSource.Play();
     }
 
 }

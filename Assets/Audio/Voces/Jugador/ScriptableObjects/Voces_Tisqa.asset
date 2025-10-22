@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fa8c3e8e434004e948377a6d3be22a, type: 3}
+  m_Name: Voces_Tisqa
+  m_EditorClassIdentifier: 
+  voices:
+  - id: Historia
+    variations:
+    - {fileID: 11400000, guid: e3293d254fb6d8e46ab1034f58196aed, type: 2}
+    - {fileID: 11400000, guid: a1456a3e8df3bc14f93d0fb4d7900000, type: 2}
+    - {fileID: 11400000, guid: eab99095d2508b84484461048cf9e381, type: 2}
+    - {fileID: 11400000, guid: 47fe2fb59ed0c14498be2a6860fcc6af, type: 2}
+    - {fileID: 11400000, guid: 2f1f20285b25c134589b8c8b7f601380, type: 2}
+    - {fileID: 11400000, guid: 763ff2a0f2d710f408981197f237c8c3, type: 2}
+    - {fileID: 11400000, guid: 78fe24c372e803148b15992337248b28, type: 2}
+    - {fileID: 11400000, guid: 308ab1a6f6f70f3468893062367e5151, type: 2}

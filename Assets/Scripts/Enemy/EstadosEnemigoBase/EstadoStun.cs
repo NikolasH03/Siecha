@@ -25,16 +25,22 @@ public class EstadoStun : EstadoBase
         agente.isStopped = true;
         tempStun.Reiniciar();
         tempStun.Empezar();
+        vidaEnemigo.EntrarEnStun();
     }
     
     public override void Update()
     {
-        tempStun.Tick(Time.deltaTime);
+        if (!vidaEnemigo.EstaEnFinisher)
+        {
+            tempStun.Tick(Time.deltaTime);
+        }
     }
     
     public override void OnExit()
     {
         agente.isStopped = false;
+        vidaEnemigo.SalirDeStun();
         vidaEnemigo.RestablecerEstamina();
+        vidaEnemigo.SetGolpesRecibidos(0);
     }
 }

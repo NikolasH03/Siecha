@@ -12,16 +12,18 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private MenuInicial menuInicial;
     [SerializeField] private MenuPrincipal menuPrincipal;
     [SerializeField] private MenuPausa menuPausa;
-    [SerializeField] private MenuColeccionables menuColeccionables;
     [SerializeField] private MenuControles menuControles;
     [SerializeField] private MenuCreditos menuCreditos;
     [SerializeField] private MenuVolumen menuVolumen;
     [SerializeField] private MenuGraficos menuGraficos;
+    [SerializeField] private MenuColeccionables menuColeccionables;
+    [SerializeField] private MenuVisualizador3D menuVisualizador3D;
 
     [Header("Paneles de Gameplay")]
     [SerializeField] private MenuMuerteTisqa menuMuerteTisqa;  
     [SerializeField] private MenuMuertePaco menuMuertePaco;
     [SerializeField] private MenuTotem menuTotem;
+    [SerializeField] private List<PanelTutorial> PanelesTutorial;
 
     [Header("Configuración de Escenas")]
     [SerializeField] private string[] escenasMenuPrincipal = { "Menu" };
@@ -39,7 +41,6 @@ public class MenuManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -59,7 +60,11 @@ public class MenuManager : MonoBehaviour
         if (InputJugador.instance?.AbrirMenuPausa == true)
         {
             if (menuPausa != null && (menuPrincipal == null || !menuPrincipal.IsOpen))
+            {
                 OpenMenu(menuPausa);
+                ControladorCambiarPersonaje.instance.OcultarTodosLosHUD();
+            }
+                
 
         }
 
@@ -205,6 +210,7 @@ public class MenuManager : MonoBehaviour
             if (EstaEnGameplay)
             {
                 // Volver a gameplay
+                ControladorCambiarPersonaje.instance.ActivarHUDPausa();
                 InputJugador.instance?.VolverAGameplay();
             }
             else if (EstaEnMenuPrincipal)
@@ -265,6 +271,14 @@ public class MenuManager : MonoBehaviour
             OpenMenu(menuPrincipal);
         }
     }
+    public void AbrirPanelTutorial(int IndexPanel)
+    {
+        if (PanelesTutorial[IndexPanel + 1] != null)
+            OpenMenu(PanelesTutorial[IndexPanel + 1]);
+        else
+            Debug.LogWarning($"No se encontró el panel de tutorial: {PanelesTutorial[IndexPanel + 1]}");
+    }
+
 
     public bool EsEscenaDeGameplay(string nombreEscena)
     {
@@ -291,7 +305,6 @@ public class MenuManager : MonoBehaviour
     public MenuInicial MenuInicial => menuInicial;
     public MenuPrincipal MenuPrincipal => menuPrincipal;
     public MenuPausa MenuPausa => menuPausa;
-    public MenuColeccionables MenuColeccionables => menuColeccionables;
     public MenuControles MenuControles => menuControles;
     public MenuCreditos MenuCreditos => menuCreditos;
     public MenuVolumen MenuVolumen => menuVolumen;
@@ -299,4 +312,6 @@ public class MenuManager : MonoBehaviour
     public MenuMuertePaco MenuMuertePaco => menuMuertePaco;
     public MenuTotem MenuTotem => menuTotem;
     public MenuGraficos MenuGraficos => menuGraficos;
+    public MenuColeccionables MenuColeccionables => menuColeccionables;
+    public MenuVisualizador3D MenuVisualizador3D => menuVisualizador3D;
 }

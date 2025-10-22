@@ -12,8 +12,11 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 81626b989db8d4d41a4947b6cef528af
   - enabled: 1
-    path: Assets/Scenes/Capitulo1-Introduccion.unity
+    path: Assets/Scenes/Demo-Combate1.unity
     guid: 6f6f9f25611e46340ab8c601b027394e
+  - enabled: 1
+    path: Assets/Scenes/Demo-Combate2.unity
+    guid: 371e8b8cbd3b0a047ba4cab4e85f074d
   - enabled: 0
     path: Assets/Scenes/ArbolHabilidades.unity
     guid: 2f2ac72108cf21f4e9f1adbdbef52507

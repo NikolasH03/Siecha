@@ -44,6 +44,7 @@ public class MenuPausa : MenuBaseConNavegacion
     {
         CloseMenu();
         InputJugador.instance?.VolverAGameplay();
+        ControladorCambiarPersonaje.instance.ActivarHUDPausa();
     }
 
     public void AbrirOpciones()
@@ -58,7 +59,6 @@ public class MenuPausa : MenuBaseConNavegacion
 
     public void IrArbolHabilidades(string nivel)
     {
-        AudioManager.Instance?.PlayMusic(AudioManager.Instance.mus_arbol);
         Time.timeScale = 1f;
         SceneManager.LoadScene(nivel);
     }

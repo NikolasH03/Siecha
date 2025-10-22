@@ -81,4 +81,14 @@ public class EnemyManager : MonoBehaviour
 
         return disponibles[Random.Range(0, disponibles.Count)];
     }
+    public bool AreAllEnemiesDead()
+    {
+        enemigos.RemoveAll(e => e == null); // limpiar nulos
+        foreach (var enemigo in enemigos)
+        {
+            if (enemigo != null && !enemigo.EstaMuerto())
+                return false;
+        }
+        return true;
+    }
 }
