@@ -15,6 +15,7 @@ public class EstadoRebirDano : EstadoBase
     public override void OnEnter()
     {
         Debug.Log("Recibiendo Daño!");
+        enemigo.desactivarCollider();
         animator.CrossFade(DamageHash, duracionTransicion);
         vidaEnemigo.setRecibiendoDano(false);
         temporizadorDano.Empezar();

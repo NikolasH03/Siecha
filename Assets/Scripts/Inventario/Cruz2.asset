@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b2238554f1e83a4fbec25fe9afee535, type: 3}
+  m_Name: Cruz2
+  m_EditorClassIdentifier: 
+  id: 2
+  nombre: Cruz
+  descripcion: I'm a WFH software engineer. Coffee breaks are overrated. Wank breaks
+    are where it's at because post nut clarity code is the best code.
+  modelo3D: {fileID: 5551803659168844248, guid: b63eb9baaa9bcde4c979fdb142fc3dc9, type: 3}
+  icono: {fileID: 21300000, guid: 55172e819ab7aec4e97f488429d7ab7c, type: 3}

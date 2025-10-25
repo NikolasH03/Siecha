@@ -32,18 +32,25 @@ public class UIIndicadorRecolectado : MonoBehaviour
 
     private void Update()
     {
-        if (puedeAbrirVisualizador && Input.GetKeyDown(KeyCode.Tab))
+        if (puedeAbrirVisualizador && InputJugador.instance.AbrirMenuPausa)
         {
-
-            ColeccionableData data = InventarioColeccionables.instance.GetDatosPorID(idActual);
-            PausaUI.instance.Pausar();
-            PausaUI.instance.MostrarColeccionables();
-            UIVisualizador3D.instance.Mostrar(data);
-
-
-
+            AbrirVisualizadorColeccionable();
             OcultarIndicador();
         }
+    }
+
+    private void AbrirVisualizadorColeccionable()
+    {
+        ColeccionableData data = InventarioColeccionables.instance.GetDatosPorID(idActual);
+
+        MenuManager.Instance.OpenMenu(MenuManager.Instance.MenuPausa);
+
+        MenuManager.Instance.OpenMenu(MenuManager.Instance.MenuColeccionables);
+
+        MenuManager.Instance.OpenMenu(MenuManager.Instance.MenuVisualizador3D);
+
+        if (UIVisualizador3D.instance != null)
+            UIVisualizador3D.instance.Mostrar(data);
     }
 }
 

@@ -6,7 +6,6 @@ public class EstadisticasCombateSO : ScriptableObject
     [Header("Stats Base")]
     public float vidaBase = 100;
     public float estaminaBase = 100;
-    public float danoBase = 10;
     public float curacionEstamina = 5;
 
     [Header("Cadena de ataques")]

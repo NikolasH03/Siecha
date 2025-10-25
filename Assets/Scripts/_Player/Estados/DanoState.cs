@@ -2,11 +2,15 @@ using UnityEngine;
 
 public class DanoState : CombatState
 {
-    public DanoState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
+    private int DanoRecibido;
+    public DanoState(CombatStateMachine fsm, ControladorCombate cc , int dano) : base(fsm, cc) 
+    { 
+        this.DanoRecibido = dano;
+    }
 
     public override void Enter()
     {
-        combatController.stats.RecibirDano(combatController.stats.DanoBase);
+        combatController.stats.RecibirDano(DanoRecibido);
 
         if (combatController.stats.VidaActual <= 0)
         {

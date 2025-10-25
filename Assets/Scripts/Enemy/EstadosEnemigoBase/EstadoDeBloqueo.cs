@@ -17,7 +17,6 @@ public class EstadoDeBloqueo : EstadoBase
         Debug.Log("Bloqueo!!!");
         vidaEnemigo.setBloqueado(true);
         animator.CrossFade(BlockHash, duracionTransicion);
-        vidaEnemigo.ConsumirStaminaPorBloqueo();
     }
 
     public override void Update()

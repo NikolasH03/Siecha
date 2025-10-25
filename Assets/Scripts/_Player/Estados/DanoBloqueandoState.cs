@@ -2,13 +2,17 @@ using UnityEngine;
 
 public class DanoBloqueandoState : CombatState
 {
-    public DanoBloqueandoState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
+    private int DanoRecibido;
+    public DanoBloqueandoState(CombatStateMachine fsm, ControladorCombate cc, int Dano) : base(fsm, cc)
+    { 
+        this.DanoRecibido = Dano;
+    }
 
     public override void Enter()
     {
 
         combatController.InvulneravilidadJugador();
-        combatController.stats.UsarEstamina(combatController.stats.DanoBase);
+        combatController.stats.UsarEstamina(DanoRecibido);
 
         if (combatController.stats.EstaminaActual <= 0)
         {

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fa8c3e8e434004e948377a6d3be22a, type: 3}
+  m_Name: VocesEnemigos
+  m_EditorClassIdentifier: 
+  voices:
+  - id: Ataque
+    variations:
+    - {fileID: 11400000, guid: 21b65cc5e01810b4cabf5b22a39a95f3, type: 2}
+    - {fileID: 11400000, guid: 139affe79c1677b4fadb8ddcdb3b8580, type: 2}
+    - {fileID: 11400000, guid: 75c93edef3299b842b69d471c445ef7a, type: 2}
+  - id: Deteccion
+    variations:
+    - {fileID: 11400000, guid: 9cded74753a8af449a39b8bebe31551c, type: 2}
+    - {fileID: 11400000, guid: 467cfd4196b2b604ead0fc685673c01d, type: 2}
+    - {fileID: 11400000, guid: aa820cd7e27f1564fba5f79ef5d60e0f, type: 2}
+  - id: Esquive
+    variations:
+    - {fileID: 11400000, guid: 069018e7aefbd2048965625834797b9a, type: 2}
+    - {fileID: 11400000, guid: c0aca70783307cf49a8eca550848d0fd, type: 2}
+    - {fileID: 11400000, guid: 4f3cb46c557980a468c04796eda2f1f4, type: 2}
+  - id: Revivir
+    variations:
+    - {fileID: 11400000, guid: cb09c67b1ff8cdb4d8f9f90edc72934b, type: 2}
+    - {fileID: 11400000, guid: 5c2c9e4e4ac01f243b9038ce8cfcb05f, type: 2}
+    - {fileID: 11400000, guid: 9c1e38c6abe5e4145a8095834ed42202, type: 2}

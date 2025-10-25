@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nombre: Estoque
   "da\xF1oGolpeFuerte": 2
-  "da\xF1oGolpeLigero": 2
+  "da\xF1oGolpeLigero": 4
   "da\xF1oGolpeCargado": 12
   "da\xF1oGolpeFuerteGuardia": 4
   "da\xF1oGolpeLigeroGuardia": 2

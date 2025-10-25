@@ -89,26 +89,11 @@ public class ControladorCombate : MonoBehaviour
         fsm = new CombatStateMachine();
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
         combos = ComboDatabase.Combos;
-
-        Time.timeScale = 1;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_exploracion);
-        AudioManager.Instance.PlayAmbience(AudioManager.Instance.amb_naturaleza);
     }
     public void Update()
     {
         fsm.Update();
     }
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag == "hostile")
-        {
-            JugadorRecibeDano();
-        }
-    }
-
     public void EmpezarRegeneracionEstamina()
     {
         if (regeneracionCoroutine != null) StopCoroutine(regeneracionCoroutine);
@@ -128,11 +113,11 @@ public class ControladorCombate : MonoBehaviour
         regeneracionCoroutine = null;
     }
 
-    public void JugadorRecibeDano()
+    public void JugadorRecibeDano(int Dano)
     {
         if (bloqueando)
         {
-            fsm.ChangeState(new DanoBloqueandoState(fsm, this));
+            fsm.ChangeState(new DanoBloqueandoState(fsm, this, Dano));
         }
         else
         {
@@ -142,7 +127,7 @@ public class ControladorCombate : MonoBehaviour
             }
 
             ResetCompleto();
-            fsm.ChangeState(new DanoState(fsm, this));
+            fsm.ChangeState(new DanoState(fsm, this, Dano));
         }
     }
 
@@ -231,7 +216,7 @@ public class ControladorCombate : MonoBehaviour
         foreach (var hit in hits)
         {
             var enemy = hit.GetComponent<HealthComp>();
-            if (enemy != null && enemy.EstaStuneado)
+            if (enemy != null && enemy.SePuedeHacerFinisher())
             {
                 return enemy;
             }

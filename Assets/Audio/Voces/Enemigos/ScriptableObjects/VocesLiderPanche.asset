@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57fa8c3e8e434004e948377a6d3be22a, type: 3}
+  m_Name: VocesLiderPanche
+  m_EditorClassIdentifier: 
+  voices:
+  - id: CambioFase
+    variations:
+    - {fileID: 11400000, guid: 7dcedd7ffb114a349bc24fb845c33ee3, type: 2}
+    - {fileID: 11400000, guid: 85f5e6adf07713347b9b21cf4e323290, type: 2}
+    - {fileID: 11400000, guid: 658c61ed14305dd4ea7b222d5490276b, type: 2}
+  - id: Fase1
+    variations:
+    - {fileID: 11400000, guid: f270cd006af778b4a9a8188b09372cc1, type: 2}
+    - {fileID: 11400000, guid: 86ce46ddf3ca72148b5117419d49201b, type: 2}
+    - {fileID: 11400000, guid: 57e2acf50778fdc42aa5ba359de49045, type: 2}
+    - {fileID: 11400000, guid: 9c9697062999b2e44b68f019be397c7c, type: 2}
+    - {fileID: 11400000, guid: f54129badd2d68a418da78ecee51f748, type: 2}
+  - id: Muerte
+    variations:
+    - {fileID: 11400000, guid: d5869c39ed833824da562b816e53b630, type: 2}
+    - {fileID: 11400000, guid: 3a1571ad6c8eb0d4dafc2f9dbafc330c, type: 2}
+    - {fileID: 11400000, guid: bad9973962109c74a9e00c9512193910, type: 2}

@@ -4,14 +4,12 @@ using UnityEngine.AI;
 public class EstadoSeguirJugador : EstadoBase
 {
     readonly NavMeshAgent agent;
-    readonly Transform jugador;
 
     private float velocidadBase;
     private float velocidadPersecucion;
-    public EstadoSeguirJugador(Enemigo enemigo, Animator animator, NavMeshAgent agent, Transform juagdor, float velocidadPersecucion) : base(enemigo, animator)
+    public EstadoSeguirJugador(Enemigo enemigo, Animator animator, NavMeshAgent agent, float velocidadPersecucion) : base(enemigo, animator)
     {
         this.agent = agent;
-        this.jugador = juagdor;
         this.velocidadBase = agent.speed;
         this.velocidadPersecucion = velocidadPersecucion;
     }
@@ -25,7 +23,7 @@ public class EstadoSeguirJugador : EstadoBase
 
     public override void Update()
     {
-        agent.SetDestination(jugador.position);
+        agent.SetDestination(enemigo.JugadorActual.position);
     }
 
     public override void OnExit()

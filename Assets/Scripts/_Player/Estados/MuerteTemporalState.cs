@@ -23,11 +23,15 @@ public class MuerteTemporalState : CombatState
 
         if (tiempoActual >= tiempoEspera)
         {
-            HUDJugador hud = combatController.GetComponent<HUDJugador>();
-            if (hud != null)
+            if (ControladorCambiarPersonaje.instance.getEsMuisca())
             {
-                hud.MostrarCanvasMuerte();
+                MenuManager.Instance.MostrarPanelMuerteTisqa();
             }
+            else
+            {
+                MenuManager.Instance.MostrarPanelMuertePaco();
+            }
+
         }
     }
 }

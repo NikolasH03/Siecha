@@ -6,19 +6,24 @@ public abstract class EstadoBase : IEstado
     protected readonly Enemigo enemigo;
     protected readonly Animator animator;
     
-    protected static readonly int IddleHash = Animator.StringToHash("Neutral Idle");
+    protected static readonly int IddleHash = Animator.StringToHash("Idle");
     protected static readonly int WalkingHash = Animator.StringToHash("Walking");
-    protected static readonly int RunningHash = Animator.StringToHash("Runing");
-    protected static readonly int AttackHash = Animator.StringToHash("Attack");
-    protected static readonly int Attack1Hash = Animator.StringToHash("punchAttack");
-    protected static readonly int HeavyAttackHash = Animator.StringToHash("heavyAttack");
-    protected static readonly int BlockHash = Animator.StringToHash("Bloqueo");
-    protected static readonly int DamageHash = Animator.StringToHash("damage");
-    protected static readonly int SecuenceHash = Animator.StringToHash("Secuencia");
-    protected static readonly int DodgeHash = Animator.StringToHash("Esquivar Izquierda");
-    protected static readonly int DeathHash = Animator.StringToHash("Falling Back Death");
-    protected static readonly int GuardBreakHash = Animator.StringToHash("Rompe Guardia");
-    protected static readonly int StunHash = Animator.StringToHash("StunAnimation");
+    protected static readonly int RunningHash = Animator.StringToHash("Running");
+    protected static readonly int BlockHash = Animator.StringToHash("Blocking");
+    protected static readonly int DamageHash = Animator.StringToHash("Hit");
+    protected static readonly int DodgeHash = Animator.StringToHash("Dodge");
+    protected static readonly int DeathHash = Animator.StringToHash("Dying");
+    protected static readonly int GuardBreakHash = Animator.StringToHash("GuardBreak");
+    protected static readonly int StunHash = Animator.StringToHash("Stun");
+
+    // Ataques ligeros (combo de 3)
+    protected static readonly int LightAttack1Hash = Animator.StringToHash("Ligero1");
+    protected static readonly int LightAttack2Hash = Animator.StringToHash("Ligero2");
+    protected static readonly int LightAttack3Hash = Animator.StringToHash("Ligero3");
+
+    // Ataques fuertes (combo de 2)
+    protected static readonly int HeavyAttack1Hash = Animator.StringToHash("Fuerte1");
+    protected static readonly int HeavyAttack2Hash = Animator.StringToHash("Fuerte2");
 
     protected const float duracionTransicion = 0.1f;
 

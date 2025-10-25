@@ -16,6 +16,8 @@ public class FinisherState : CombatState
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Finisher");
 
+        target.SetFinisher();
+
         combatController.camaraFinisher.gameObject.SetActive(true);
         combatController.camaraFinisher.LookAt = target.transform;
         combatController.camaraFinisher.Follow = target.transform;
@@ -28,7 +30,7 @@ public class FinisherState : CombatState
         combatController.setAtacando(false);
         combatController.camaraFinisher.LookAt = null;
         combatController.camaraFinisher.gameObject.SetActive(false);
-        target.SetFinisher();
+        target.FinalizarFinisher();
 
     }
 }
