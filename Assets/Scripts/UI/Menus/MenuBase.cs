@@ -15,6 +15,7 @@ public abstract class MenuBase : MonoBehaviour
         if (isOpen) return;
 
         isOpen = true;
+        EventSystem.current.SetSelectedGameObject(null);
         menuContainer.SetActive(true);
 
         if (pauseGame)
