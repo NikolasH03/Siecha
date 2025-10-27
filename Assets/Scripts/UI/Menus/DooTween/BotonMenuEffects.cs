@@ -10,7 +10,7 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [Header("Referencias")]
     [SerializeField] private TextMeshProUGUI textoBoton;
     [SerializeField] private Image efectoHalo;
-    [SerializeField] private RectMask2D haloMask; // La máscara
+    [SerializeField] private RectMask2D haloMask;
 
     [Header("Efectos Visuales - Escala")]
     [SerializeField] private Vector3 escalaHover = new Vector3(1.03f, 1.03f, 1.03f);
@@ -20,9 +20,9 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [SerializeField] private Ease tipoEase = Ease.OutCubic;
 
     [Header("Colores del Texto")]
-    [SerializeField] private Color colorNormal = new Color(0.91f, 0.89f, 0.83f, 0.7f); // E8E3D3 70%
-    [SerializeField] private Color colorHover = new Color(0.051f, 0.106f, 0.165f, 1f); // 0D1B2A 100%
-    [SerializeField] private Color colorSeleccionado = new Color(0.051f, 0.106f, 0.165f, 1f); // 0D1B2A 100%
+    [SerializeField] private Color colorNormal = new Color(0.91f, 0.89f, 0.83f, 0.7f);
+    [SerializeField] private Color colorHover = new Color(0.051f, 0.106f, 0.165f, 1f);
+    [SerializeField] private Color colorSeleccionado = new Color(0.051f, 0.106f, 0.165f, 1f);
 
     [Header("Efecto Halo")]
     [SerializeField] private bool usarEfectoHalo = true;
@@ -54,7 +54,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (textoBoton == null)
             textoBoton = GetComponentInChildren<TextMeshProUGUI>();
 
-        // Configurar halo
         if (efectoHalo != null)
         {
             haloRect = efectoHalo.GetComponent<RectTransform>();
@@ -64,7 +63,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
             c.a = 0;
             efectoHalo.color = c;
             
-            // Buscar o crear la máscara
             if (haloMask == null)
                 haloMask = efectoHalo.GetComponentInParent<RectMask2D>();
             
@@ -77,7 +75,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
             efectoHalo.gameObject.SetActive(false);
         }
 
-        // Fondo transparente
         Image fondo = GetComponent<Image>();
         if (fondo != null)
             fondo.color = new Color(1, 1, 1, 0);
@@ -90,12 +87,79 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
             textoBoton.color = colorNormal;
     }
 
+    private void OnEnable()
+    {
+        // Forzar reseteo al activarse
+        StartCoroutine(ResetearConDelay());
+    }
+
+    private System.Collections.IEnumerator ResetearConDelay()
+    {
+        // Esperar un frame para que Unity termine de inicializar todo
+        yield return null;
+        
+        // Forzar deselección en el EventSystem
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
+        
+        // Resetear estado completamente
+        ResetearEstado();
+    }
+
     private void OnDestroy()
     {
         tweenEscala?.Kill();
         tweenColor?.Kill();
         tweenPulso?.Kill();
         secuenciaHalo?.Kill();
+    }
+
+    // ==================== MÉTODO PÚBLICO PARA RESETEAR ====================
+    /// <summary>
+    /// Resetea el estado del botón a su estado normal.
+    /// Llama a este método cuando regreses al menú para limpiar la selección.
+    /// </summary>
+    public void ResetearEstado()
+    {
+        estaSeleccionado = false;
+        estaEnHover = false;
+        
+        DetenerPulso();
+        secuenciaHalo?.Kill();
+        tweenEscala?.Kill();
+        tweenColor?.Kill();
+        
+        // Restaurar a estado normal
+        transform.localScale = escalaOriginal;
+        
+        if (textoBoton != null)
+            textoBoton.color = colorNormal;
+        
+        if (efectoHalo != null)
+        {
+            efectoHalo.gameObject.SetActive(false);
+            Color c = efectoHalo.color;
+            c.a = 0;
+            efectoHalo.color = c;
+        }
+        
+        // Resetear máscara si existe
+        if (maskRect != null)
+        {
+            RectMask2D mask = maskRect.GetComponent<RectMask2D>();
+            Vector4 padding = mask.padding;
+            padding.x = 0;
+            padding.z = anchoMaskOriginal;
+            mask.padding = padding;
+        }
+        
+        // Deseleccionar en el EventSystem
+        if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+        }
     }
 
     // ==================== EVENTOS ====================
@@ -146,25 +210,20 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         AnimarEscala(estaSeleccionado ? escalaSeleccionado : escalaHover);
     }
 
-
-
     // ==================== ANIMACIONES ====================
     private void AnimarHover(bool entrar)
     {
         if (entrar)
         {
             AnimarEscala(escalaHover);
-            // Animar halo CON cambio de color sincronizado
             if (usarEfectoHalo && efectoHalo != null)
                 MostrarHaloConBarrido(true);
             else
-                // Si no hay halo, cambiar color directamente
                 CambiarColorTexto(colorHover);
         }
         else
         {
             AnimarEscala(escalaOriginal);
-            // Solo cambiar a normal si no está seleccionado
             if (!estaSeleccionado)
             {
                 if (efectoHalo != null)
@@ -180,20 +239,18 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (seleccionar)
         {
             AnimarEscala(escalaSeleccionado);
-            // Reproduce la misma animación de barrido que el hover
             if (usarEfectoHalo && efectoHalo != null)
-                MostrarHaloConBarrido(true); // ✅ animación de entrada
+                MostrarHaloConBarrido(true);
             else
                 CambiarColorTexto(colorSeleccionado);
         }
         else
         {
             AnimarEscala(escalaOriginal);
-            // Solo cambiar a normal si no está en hover
             if (!estaEnHover)
             {
                 if (efectoHalo != null)
-                    MostrarHaloConBarrido(false); // ✅ animación de salida
+                    MostrarHaloConBarrido(false);
                 else
                     CambiarColorTexto(colorNormal);
             }
@@ -224,48 +281,42 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (efectoHalo == null) return;
 
         secuenciaHalo?.Kill();
-        tweenColor?.Kill(); // Cancelar animación de color previa
+        tweenColor?.Kill();
 
         if (mostrar)
         {
-            // Activar halo
             efectoHalo.gameObject.SetActive(true);
 
-            // Alpha visible
             Color c = efectoHalo.color;
             c.a = alphaHaloMax;
             efectoHalo.color = c;
 
             secuenciaHalo = DOTween.Sequence();
 
-            // Si tiene máscara, configurar para revelar de izquierda a derecha
             if (maskRect != null)
             {
                 RectMask2D mask = maskRect.GetComponent<RectMask2D>();
                 
-                // INICIO: padding derecho = ancho completo (oculta todo desde la derecha)
                 Vector4 padding = mask.padding;
-                padding.x = 0; // Sin padding izquierdo
-                padding.z = anchoMaskOriginal; // Padding derecho = todo oculto
+                padding.x = 0;
+                padding.z = anchoMaskOriginal;
                 mask.padding = padding;
 
-                // ANIMACIÓN: reducir padding derecho de ancho completo a 0 (revelar de izquierda a derecha)
                 secuenciaHalo.Append(
                     DOTween.To(
-                        () => mask.padding.z, // Animar padding DERECHO
+                        () => mask.padding.z,
                         x => {
                             Vector4 p = mask.padding;
                             p.z = x;
                             mask.padding = p;
                         },
-                        0f, // Reducir a 0 = completamente visible
+                        0f,
                         duracionHalo
                     ).SetEase(easeHalo)
                 );
             }
             else if (haloRect != null)
             {
-                // Si no hay máscara, animar la posición del halo
                 Vector2 anchoredPos = haloRect.anchoredPosition;
                 anchoredPos.x = -haloRect.rect.width;
                 haloRect.anchoredPosition = anchoredPos;
@@ -276,38 +327,27 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
                 );
             }
 
-            // SINCRONIZAR: Cambiar color del texto JUNTO con el barrido
             if (textoBoton != null)
             {
-                Debug.Log($"Color Normal: {colorNormal} | Color Hover: {colorHover}");
-                Debug.Log($"Color actual del texto antes de animar: {textoBoton.color}");
-                
                 secuenciaHalo.Join(
                     textoBoton.DOColor(colorHover, duracionHalo)
                         .SetEase(easeHalo)
                 );
             }
 
-            secuenciaHalo.SetUpdate(true)
-                .OnComplete(() => {
-                    if (textoBoton != null)
-                        Debug.Log($"Barrido completo - Color final: RGBA({textoBoton.color.r:F3}, {textoBoton.color.g:F3}, {textoBoton.color.b:F3}, {textoBoton.color.a:F3})");
-                });
+            secuenciaHalo.SetUpdate(true);
         }
         else
         {
-            // Solo ocultar si no hay hover ni selección
             if (!estaSeleccionado && !estaEnHover)
             {
                 secuenciaHalo = DOTween.Sequence();
 
-                // Fade out del halo
                 secuenciaHalo.Join(
                     efectoHalo.DOFade(0f, duracionHalo * 0.5f)
                         .SetEase(Ease.InQuad)
                 );
 
-                // Cambiar texto de vuelta a color normal
                 if (textoBoton != null)
                 {
                     secuenciaHalo.Join(
@@ -316,7 +356,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
                     );
                 }
 
-                // Resetear máscara (volver a ocultar desde la derecha)
                 if (maskRect != null)
                 {
                     RectMask2D mask = maskRect.GetComponent<RectMask2D>();
@@ -328,7 +367,7 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
                                 p.z = x;
                                 mask.padding = p;
                             },
-                            anchoMaskOriginal, // Volver a ocultar
+                            anchoMaskOriginal,
                             duracionHalo * 0.5f
                         ).SetEase(Ease.InQuad)
                     );
@@ -340,7 +379,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         }
     }
 
-    // Mostrar halo completo sin animación de barrido (para selección)
     private void MostrarHaloCompletoSinBarrido()
     {
         if (efectoHalo == null) return;
@@ -350,17 +388,15 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
         
         efectoHalo.gameObject.SetActive(true);
 
-        // Máscara revelada completamente (sin padding)
         if (maskRect != null)
         {
             RectMask2D mask = maskRect.GetComponent<RectMask2D>();
             Vector4 padding = mask.padding;
-            padding.x = 0; // Sin padding izquierdo
-            padding.z = 0; // Sin padding derecho = completamente visible
+            padding.x = 0;
+            padding.z = 0;
             mask.padding = padding;
         }
 
-        // Halo en posición correcta
         if (haloRect != null)
         {
             Vector2 anchoredPos = haloRect.anchoredPosition;
@@ -368,14 +404,12 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
             haloRect.anchoredPosition = anchoredPos;
         }
 
-        // Fade in suave del halo
         Color c = efectoHalo.color;
         c.a = alphaHaloMax;
         efectoHalo.DOColor(c, duracionHalo * 0.4f)
             .SetEase(Ease.OutQuad)
             .SetUpdate(true);
         
-        // Cambiar color del texto
         if (textoBoton != null)
         {
             textoBoton.DOColor(colorSeleccionado, duracionHalo * 0.4f)
@@ -397,7 +431,6 @@ public class BotonMenuEffects : MonoBehaviour, IPointerEnterHandler, IPointerExi
             .SetLoops(-1, LoopType.Yoyo)
             .SetUpdate(true);
 
-        // Asegurar que el halo esté visible
         if (usarEfectoHalo && efectoHalo != null && !efectoHalo.gameObject.activeSelf)
             MostrarHaloCompletoSinBarrido();
     }
