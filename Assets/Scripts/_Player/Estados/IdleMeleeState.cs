@@ -33,10 +33,10 @@ public class IdleMeleeState : CombatState
             stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
 
-        //if (InputJugador.instance.cambiarProtagonista)
-        //{
-        //    ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        //}
+        if (InputJugador.instance.cambiarProtagonista)
+        {
+            ControladorCambiarPersonaje.instance.CambiarProtagonista();
+        }
         if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
         {
             combatController.DesactivarVentanaCombo();

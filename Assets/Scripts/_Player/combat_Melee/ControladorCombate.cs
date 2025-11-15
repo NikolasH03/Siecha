@@ -296,7 +296,7 @@ public class ControladorCombate : MonoBehaviour
     public void TerminarAtaqueCargado()
     {
         DesactivarVentanaCombo();
-        fsm.ChangeState(new CooldownCargadoState(fsm, this, 0.5f));
+        fsm.ChangeState(new CooldownCargadoState(fsm, this, 0.2f));
     }
     public void TerminarEstadoDano()
     {

@@ -8,7 +8,7 @@ public class PerderGuardiaState : CombatState
     {
         combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
-        combatController.anim.SetTrigger("Dano");
+        combatController.anim.SetTrigger("GuardBreak");
         combatController.ReproducirVFX(7, 5);
 
     }
