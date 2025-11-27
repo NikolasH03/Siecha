@@ -1,6 +1,8 @@
 # SAMI
 
 > 🎮 **SAMI** es un juego de acción y combate en tercera persona desarrollado en Unity, con combates cuerpo a cuerpo y a distancia, cambio de personaje, IA de enemigos, sistema de stamina/guard-break, navegación con NavMesh, y un control general de escenas, UI, VFX, etc.
+![Exploración en Siecha](Docs/Gameplay1.jpeg)
+![Combate en Siecha](Docs/Gameplay2.png)
 
 ---
 
@@ -35,14 +37,14 @@ Este README sirve como punto de partida para entender la base de código, su org
 
 ## Funcionalidades principales
 
-- Combate cuerpo a cuerpo (ataques ligeros, fuertes, combos, bloqueos, esquives). :contentReference[oaicite:2]{index=2}  
-- Combate a distancia con armas (arco, arcabuz, proyectiles). :contentReference[oaicite:3]{index=3}  
-- Cambio de personaje (Muisca ↔ Español). :contentReference[oaicite:4]{index=4}  
-- Gestión de estadísticas, salud y stamina tanto de jugador como de enemigos. :contentReference[oaicite:5]{index=5}  
-- IA de enemigos con lógica de decisión (utility-AI), máquinas de estado independientes, con estados proactivos y reactivos. :contentReference[oaicite:6]{index=6}  
-- Navegación por NavMesh, con agentes de navegación para personajes y enemigos. :contentReference[oaicite:7]{index=7}  
-- Sistemas de UI / menú / navegación, incluyendo menú principal, tutoriales, configuración, video playback, etc. :contentReference[oaicite:8]{index=8}  
-- Arquitectura de datos mediante ScriptableObjects para armas, estadísticas, configuración de personajes/enemigos. :contentReference[oaicite:9]{index=9}
+- Combate cuerpo a cuerpo (ataques ligeros, fuertes, combos, bloqueos, esquives).
+- Combate a distancia con armas (arco, arcabuz, proyectiles).
+- Cambio de personaje (Muisca ↔ Español). 
+- Gestión de estadísticas, salud y stamina tanto de jugador como de enemigos. 
+- IA de enemigos con lógica de decisión (utility-AI), máquinas de estado independientes, con estados proactivos y reactivos. {index=6}  
+- Navegación por NavMesh, con agentes de navegación para personajes y enemigos. 
+- Sistemas de UI / menú / navegación, incluyendo menú principal, tutoriales, configuración, video playback, etc.
+- Arquitectura de datos mediante ScriptableObjects para armas, estadísticas, configuración de personajes/enemigos.
 
 ---
 
@@ -77,7 +79,7 @@ Por ejemplo:
 ## Flujo principal del juego
 
 [**DIAGRAMA DEL FLUJO DE JUEGO (Gameplay Loop)**]  
-*(Inserta aquí la imagen del diagrama del flujo completo)*
+![DiagramaArquitectura](Docs/DiagramaArquitectura.png)
 
 1. El jugador inicia desde la escena de introducción — video de inicialización.  
 2. Luego pasa al menú principal, desde donde puede acceder a juego, configuración, tutoriales, etc.  
@@ -86,9 +88,9 @@ Por ejemplo:
    - `ControladorCambiarPersonaje` activa el personaje por defecto (Muisca).  
    - `ControladorCombate` carga estadísticas, equipa armas, inicializa la máquina de estados de combate.  
    - `EnemyManager` registra todos los enemigos en la escena.  
-   - Cada enemigo inicia su propia máquina de estados, IA y navegación. :contentReference[oaicite:16]{index=16}  
+   - Cada enemigo inicia su propia máquina de estados, IA y navegación. 
 
-4. Durante el combate: inputs del jugador disparan transiciones de estado → animaciones + colliders → detección de impacto → aplicación de daño → posible reacción enemiga → decisiones de IA → ataque enemigo → daño al jugador → y así en bucle hasta fin de combate. :contentReference[oaicite:17]{index=17}  
+4. Durante el combate: inputs del jugador disparan transiciones de estado → animaciones + colliders → detección de impacto → aplicación de daño → posible reacción enemiga → decisiones de IA → ataque enemigo → daño al jugador → y así en bucle hasta fin de combate.
 
 ---
 
@@ -96,11 +98,11 @@ Por ejemplo:
 
 - **Singleton**: para sistemas globales como `InputJugador`, `EnemyManager`, `ControladorCambiarPersonaje`, `CameraShakeManager`, `GameDataManager`. :contentReference[oaicite:18]{index=18}  
 - **State Pattern (máquinas de estados)**:  
-  - Para el combate del jugador: `CombatStateMachine` + clases derivadas de `CombatState`. :contentReference[oaicite:19]{index=19}  
-  - Para IA enemiga: `MaquinaDeEstados` + `EstadoBase`, con transiciones normales e interrupciones globales (`DesdeCualquier`). :contentReference[oaicite:20]{index=20}  
-- **Facade Pattern**: `ControladorCombate` actúa como fachada que simplifica el acceso a subsistemas complejos como estado de combate, gestión de armas, cálculo de daño, VFX, etc. :contentReference[oaicite:21]{index=21}  
-- **ScriptableObject for data**: para definir armas, estadísticas, configuración, lo que permite al diseñador editar valores sin modificar código. :contentReference[oaicite:22]{index=22}  
-- **Observer / Event-Driven (para animaciones)**: se usan eventos de animación para activar colliders de armas, volver a estado idle, temporizadores para recuperación luego de guard-break, etc. :contentReference[oaicite:23]{index=23}  
+  - Para el combate del jugador: `CombatStateMachine` + clases derivadas de `CombatState`.  
+  - Para IA enemiga: `MaquinaDeEstados` + `EstadoBase`, con transiciones normales e interrupciones globales (`DesdeCualquier`). 
+- **Facade Pattern**: `ControladorCombate` actúa como fachada que simplifica el acceso a subsistemas complejos como estado de combate, gestión de armas, cálculo de daño, VFX, etc.
+- **ScriptableObject for data**: para definir armas, estadísticas, configuración, lo que permite al diseñador editar valores sin modificar código. 
+- **Observer / Event-Driven (para animaciones)**: se usan eventos de animación para activar colliders de armas, volver a estado idle, temporizadores para recuperación luego de guard-break, etc. 
 
 ---
 
