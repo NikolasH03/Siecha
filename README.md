@@ -126,7 +126,7 @@ Por ejemplo:
 | **Juliana María Deaza**    | Environments 3D                                       | [GitHub](https://github.com/JuliDeaza) |
 | **Juan José Camacho**      | Programador de IA                                     | [GitHub](https://github.com/JuanJoII) |
 | **David José Gutiérrez**   | Guionista                                             | [GitHub](https://github.com/DajoGutierrezHernandez) |
-| **Nicolás Hurtado Vargas** | Programador principal / Mecánicas                     | [GitHub](https://github.com/[usuario]) |
+| **Nicolás Hurtado Vargas** | Programador principal / Mecánicas                     | [GitHub](https://github.com/NikolasH03) |
 
 ---
 ## Requerimientos Técnicos
