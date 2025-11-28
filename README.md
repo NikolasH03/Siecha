@@ -119,13 +119,13 @@ Por ejemplo:
 
 | Integrante                 | Rol                                                   | GitHub                                 |
 | -------------------------- | ----------------------------------------------------- | -------------------------------------- |
-| **Ricardo López Murcia**   | Tester / Documentador                                 | [GitHub](https://github.com/[usuario]) |
-| **Stefany López**          | Personajes 3D, animación, shaders, UI/UX              | [GitHub](https://github.com/[usuario]) |
+| **Ricardo López Murcia**   | Tester / Documentador                                 | [GitHub]([https://github.com/[usuario]](https://github.com/R1ckLop)) |
+| **Stefany López**          | Personajes 3D, animación, shaders, UI/UX              | [GitHub]([https://github.com/[usuario]](https://github.com/StefanyLopez)) |
 | **Leidy Katerine Pinzón**  | Diseño de personajes, animación, shaders, cinemáticas | [GitHub](https://github.com/[usuario]) |
-| **Gian Luis Osorio**       | Environments 3D                                       | [GitHub](https://github.com/[usuario]) |
-| **Juliana María Deaza**    | Environments 3D                                       | [GitHub](https://github.com/[usuario]) |
-| **Juan José Camacho**      | Programador de IA                                     | [GitHub](https://github.com/[usuario]) |
-| **David José Gutiérrez**   | Guionista                                             | [GitHub](https://github.com/[usuario]) |
+| **Gian Luis Osorio**       | Environments 3D                                       | [GitHub]([https://github.com/[usuario]](https://github.com/SAGIDO7M3L0)) |
+| **Juliana María Deaza**    | Environments 3D                                       | [GitHub]([https://github.com/[usuario]](https://github.com/JuliDeaza)) |
+| **Juan José Camacho**      | Programador de IA                                     | [GitHub]([https://github.com/[usuario]](https://github.com/JuanJoII)) |
+| **David José Gutiérrez**   | Guionista                                             | [GitHub]([https://github.com/[usuario]](https://github.com/DajoGutierrezHernandez)) |
 | **Nicolás Hurtado Vargas** | Programador principal / Mecánicas                     | [GitHub](https://github.com/[usuario]) |
 
 ---
@@ -205,7 +205,7 @@ Este proyecto está bajo la **Licencia MIT**:
 ```
 MIT License
 
-Copyright (c) [AÑO] [TU NOMBRE / EQUIPO]
+Copyright (c) [2025] [Ranita Estudios]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
