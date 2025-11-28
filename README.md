@@ -3,12 +3,12 @@
 > 🎮 **Siecha** es un juego de acción y combate en tercera persona desarrollado en Unity, con combates cuerpo a cuerpo y a distancia, cambio de personaje, IA de enemigos, sistema de stamina/guard-break, navegación con NavMesh, y un control general de escenas, UI, VFX, etc.
 <table>
   <tr>
-    <td><img src="Docs/Gameplay1.jpeg" alt="Screenshot 1" width="300"/></td>
-    <td><img src="Docs/Cinematica1.png" alt="Screenshot 2" width="300"/></td>
+    <td><img src="Docs/Gameplay1.jpeg" alt="Screenshot 1" width="500"/></td>
+    <td><img src="Docs/Cinematica1.png" alt="Screenshot 2" width="500"/></td>
   </tr>
   <tr>
-    <td><img src="Docs/Interfaz.png" alt="Screenshot 3" width="300"/></td>
-    <td><img src="Docs/Gameplay2.png" alt="Screenshot 4" width="300"/></td>
+    <td><img src="Docs/Interfaz1.png" alt="Screenshot 3" width="500"/></td>
+    <td><img src="Docs/Gameplay2.png" alt="Screenshot 4" width="500"/></td>
   </tr>
 </table>
 
@@ -22,8 +22,9 @@
 - [Arquitectura del sistema](#arquitectura-del-sistema)  
 - [Estructura del proyecto](#estructura-del-proyecto)  
 - [Flujo principal del juego](#flujo-principal-del-juego)  
-- [Patrones de diseño y decisiones técnicas](#patrones-de-diseño-y-decisiones-técnicas)  
-- [Cómo empezar / Uso](#cómo-empezar--uso)  
+- [Patrones de diseño y decisiones técnicas](#patrones-de-diseño-y-decisiones-técnicas)
+- [Integrantes](#Integrantes-del-Equipo)
+- [Cómo empezar / Uso](#Requerimientos-Técnicos)
 - [Planes futuros / Próximos pasos](#planes-futuros--próximos-pasos)  
 - [Licencia](#licencia)  
 
@@ -38,7 +39,7 @@ SAMI es un juego de acción-combate en tercera persona creado en Unity con las s
 - IA enemiga con máquinas de estados y decisiones basadas en utility-AI.  
 - Combate con sistema de stamina: bloquear consume stamina, lo que puede llevar a guard-break y permitir finalizadores (finishers).  
 - Navegación mediante NavMesh tanto para jugador como para enemigos.  
-- Uso de tecnologías en Unity como Input System (para entrada cruzada), Cinemachine (cámaras), DOTween (animaciones UI), y Universal Render Pipeline (URP). :contentReference[oaicite:1]{index=1}
+- Uso de tecnologías en Unity como Input System (para entrada cruzada), Cinemachine (cámaras), DOTween (animaciones UI), y Universal Render Pipeline (URP). 
 
 Este README sirve como punto de partida para entender la base de código, su organización, y cómo están estructurados los sistemas principales.  
 
@@ -114,12 +115,64 @@ Por ejemplo:
 - **Observer / Event-Driven (para animaciones)**: se usan eventos de animación para activar colliders de armas, volver a estado idle, temporizadores para recuperación luego de guard-break, etc. 
 
 ---
-### Requerimientos
-- Android device compatible with mobile VR headsets (e.g., Google Cardboard).
-- Android 7.0 or newer.
+## Integrantes del Equipo
+
+| Integrante                 | Rol                                                   | GitHub                                 |
+| -------------------------- | ----------------------------------------------------- | -------------------------------------- |
+| **Ricardo López Murcia**   | Tester / Documentador                                 | [GitHub](https://github.com/[usuario]) |
+| **Stefany López**          | Personajes 3D, animación, shaders, UI/UX              | [GitHub](https://github.com/[usuario]) |
+| **Leidy Katerine Pinzón**  | Diseño de personajes, animación, shaders, cinemáticas | [GitHub](https://github.com/[usuario]) |
+| **Gian Luis Osorio**       | Environments 3D                                       | [GitHub](https://github.com/[usuario]) |
+| **Juliana María Deaza**    | Environments 3D                                       | [GitHub](https://github.com/[usuario]) |
+| **Juan José Camacho**      | Programador de IA                                     | [GitHub](https://github.com/[usuario]) |
+| **David José Gutiérrez**   | Guionista                                             | [GitHub](https://github.com/[usuario]) |
+| **Nicolás Hurtado Vargas** | Programador principal / Mecánicas                     | [GitHub](https://github.com/[usuario]) |
+
+---
+## Requerimientos Técnicos
+
+### Controles
+
+* **Teclado y Mouse**: Totalmente compatible.
+* **Mando / Gamepad**: Soportado (Xbox / PlayStation / genérico).
+
+### Conectividad
+
+* **No requiere conexión a Internet** para jugar.
+* No necesita servicios en línea, cuentas externas ni autenticación.
+
+### Sistema
+
+Estos valores son aproximados basados en pruebas internas.
+
+#### **Requisitos Mínimos**
+
+* **SO:** Windows 10 (64 bits)
+* **Procesador:** Intel Core i5 (6ª generación o equivalente)
+* **GPU:** NVIDIA GTX 1050 / GTX 960 / equivalente
+* **RAM:** 8 GB
+* **Almacenamiento:** 1.5 GB de espacio disponible
+* **DirectX:** Versión 11 o superior
+
+#### **Requisitos Recomendados**
+
+(Probado en equipo de desarrollo)
+
+* **Procesador:** Intel Core i7 10ª generación
+* **GPU:** NVIDIA GTX 1650
+* **RAM:** 16 GB
+* **Rendimiento esperado:** ~50 FPS 
+* **Almacenamiento:** 1.5 GB de espacio disponible
+
+### Otros
+
+* No requiere instalación de software adicional.
+* No usa DRM.
+
+- 
 
 ### Instalación
-1. Descargar el ultimo [release](https://github.com/NikolasH03/Siecha/releases/latest).
+1. Descargar el ultimo [Ejecutable](https://github.com/NikolasH03/Siecha/releases/latest).
 2. Ejecutar el archivo Gameplay_Siecha.exe
 3. ¡Juega!
 
