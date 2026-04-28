@@ -18,7 +18,7 @@ public class ControladorCombate : MonoBehaviour
     [SerializeField] bool bloqueando = false;
 
     //intanciar arma melee
-    [SerializeField] private ArmaData armaActual;
+    [SerializeField] private ArmaData armaMelee;
     [SerializeField] private Transform puntoSujecionArmaPrincipal;
     [SerializeField] private Transform puntoSujecionArmaSecundaria;
     private GameObject armaInstanciada;
@@ -27,7 +27,7 @@ public class ControladorCombate : MonoBehaviour
     private ArmaVFX vfxSecundaria;
     public CinemachineVirtualCamera camaraFinisher;
 
-    //Daño del arma a distancia
+    //Dano del arma a distancia
     [SerializeField] private ArmaDistanciaData armaDistancia;
     private bool tieneBufoDisparo = false;
 
@@ -37,7 +37,7 @@ public class ControladorCombate : MonoBehaviour
     public List<TipoInputCombate> secuenciaInputs = new List<TipoInputCombate>();
     public Dictionary<string, Combo> combos;
 
-    //colliders necesarios para generar daño
+    //colliders necesarios para generar daï¿½o
     private Collider ColliderArma;
     private Collider ColliderArmaSecundaria;
     [SerializeField] Collider ColliderPierna;
@@ -57,6 +57,8 @@ public class ControladorCombate : MonoBehaviour
     public int muertesActuales = 0;
     public int muertesMaximas = 5;
 
+    private const float PorcentajeCuracionPorMuerte = 0.15f;
+    
     //referencias a otros codigos
     [SerializeField] private EventosAnimacion eventosAnimacion;
     [SerializeField] ControladorCambioArmas cambioArma;
@@ -66,6 +68,15 @@ public class ControladorCombate : MonoBehaviour
     [HideInInspector] public Vector2 ultimoInputMovimiento;
     //[SerializeField] HabilidadesJugador habilidadesJugador;
 
+    private void OnEnable()
+    {
+        HealthComp.OnEnemyMuerto += CurarPorMuerteEnemigo;
+    }
+
+    private void OnDisable()
+    {
+        HealthComp.OnEnemyMuerto -= CurarPorMuerteEnemigo;
+    }
     void Awake()
     {
         stats = new EstadisticasCombate(statsBase);
@@ -75,7 +86,7 @@ public class ControladorCombate : MonoBehaviour
             GameDataManager.Instance.CargarEnJugador(this);
         }
 
-        EquiparArma(armaActual);
+        EquiparArma(armaMelee);
     }
     private void Start()
     {
@@ -138,6 +149,10 @@ public class ControladorCombate : MonoBehaviour
             fsm.ChangeState(new DanoState(fsm, this, Dano));
         }
     }
+    private void CurarPorMuerteEnemigo()
+    {
+        stats.CurarVida(stats.VidaMax * PorcentajeCuracionPorMuerte);
+    }
 
     public int VerificarArmaEquipada()
     {
@@ -165,32 +180,32 @@ public class ControladorCombate : MonoBehaviour
         vfxPrincipal?.DesactivarTrail();
         vfxSecundaria?.DesactivarTrail();
 
-        armaActual = nuevaArma;
+        armaMelee = nuevaArma;
     }
 
-    public int EntregarDañoArmaMelee(bool enemigoBloqueando)
+    public int EntregarDanoArmaMelee(bool enemigoBloqueando)
     {
         if (!enemigoBloqueando)
         {
             if (tipoAtaque == "ligero")
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigero;
+                return armaMelee.danoGolpeLigero;
             }
             else if (tipoAtaque == "fuerte")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeFuerte;
+                return armaMelee.danoGolpeFuerte;
             }
             else if (tipoAtaque == "cargado")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeCargado;
+                return armaMelee.danoGolpeCargado;
             }
             else
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigero;
+                return armaMelee.danoGolpeLigero;
             }
         }
         else
@@ -198,22 +213,22 @@ public class ControladorCombate : MonoBehaviour
             if (tipoAtaque == "ligero")
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigeroGuardia;
+                return armaMelee.danoGolpeLigeroGuardia;
             }
             else if (tipoAtaque == "fuerte")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeFuerteGuardia;
+                return armaMelee.danoGolpeFuerteGuardia;
             }
             else if (tipoAtaque == "cargado")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeCargado;
+                return armaMelee.danoGolpeCargado;
             }
             else
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigeroGuardia;
+                return armaMelee.danoGolpeLigeroGuardia;
             }
         }
     }

@@ -5,9 +5,9 @@ public class DetectarJugador : MonoBehaviour
 {
     //Este script se encargara de detectar al jugador en un cono que representa la visión del enemigo, sin embargo, si el jugador se encuentra demasiado cerca del enemigo este será detectado
     [Header("Ajustes de Detección de Jugador")]
-    [SerializeField] private float anguloDeDeteccion = 60f; //cono de visión del enemigo
+    [SerializeField] private float anguloDeDeteccion = 120f; //cono de visión del enemigo
     [SerializeField] float radioDeDeteccion = 15f; //este valor debe ser el mismo del rango de patrulla del enemigo
-    [SerializeField] private float radioDeDeteccionAutomatica = 10f;
+    [SerializeField] private float radioDeDeteccionAutomatica = 5f;
     [SerializeField] private float rangoDeAtaque = 3f;
     [SerializeField] private float tiempoPorDeteccion = 1f;
 
@@ -32,7 +32,7 @@ public class DetectarJugador : MonoBehaviour
 
     public void BuscarJugador()
     {
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        Player = EnemyManager.instance.Jugador.transform;
     }
     public bool SePuedeDetectarAlJugador()
     {

@@ -1,36 +1,31 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EstadoMuerte : EstadoBase
 {
-    private readonly float tiempoDeDesaparicion;
     private readonly HealthComp vidaEnemigo;
-
-    public EstadoMuerte(Enemigo enemigo, Animator animator, HealthComp vidaEnemigo, float tiempoDeDesaparicion) : base(enemigo, animator)
+    private readonly NavMeshAgent agente;
+    public EstadoMuerte(Enemigo enemigo, Animator animator, NavMeshAgent agente, HealthComp vidaEnemigo) : base(enemigo, animator)
     {
         this.vidaEnemigo = vidaEnemigo;
-        this.tiempoDeDesaparicion = tiempoDeDesaparicion;
+        this.agente = agente;
     }
 
     public override void OnEnter()
     {
-        Debug.Log("Muelto!");
         animator.CrossFade(DeathHash, duracionTransicion);
         
-        var col = enemigo.GetComponent<Collider>();
-        if (col != null) col.enabled = false;
-
-        var rb = enemigo.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = true;
+        agente.isStopped = true;
+        agente.velocity = Vector3.zero;
+        enemigo.ActivarInvulnerabilidad();
 
         vidaEnemigo.OcultarUIBarras();
-
-        enemigo.StartCoroutine(EliminarEnemigo(tiempoDeDesaparicion));
     }
 
-    private IEnumerator EliminarEnemigo(float delay)
+    public override void Update()
     {
-        yield return new WaitForSeconds(delay);
+        if(vidaEnemigo.TerminaAnimacionMuerte)
         vidaEnemigo.Eliminar();
     }
 }

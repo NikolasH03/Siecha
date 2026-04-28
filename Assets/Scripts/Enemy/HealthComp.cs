@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
 
 public class HealthComp : MonoBehaviour
 {
@@ -36,13 +37,15 @@ public class HealthComp : MonoBehaviour
     [Header("Booleanos Adicionales")]
     private bool estaBloqueado;
     private bool estaMuerto = false;
+    private bool terminaAnimacionMuerte = false;
     private bool estaSiendoDanado = false;
     private bool estaEsquivando = false;
     private bool danoPendiente = false;
     private bool estaEnFinisher = false;
 
-
+    public static event Action OnEnemyMuerto;
     public bool EstaMuerto => estaMuerto;
+    public bool TerminaAnimacionMuerte => terminaAnimacionMuerte;
     public bool EstaSiendoDanado => estaSiendoDanado;
     public bool EstaEsquivando => estaEsquivando;
     public bool EstaStuneado => estaStuneado; 
@@ -99,6 +102,14 @@ public class HealthComp : MonoBehaviour
             estaMuerto = true;
         }
     }
+    public void TerminarDanoRecibido()
+    {
+        estaSiendoDanado = false;
+    }
+    public void TerminarAnimacionMuerte()
+    {
+        terminaAnimacionMuerte = true;
+    }
 
     public void setRecibiendoDano(bool valor) => estaSiendoDanado = valor;
 
@@ -129,6 +140,7 @@ public class HealthComp : MonoBehaviour
     public void Eliminar()
     {
         //InventarioEconomia.instance.enemigoMuerto(1);
+        OnEnemyMuerto?.Invoke(); 
         Debug.Log("Enemigo eliminado");
         gameObject.SetActive(false);
     }
@@ -142,8 +154,6 @@ public class HealthComp : MonoBehaviour
         }
         return false;
     }
-
-    public bool EnemigoHaMuerto() => estaMuerto;
 
     // --- Stamina / Guard Break ---
     public void ConsumirStaminaPorBloqueo(int danoBloqueado)

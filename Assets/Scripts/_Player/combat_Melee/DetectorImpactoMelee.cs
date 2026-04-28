@@ -13,7 +13,7 @@ public class DetectorImpactoMelee : MonoBehaviour
             player = GameObject.FindGameObjectWithTag("Player").GetComponent<ControladorCombate>();
 
             enemigo = other.GetComponent<HealthComp>();
-            enemigo.recibeDano(player.EntregarDañoArmaMelee(enemigo.getBloqueando()));
+            enemigo.recibeDano(player.EntregarDanoArmaMelee(enemigo.getBloqueando()));
             enemigo.setRecibiendoDano(true);
 
             if (enemigo.EstaEsquivando) return;

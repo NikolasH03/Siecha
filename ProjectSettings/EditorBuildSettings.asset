@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Introduccion.unity
+    path: Assets/Scenes/Introduccion_RanitaEstudios.unity
     guid: a53d4c5101c93c445a4c37a37fc2b648
   - enabled: 1
     path: Assets/Scenes/Menu.unity

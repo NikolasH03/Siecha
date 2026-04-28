@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Macana
   m_EditorClassIdentifier: 
   nombre: Macana
-  "da\xF1oGolpeFuerte": 5
-  "da\xF1oGolpeLigero": 2
-  "da\xF1oGolpeCargado": 8
-  "da\xF1oGolpeFuerteGuardia": 8
-  "da\xF1oGolpeLigeroGuardia": 4
+  danoGolpeFuerte: 6
+  danoGolpeLigero: 3
+  danoGolpeCargado: 20
+  danoGolpeFuerteGuardia: 8
+  danoGolpeLigeroGuardia: 3
   prefabArmaPrincipal: {fileID: 8877112164534755396, guid: 0f548349a05496449929c0ce7c0420b1, type: 3}
   prefabArmaSecundaria: {fileID: 7052880051834398934, guid: 3c6393f0c87c40a45837b5d642193310, type: 3}

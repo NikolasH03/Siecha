@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public abstract class MenuBaseConNavegacion : MenuBase
 {
-    [Header("Navegación con Mando")]
+    [Header("Navegaciï¿½n con Mando")]
     protected Selectable primerSeleccionable;
     [SerializeField] protected bool navegacionConMando = true;
 

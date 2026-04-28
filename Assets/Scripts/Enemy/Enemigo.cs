@@ -48,14 +48,11 @@ public class Enemigo : MonoBehaviour
     [Header("Parametros para Esquivar")]
     [SerializeField] public float distanciaEsquivar = 3f;
     [SerializeField] public float velocidadEsquivar = 10f;
-    [SerializeField] private int layerNormal; 
-    [SerializeField] private int layerInvulnerable;
+     private int layerNormal; 
+     private int layerInvulnerable;
 
     [Header("Parametros Estado Daño")]
     [SerializeField] public float duracionDanoRecibido = 1.10f;
-
-    [Header("Parametros Estado Muerte")]
-    [SerializeField] public float tiempoDeDesaparicion = 2f;
 
     // Cache de estados
     private Dictionary<Type, IEstado> estadosCache = new Dictionary<Type, IEstado>();
@@ -91,7 +88,7 @@ public class Enemigo : MonoBehaviour
 
     public void BuscarJugador()
     {
-        this.Jugador = GameObject.FindGameObjectWithTag("Player");
+        this.Jugador = EnemyManager.instance.Jugador;
     }
 
     void Start()
@@ -124,8 +121,8 @@ public class Enemigo : MonoBehaviour
 
     private void InicializarEstadosReactivos()
     {
-        estadoRecibirDano = new EstadoRebirDano(this, animator, vidaEnemigo, duracionDanoRecibido);
-        estadoMuerte = new EstadoMuerte(this, animator, vidaEnemigo, tiempoDeDesaparicion);
+        estadoRecibirDano = new EstadoRebirDano(this, animator, agent, vidaEnemigo, duracionDanoRecibido);
+        estadoMuerte = new EstadoMuerte(this, animator, agent, vidaEnemigo);
         estadoStun = new EstadoStun(this, animator, agent, vidaEnemigo, vidaEnemigo.DuracionStun);
         estadoBloqueo = new EstadoDeBloqueo(this, animator, agent, vidaEnemigo);
         estadoRompeGuardia = new EstadoRomperGuardia(this, animator, agent, vidaEnemigo);
@@ -135,7 +132,7 @@ public class Enemigo : MonoBehaviour
     private void ConfigurarTransicionesReactivas()
     {
         // Muerte (máxima prioridad)
-        DesdeCualquier(estadoMuerte, new FuncPredicate(() => vidaEnemigo.EnemigoHaMuerto()));
+        DesdeCualquier(estadoMuerte, new FuncPredicate(() => vidaEnemigo.EstaMuerto));
 
         // Recibir daño
         DesdeCualquier(estadoRecibirDano, new FuncPredicate(() => vidaEnemigo.EnemigoFueDanado()));
@@ -166,12 +163,12 @@ public class Enemigo : MonoBehaviour
 
         // SÍ detecta → Decidir con Utility AI
         AccionGrupal accionGrupal = utilityGrupal.DecidirAccion();
-
+        
         switch (accionGrupal)
         {
             case AccionGrupal.Atacar:
                 // Verificar si puede atacar por rango
-                if (detectarJugador.SePuedeAtacarAlJugador())
+                if (EstaAtacando() && detectarJugador.SePuedeAtacarAlJugador())
                 {
                     // Decidir tipo de ataque
                     TipoDecisionTactica tactica = utilityTactico.DecidirAccionTactica();
@@ -191,6 +188,10 @@ public class Enemigo : MonoBehaviour
                 break;
 
             case AccionGrupal.Rodear:
+                atacando = false;
+                disponibleParaAtacar = true;
+                CambiarAEstado<EstadoRodearJugador>();
+                break;
             case AccionGrupal.Flanquear:
             case AccionGrupal.Retirarse:
                 atacando = false;
@@ -265,7 +266,7 @@ public class Enemigo : MonoBehaviour
 
     public void OrdenarAtacar()
     {
-        disponibleParaAtacar = false;
+        // disponibleParaAtacar = false;
         atacando = true;
     }
 

@@ -74,14 +74,14 @@ public class UtilityAI_Tactico
 
         float vidaRatio = salud.GetVidaNormalizada();
 
-        if (vidaRatio < 0.5f && vidaRatio > 0.2f)
+        if (vidaRatio < 0.8f && vidaRatio > 0.5f)
         {
-            utilidad += 0.3f; // Vida media-baja = más esquivar
+            utilidad += 0.3f; // Vida media-alta = mas esquivar
         }
 
-        if (vidaRatio <= 0.2f)
+        if (vidaRatio <= 0.5f)
         {
-            utilidad -= 0.2f; // Vida crítica = mejor bloquear
+            utilidad -= 0.2f; // Vida critica = mejor bloquear
         }
 
         return Mathf.Clamp01(utilidad);
@@ -97,11 +97,8 @@ public class UtilityAI_Tactico
 
         float vidaRatio = salud.GetVidaNormalizada();
 
-        if (vidaRatio > 0.6f)
-            utilidad += 0.3f; // Vida alta = más bloqueo
-
-        if (vidaRatio <= 0.3f)
-            utilidad += 0.2f; // Vida baja también = bloquear (conservador)
+        if (vidaRatio <= 0.5f)
+            utilidad += 0.3f; // Vida menor a la mitad = bloquear
 
         if (salud.DebeBloquear())
             utilidad += 0.3f;
@@ -111,17 +108,6 @@ public class UtilityAI_Tactico
 
         return Mathf.Clamp01(utilidad);
     }
-
-    public bool DebeBloquear()
-    {
-        return UtilidadBloquear() > 0.6f;
-    }
-
-    public bool DebeEsquivar()
-    {
-        return UtilidadEsquivar() > 0.5f;
-    }
-
     private bool JugadorBloqueando()
     {
         var combate = jugador.GetComponent<ControladorCombate>();

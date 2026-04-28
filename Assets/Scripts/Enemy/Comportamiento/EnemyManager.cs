@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,16 +7,19 @@ public class EnemyManager : MonoBehaviour
 {
     public static EnemyManager instance;
 
-    [Header("Configuración de Combate")]
+    [Header("Configuracion de Combate")]
     [SerializeField] private int maxEnemigosAtacandoSimultaneamente = 2;
     [SerializeField] private float intervaloEvaluacionAI = 0.1f;
-    [SerializeField] private float intervaloGestionSlots = 0.1f;
+    [SerializeField] private float intervaloGestionSlots = 0.5f;
 
     public List<Enemigo> todosLosEnemigos = new List<Enemigo>();
     public List<Enemigo> enemigosAtacando = new List<Enemigo>();
 
     private Coroutine aiLoopCoroutine;
     private Coroutine gestionSlotsCoroutine;
+    
+    //otra referencias
+    public GameObject Jugador;
 
     private void Awake()
     {
@@ -31,6 +34,8 @@ public class EnemyManager : MonoBehaviour
 
     private void Start()
     {
+        Jugador = GameObject.FindGameObjectWithTag("Player");
+        
         StartCoroutine(InicializarDespuesDeUnFrame());
     }
 
@@ -51,12 +56,18 @@ public class EnemyManager : MonoBehaviour
     {
         todosLosEnemigos.Clear();
         Enemigo[] enemigos = oleada.GetComponentsInChildren<Enemigo>(true);
+        
+        foreach(var e in enemigos) {
+            e.BuscarJugador(); // Forzar bÃºsqueda
+            if(e.detectarJugador != null) e.detectarJugador.BuscarJugador();
+        }
+    
         todosLosEnemigos.AddRange(enemigos);
     }
 
 
     /// <summary>
-    /// Loop de evaluación de IA
+    /// Loop de evaluacion de IA
     /// </summary>
     private IEnumerator AILoop()
     {
@@ -203,6 +214,8 @@ public class EnemyManager : MonoBehaviour
 
     public void ActualizarJugador()
     {
+        Jugador = GameObject.FindGameObjectWithTag("Player");
+        
         foreach (var enemigo in todosLosEnemigos)
         {
             if (enemigo == null) continue;
@@ -220,10 +233,7 @@ public class EnemyManager : MonoBehaviour
     public bool AreAllEnemiesDead()
     {
         LimpiarEnemigos();
-        Debug.Log("el numero de enemigos es " + todosLosEnemigos.Count);
         return todosLosEnemigos.Count == 0;
-
-
     }
 
     public int ContarEnemigosAtacando()
@@ -239,14 +249,13 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Obtiene posición para rodear distribuida alrededor del jugador
+    /// Obtiene posicion para rodear distribuida alrededor del jugador
     /// </summary>
     public Vector3 ObtenerPosicionParaRodear(Enemigo enemigo, float radioDeseado = 8f)
     {
-        GameObject jugadorObj = GameObject.FindGameObjectWithTag("Player");
-        if (jugadorObj == null) return enemigo.transform.position;
+        if (Jugador == null) return enemigo.transform.position;
 
-        Transform jugador = jugadorObj.transform;
+        Transform jugador = Jugador.transform;
 
         // Lista de enemigos rodeando
         List<Enemigo> enemigosRodeando = new List<Enemigo>();

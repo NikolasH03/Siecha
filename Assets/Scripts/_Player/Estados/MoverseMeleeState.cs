@@ -40,10 +40,11 @@ public class MoverseMeleeState : CombatState
             stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
         }
 
-        //if (InputJugador.instance.cambiarProtagonista)
-        //{
-        //    ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        //}
+        if (InputJugador.instance.cambiarProtagonista)
+        {
+            ControladorCambiarPersonaje.instance.CambiarProtagonista();
+        }
+        
         if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
         {
             combatController.DesactivarVentanaCombo();

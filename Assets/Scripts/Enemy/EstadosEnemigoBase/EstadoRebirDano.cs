@@ -1,15 +1,15 @@
 using UnityEngine;
-
+using UnityEngine.AI;
 public class EstadoRebirDano : EstadoBase
 {
-    private readonly Temporizador temporizadorDano;
     private readonly HealthComp vidaEnemigo;
+    private readonly NavMeshAgent agente;
 
-    public EstadoRebirDano(Enemigo enemigo, Animator animator, HealthComp vidaEnemigo, float duracionDano)
+    public EstadoRebirDano(Enemigo enemigo, Animator animator, NavMeshAgent agente, HealthComp vidaEnemigo, float duracionDano)
         : base(enemigo, animator)
     {
         this.vidaEnemigo = vidaEnemigo;
-        this.temporizadorDano = new Temporizador(duracionDano);
+        this.agente = agente;
     }
 
     public override void OnEnter()
@@ -17,17 +17,15 @@ public class EstadoRebirDano : EstadoBase
         enemigo.desactivarCollider();
         animator.CrossFade(DamageHash, duracionTransicion);
         vidaEnemigo.setRecibiendoDano(true);
-        temporizadorDano.Empezar();
+        agente.isStopped = true;
+        agente.velocity = Vector3.zero;
+
     }
 
     public override void Update()
     {
-        temporizadorDano.Tick(Time.deltaTime);
-
-        if (temporizadorDano.HaFinalizado)
+        if (!vidaEnemigo.EstaSiendoDanado)
         {
-            vidaEnemigo.setRecibiendoDano(false);
-
             if (enemigo.detectarJugador.SePuedeDetectarAlJugador())
             {
                 enemigo.CambiarAEstado<EstadoSeguirJugador>();
@@ -39,5 +37,9 @@ public class EstadoRebirDano : EstadoBase
         }
     }
 
-    public bool TerminoTiempoDano => temporizadorDano.HaFinalizado;
+    public override void OnExit()
+    {
+        agente.isStopped = false;
+        agente.velocity = Vector3.zero;
+    }
 }

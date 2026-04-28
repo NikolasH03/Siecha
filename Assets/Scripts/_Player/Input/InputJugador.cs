@@ -15,7 +15,7 @@ public class InputJugador : MonoBehaviour
     public event System.Action<string> OnControlSchemeChanged;
 
     // ========== GAMEPLAY INPUTS ==========
-    public Vector2 moverse { get; private set; }
+    public Vector2 moverse;
     public Vector2 mirar { get; private set; }
 
     public bool correr { get; private set; }

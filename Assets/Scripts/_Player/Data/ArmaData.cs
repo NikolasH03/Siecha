@@ -10,12 +10,12 @@ public class ArmaData : ScriptableObject
     [Header("Info General")]
     public string nombre;
 
-    [Header("Daño")]
-    public int dañoGolpeFuerte;
-    public int dañoGolpeLigero;
-    public int dañoGolpeCargado;
-    public int dañoGolpeFuerteGuardia;
-    public int dañoGolpeLigeroGuardia;
+    [Header("Dano")]
+    public int danoGolpeFuerte;
+    public int danoGolpeLigero;
+    public int danoGolpeCargado;
+    public int danoGolpeFuerteGuardia;
+    public int danoGolpeLigeroGuardia;
 
     [Header("Prefabs de Arma")]
     public GameObject prefabArmaPrincipal;

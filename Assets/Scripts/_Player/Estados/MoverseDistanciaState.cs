@@ -35,10 +35,10 @@ public class MoverseDistanciaState : CombatState
             stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
         }
 
-        //if (InputJugador.instance.cambiarProtagonista)
-        //{
-        //    ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        //}
+        if (InputJugador.instance.cambiarProtagonista)
+        {
+            ControladorCambiarPersonaje.instance.CambiarProtagonista();
+        }
 
         if (InputJugador.instance.apuntar && !anim.GetBool("running"))
         {

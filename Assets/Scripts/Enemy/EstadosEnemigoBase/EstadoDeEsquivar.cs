@@ -50,14 +50,7 @@ public class EstadoDeEsquivar : EstadoBase
             agent.ResetPath();
             estaEsquivando = false;
 
-            if (enemigo.detectarJugador.SePuedeDetectarAlJugador())
-            {
-                enemigo.CambiarAEstado<EstadoSeguirJugador>();
-            }
-            else
-            {
-                enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
-            }
+            enemigo.CambiarAEstado<EstadoRodearJugador>();
         }
     }
 
@@ -65,6 +58,14 @@ public class EstadoDeEsquivar : EstadoBase
     {
         agent.speed = velocidadBase;
         vidaEnemigo.setEsquivando(false);
+        
+        if (enemigo.JugadorActual != null)
+        {
+            Vector3 direccionAlJugador = (enemigo.JugadorActual.position - enemigo.transform.position).normalized;
+            direccionAlJugador.y = 0; // Mantenerlo nivelado
+            enemigo.transform.rotation = Quaternion.LookRotation(direccionAlJugador);
+        }
+        
         agent.isStopped = false;
         enemigo.DesactivarInvulnerabilidad();
     }

@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class MenuInicial : MenuBase
 {
-    [Header("UI del Menú Inicial")]
+    [Header("UI del Menï¿½ Inicial")]
     [SerializeField] private TextMeshProUGUI textoPressAnyKey;
     [SerializeField] private CanvasGroup canvasGroup;
 
@@ -22,7 +22,7 @@ public class MenuInicial : MenuBase
     protected override void OnMenuOpened()
     {
         GameDataManager.Instance.ReiniciarDatosJugador();
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
+        // AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
         esperandoInput = true;
 
         // Cambiar a input UI para detectar cualquier tecla
@@ -75,7 +75,7 @@ public class MenuInicial : MenuBase
             return true;
         }
 
-        // Detectar cualquier botón del gamepad
+        // Detectar cualquier botï¿½n del gamepad
         if (Input.GetKeyDown(KeyCode.JoystickButton0) ||
             Input.GetKeyDown(KeyCode.JoystickButton1) ||
             Input.GetKeyDown(KeyCode.JoystickButton2) ||

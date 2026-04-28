@@ -15,6 +15,6 @@ public class MenuCreditos : MenuBaseConNavegacion
     public void VolverAtras()
     {
         MenuManager.Instance.GoBack();
-        AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
+        // AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
     }
 }

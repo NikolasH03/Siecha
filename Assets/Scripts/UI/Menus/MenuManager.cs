@@ -8,7 +8,7 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance { get; private set; }
 
-    [Header("Menús del Sistema")]
+    [Header("Menï¿½s del Sistema")]
     [SerializeField] private MenuInicial menuInicial;
     [SerializeField] private MenuPrincipal menuPrincipal;
     [SerializeField] private MenuPausa menuPausa;
@@ -25,7 +25,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private MenuTotem menuTotem;
     [SerializeField] private List<PanelTutorial> PanelesTutorial;
 
-    [Header("Configuración de Escenas")]
+    [Header("Configuraciï¿½n de Escenas")]
     [SerializeField] private string[] escenasMenuPrincipal = { "Menu" };
     [SerializeField] private string[] escenasGameplay = { "Capitulo1-Introduccion" };
 
@@ -94,7 +94,7 @@ public class MenuManager : MonoBehaviour
                 currentMenu == menuTotem);
     }
 
-    // NUEVOS: Métodos para abrir paneles desde FSM y tótems
+    // NUEVOS: Mï¿½todos para abrir paneles desde FSM y tï¿½tems
     public void MostrarPanelMuerteTisqa()
     {
         if (menuMuerteTisqa != null && !menuMuerteTisqa.IsOpen)
@@ -172,7 +172,6 @@ public class MenuManager : MonoBehaviour
 
         if (currentMenu != null)
         {
-            Debug.Log($"Cerrando menú actual: {currentMenu.name} y agregándolo al stack");
             menuStack.Push(currentMenu);
             currentMenu.CloseMenu();
         }
@@ -194,7 +193,7 @@ public class MenuManager : MonoBehaviour
             currentMenu = menuStack.Pop();
             currentMenu.OpenMenu();
 
-            // Mantener en UI porque hay más menús
+            // Mantener en UI porque hay mï¿½s menï¿½s
         }
         else if (currentMenu != null)
         {
@@ -206,7 +205,7 @@ public class MenuManager : MonoBehaviour
                 return;
             }
 
-            // Último menú
+            // ï¿½ltimo menï¿½
             currentMenu.CloseMenu();
             currentMenu = null;
 
@@ -239,20 +238,20 @@ public class MenuManager : MonoBehaviour
             currentMenu = null;
         }
 
-        // Decidir input según contexto
+        // Decidir input segï¿½n contexto
         if (EstaEnGameplay)
         {
             InputJugador.instance?.VolverAGameplay();
         }
-        // En menú principal, mantener UI input
+        // En menï¿½ principal, mantener UI input
     }
     public void GoBackToPreviousCoreMenu()
     {
-        // Cerrar el menú actual
+        // Cerrar el menï¿½ actual
         if (currentMenu != null)
             currentMenu.CloseMenu();
 
-        // Vaciar todos los submenús del stack que sean parte de las opciones
+        // Vaciar todos los submenï¿½s del stack que sean parte de las opciones
         while (menuStack.Count > 0)
         {
             var menu = menuStack.Pop();
@@ -279,11 +278,10 @@ public class MenuManager : MonoBehaviour
         if (indexPanel >= 0 && indexPanel < PanelesTutorial.Count)
         {
             OpenMenu(PanelesTutorial[indexPanel]);
-            Debug.Log($"[MenuManager] Mostrando panel de tutorial {indexPanel}");
         }
         else
         {
-            Debug.LogWarning($"[MenuManager] Índice de tutorial inválido: {indexPanel}");
+            Debug.LogWarning($"[MenuManager] indice de tutorial invï¿½lido: {indexPanel}");
         }
     }
 
@@ -312,7 +310,7 @@ public class MenuManager : MonoBehaviour
         return currentMenu.Pause;
     }
 
-    // Métodos de acceso rápido
+    // Mï¿½todos de acceso rï¿½pido
     public MenuInicial MenuInicial => menuInicial;
     public MenuPrincipal MenuPrincipal => menuPrincipal;
     public MenuPausa MenuPausa => menuPausa;

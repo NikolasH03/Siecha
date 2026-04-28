@@ -25,6 +25,13 @@ public class EstadoRodearJugador : EstadoBase
     {
         Transform jugador = enemigo.JugadorActual;
 
+        if (enemigo.GetHealthComp().getBloqueando() || enemigo.GetHealthComp().EstaEsquivando)
+        {
+            agent.isStopped = true; // Detener el movimiento para que la defensa funcione
+            return; 
+        }
+    
+        agent.isStopped = false;
         if (jugador == null)
         {
             Debug.LogWarning($"[{enemigo.name}] Jugador null en EstadoRodear, volviendo a patrullar");
@@ -34,8 +41,13 @@ public class EstadoRodearJugador : EstadoBase
 
         if (!enemigo.detectarJugador.SePuedeDetectarAlJugador())
         {
-            Debug.Log($"[{enemigo.name}] Perdió detección del jugador, volviendo a patrullar");
+            Debug.Log($"[{enemigo.name}] Perdio deteccion del jugador, volviendo a patrullar");
             enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
+            return;
+        }
+        if (enemigo.EstaAtacando()) 
+        {
+            enemigo.CambiarAEstado<EstadoAtacarJugador>();
             return;
         }
 
@@ -59,13 +71,13 @@ public class EstadoRodearJugador : EstadoBase
     {
         if (EnemyManager.instance != null)
         {
-            // Usar distancia del radio de detección automática como referencia
+            // Usar distancia del radio de deteccion automotica como referencia
             float distanciaRodeo = enemigo.detectarJugador != null ? 6f : 6f;
             posicionObjetivo = EnemyManager.instance.ObtenerPosicionParaRodear(enemigo, distanciaRodeo);
         }
         else
         {
-            // Fallback: quedarse donde está
+            // Fallback: quedarse donde esta
             posicionObjetivo = enemigo.transform.position;
         }
     }

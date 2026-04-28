@@ -14,7 +14,7 @@ public class LlaveColeccionable : MonoBehaviour
             InventarioColeccionables.instance.Desbloquear(idColeccionable);
             UIIndicadorRecolectado.instance.MostrarIndicador(idColeccionable);
             gameObject.SetActive(false);
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.efecto_agarrarObjeto, this.transform.position);
+            // AudioManager.Instance.PlaySFX(AudioManager.Instance.efecto_agarrarObjeto, this.transform.position);
         }
     }
     private void OnTriggerEnter(Collider other)

@@ -2,7 +2,12 @@ using System.Collections.Generic;
 using UnityEngine;
 public class CargandoDisparo : CombatState
 {
-    public CargandoDisparo(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
+    private ControladorApuntado apuntado;
+    public CargandoDisparo(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
+    {
+        apuntado = cc.GetComponent<ControladorApuntado>(); 
+    }
+
     public override void Enter()
     {
         combatController.anim.SetTrigger("CargarDisparo");
@@ -21,6 +26,12 @@ public class CargandoDisparo : CombatState
             return;
         }
     }
+
+    public override void Update()
+    {
+        apuntado.EstaApuntando(apuntado.ObtenerPosicionObjetivo());
+    }
+
     public override void Exit()
     {
 

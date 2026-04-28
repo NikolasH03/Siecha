@@ -5,11 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class WaveManager : MonoBehaviour
 {
-    [Header("Configuración de Oleadas")]
+    [Header("Configuracion de Oleadas")]
     [Tooltip("Cada oleada debe ser un GameObject que contenga los enemigos como hijos.")]
     [SerializeField] private List<GameObject> oleadas = new List<GameObject>();
 
-    [Header("Configuración de Tutoriales")]
+    [Header("Configuracion de Tutoriales")]
     [Tooltip("Paneles de tutorial asociados a las primeras oleadas.")]
     [SerializeField] private List<int> indicesPanelesTutorial = new List<int>();
 
@@ -38,7 +38,7 @@ public class WaveManager : MonoBehaviour
 
     private IEnumerator FlujoOleadas()
     {
-        yield return new WaitForSeconds(1f); // Pequeña espera inicial
+        yield return new WaitForSeconds(1f); // Pequeï¿½a espera inicial
 
         while (indiceOleadaActual < oleadas.Count)
         {
@@ -85,7 +85,7 @@ public class WaveManager : MonoBehaviour
         }
 
         // --- Fin de todas las oleadas ---
-        Debug.Log("[WaveManager] Todas las oleadas completadas. Volviendo al menú principal...");
+        Debug.Log("[WaveManager] Todas las oleadas completadas. Volviendo al menï¿½ principal...");
         yield return new WaitForSeconds(tiempoAntesDeCargarMenu);
         SceneManager.LoadScene("Menu");
     }

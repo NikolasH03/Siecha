@@ -26,7 +26,7 @@ public class DispararState : CombatState
         {
             apuntado.EsferaDeDano();
             combatController.ReproducirVFX(4, 2);
-            combatController.ReproducirSonido(4, 2);
+            combatController.ReproducirSonido(1, 2);
             CameraShakeManager.instance.ShakeExplosion();
         }
         
