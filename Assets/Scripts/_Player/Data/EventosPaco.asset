@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea71bfcf01073e6419b8dc231fb722b3, type: 3}
+  m_Name: EventosPaco
+  m_EditorClassIdentifier: 
+  eventos:
+  - id: dash
+    sonido: {fileID: 11400000, guid: 98642997b62acf948b515ff72a1dcea2, type: 2}
+    sonidoAleatorio: {fileID: 0}
+    vfx: {fileID: 0}
+    pivotId: centro
+  - id: disparo_arcabuz
+    sonido: {fileID: 11400000, guid: 2337a8e95b52c434eaee2c5ba965b5a4, type: 2}
+    sonidoAleatorio: {fileID: 0}
+    vfx: {fileID: 0}
+    pivotId: ArmaDistancia
+  - id: disparo_bloqueado
+    sonido: {fileID: 11400000, guid: 72d3361c2dec7d2408719d7dc88a3198, type: 2}
+    sonidoAleatorio: {fileID: 0}
+    vfx: {fileID: 0}
+    pivotId: 0
+  - id: slash
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: d61f76b82f3404b41a33c72407e8f1c8, type: 2}
+    vfx: {fileID: 0}
+    pivotId: ArmaMelee
+  - id: golpe_impacta
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 2da0c8b59d6538341977a242ef4696bf, type: 2}
+    vfx: {fileID: 0}
+    pivotId: ArmaMelee
+  - id: golpe_bloqueado
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 4acaedb9bae650b4db87a15684a68973, type: 2}
+    vfx: {fileID: 0}
+    pivotId: ArmaMelee
+  - id: bloqueo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: f067e8b4827c3b243a8d2238b1f1b6cd, type: 2}
+    vfx: {fileID: 0}
+    pivotId: ArmaSecundaria
+  - id: perder_guardia
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 8ca66fade8e0717428aa9c1533e27de6, type: 2}
+    vfx: {fileID: 0}
+    pivotId: centro
+  - id: inicio_cargado
+    sonido: {fileID: 11400000, guid: c6f5a758013686c44af04aa40439ab02, type: 2}
+    sonidoAleatorio: {fileID: 0}
+    vfx: {fileID: 0}
+    pivotId: ArmaMelee
+  - id: cargado_impacta
+    sonido: {fileID: 11400000, guid: 9e5a8107e507e624aabd98fbd13cea28, type: 2}
+    sonidoAleatorio: {fileID: 0}
+    vfx: {fileID: 0}
+    pivotId: ArmaMelee
+  - id: recibe_impacto
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 8ca66fade8e0717428aa9c1533e27de6, type: 2}
+    vfx: {fileID: 0}
+    pivotId: centro
+  - id: paso_izq_roca
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 94c48f8d2f50a384482cdd720a35ba7d, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_roca
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 94c48f8d2f50a384482cdd720a35ba7d, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der
+  - id: paso_izq_roca_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 952452e9fcccbfe4c99c56e7c32d4865, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_roca_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 952452e9fcccbfe4c99c56e7c32d4865, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der
+  - id: paso_izq_madera
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 8963a4d9162a4ac4fbf3bea4132af546, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_madera
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 8963a4d9162a4ac4fbf3bea4132af546, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der
+  - id: paso_izq_madera_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: ec96810c865c89b4fb23cc236c910102, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_madera_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: ec96810c865c89b4fb23cc236c910102, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der
+  - id: paso_izq_agua
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: cd2a39c5ffb860641839d4d9ac91211d, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_agua
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: cd2a39c5ffb860641839d4d9ac91211d, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der
+  - id: paso_izq_agua_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 7edd75145e2953f4193672c4545d65f3, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_izq
+  - id: paso_der_agua_corriendo
+    sonido: {fileID: 0}
+    sonidoAleatorio: {fileID: 11400000, guid: 7edd75145e2953f4193672c4545d65f3, type: 2}
+    vfx: {fileID: 0}
+    pivotId: pie_der

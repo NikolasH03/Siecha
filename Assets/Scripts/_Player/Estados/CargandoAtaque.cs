@@ -8,7 +8,7 @@ public class CargandoAtaque : CombatState
         combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("CargarAtaque");
         combatController.setAtacando(true);
-        combatController.ReproducirSonido(5,1);
+        combatController.Reproducir("inicio_cargado");
 
     }
     public override void HandleInput()

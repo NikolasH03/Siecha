@@ -288,22 +288,14 @@ public class ControladorCombate : MonoBehaviour
     {
         targeting.EjecutarDash();
     }
-    public void ReproducirVFX(int indexVFX, int indexPivot = 0)
-    {
-        eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
-    }
 
-    public void ReproducirSonido(int indexSonido, int indexPivot = 0)
+    public void Reproducir(string evento)
     {
-        eventosAnimacion.ReproducirSonidoPivoteEstablecido(indexSonido, indexPivot);
+        eventosAnimacion.Reproducir(evento);
     }
-    public void ReproducirSonidoAleatorio(int indexSonido, int indexPivot = 0)
+    public void ReproducirTransform(string evento, GameObject pivote)
     {
-        eventosAnimacion.ReproducirSonidoAleatorio(indexSonido, indexPivot);
-    }
-    public void ReproducirSonidoTransform(int indexSonido, GameObject pivote)
-    {
-        eventosAnimacion.ReproducirSonidoTransform(indexSonido, pivote);
+        eventosAnimacion.ReproducirTransform(evento, pivote);
     }
 
     // funciones para los Animation Events
@@ -437,38 +429,6 @@ public class ControladorCombate : MonoBehaviour
         ColliderArma.enabled = false;
         ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
-    }
-    public void AnimationEvent_ReproducirPieIzq()
-    {
-        eventosAnimacion.ReproducirVFX(1, 3);
-
-        if (!anim.GetBool("running"))
-            eventosAnimacion.ReproducirSonidoAleatorio(4, 3);
-        else
-            eventosAnimacion.ReproducirSonidoAleatorio(5, 3);
-
-
-
-    }
-    public void AnimationEvent_ReproducirPieDer()
-    {
-        eventosAnimacion.ReproducirVFX(1, 4);
-
-        if (!anim.GetBool("running"))
-            eventosAnimacion.ReproducirSonidoAleatorio(4, 4);
-        else
-            eventosAnimacion.ReproducirSonidoAleatorio(5, 4);
-
-    }
-
-    public void AnimationEvent_ReproducirBloqueo()
-    {
-        eventosAnimacion.ReproducirVFX(0, 0);
-        eventosAnimacion.ReproducirSonidoAleatorio(3, 0);
-    }
-    public void ReproducirSonidoSlash()
-    {
-        eventosAnimacion.ReproducirSonidoAleatorio(0, 1);
     }
     public void ActivarTrailArmaPrincipal()
     {

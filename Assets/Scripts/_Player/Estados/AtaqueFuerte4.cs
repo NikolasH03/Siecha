@@ -12,7 +12,7 @@ public class AtaqueFuerte4 : CombatState
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Fuerte4");
         combatController.setAtacando(true);
-        combatController.ReproducirSonidoSlash();
+        combatController.Reproducir("slash");
     }
     public override void Exit()
     {

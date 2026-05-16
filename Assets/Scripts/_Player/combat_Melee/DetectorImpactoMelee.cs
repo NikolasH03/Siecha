@@ -20,14 +20,12 @@ public class DetectorImpactoMelee : MonoBehaviour
 
             if (enemigo.getBloqueando())
             {
-                player.ReproducirSonidoAleatorio(2, 1);
-                player.ReproducirVFX(2, 1);
+                player.Reproducir("golpe_bloqueado");
             }
 
             else
             {
-                player.ReproducirSonidoAleatorio(1, 1);
-                player.ReproducirVFX(2, 1);
+                player.Reproducir("golpe_impacta");
             }
 
         }

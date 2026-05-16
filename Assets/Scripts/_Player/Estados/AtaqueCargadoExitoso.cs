@@ -11,7 +11,7 @@ public class AtaqueCargadoExitoso : CombatState
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("CargadoExitoso");
         combatController.setAtacando(true);
-        combatController.ReproducirSonido(6, 1);
+        combatController.Reproducir("cargado_impacta");
         Debug.Log("el ataque cargado fue exitoso");
     }
 

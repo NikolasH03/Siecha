@@ -30,8 +30,7 @@ public class DanoState : CombatState
             combatController.InvulneravilidadJugador();
             combatController.OrientarJugador(combatController.ultimoInputMovimiento);
             combatController.anim.SetTrigger("Dano");
-            combatController.ReproducirVFX(5, 5);
-            combatController.ReproducirSonidoAleatorio(10, 5);
+            combatController.Reproducir("recibe_impacto");
             CameraShakeManager.instance.ShakeGolpeFuerte();
 
         }

@@ -21,7 +21,7 @@ public class DanoBloqueandoState : CombatState
         }
         combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("DanoBloqueando");
-        combatController.ReproducirVFX(0, 0);
+        combatController.Reproducir("bloqueo");
         combatController.EmpezarRegeneracionEstamina();
 
     }

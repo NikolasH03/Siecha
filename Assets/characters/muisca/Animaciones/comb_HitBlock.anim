@@ -31792,8 +31792,8 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.06666667
-    functionName: AnimationEvent_ReproducirBloqueo
-    data: 
+    functionName: Reproducir
+    data: bloqueo
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0

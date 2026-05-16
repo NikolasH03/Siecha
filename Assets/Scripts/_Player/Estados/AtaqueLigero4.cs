@@ -11,7 +11,7 @@ public class AtaqueLigero4 : CombatState
         if (combatController.statsBase.maxAtaquesLigeros <= 4) combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Ligero4");
         combatController.setAtacando(true);
-        combatController.ReproducirSonidoSlash();
+        combatController.Reproducir("slash");
     }
     public override void HandleInput()
     {

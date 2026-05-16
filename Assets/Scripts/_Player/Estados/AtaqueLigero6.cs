@@ -10,7 +10,7 @@ public class AtaqueLigero6 : CombatState
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Ligero6");
         combatController.setAtacando(true);
-        combatController.ReproducirSonidoSlash();
+        combatController.Reproducir("slash");
     }
 
     public override void Exit()

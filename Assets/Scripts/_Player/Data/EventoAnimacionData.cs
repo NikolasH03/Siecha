@@ -5,18 +5,6 @@ using UnityEngine;
 /// ScriptableObject que define TODOS los eventos de animación de un personaje o enemigo.
 /// Cada evento tiene un ID legible, sonido, VFX y el nombre del pivot desde donde se reproduce.
 ///
-/// CREA UN ASSET POR PERSONAJE/ENEMIGO:
-///   Clic derecho en Project → Audio/Eventos → Evento Animacion Data
-///   Nombres sugeridos:
-///     EventoAnim_Muisca
-///     EventoAnim_Espanol
-///     EventoAnim_EnemBase
-///     EventoAnim_EnemDistancia
-///     EventoAnim_EnemTanque
-///     EventoAnim_EnemPicaro
-///     EventoAnim_JefeFase1
-///     EventoAnim_JefeFase2
-///     EventoAnim_JefeFase3
 /// </summary>
 [CreateAssetMenu(menuName = "Audio/Eventos/Evento Animacion Data")]
 public class EventoAnimacionData : ScriptableObject

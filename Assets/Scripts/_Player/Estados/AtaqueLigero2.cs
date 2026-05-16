@@ -13,7 +13,7 @@ public class AtaqueLigero2 : CombatState
         combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("Ligero2");
         combatController.setAtacando(true);
-        combatController.ReproducirSonidoSlash();
+        combatController.Reproducir("slash");
     }
 
     public override void HandleInput()

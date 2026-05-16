@@ -873,20 +873,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab972b8361d42ea479c9be48661a3fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  datosEventos: {fileID: 0}
+  datosEventos: {fileID: 11400000, guid: 3dc28cc937a772f4e8b62fa1743d8101, type: 2}
   pivotsImpacto:
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
+  - id: centro
+    transform: {fileID: 1618948308}
+  - id: ArmaMelee
+    transform: {fileID: 263926914}
+  - id: ArmaSecundaria
+    transform: {fileID: 1649129020}
+  - id: ArmaDistancia
+    transform: {fileID: 1202661480}
+  - id: pie_der
+    transform: {fileID: 1228638490}
+  - id: pie_izq
+    transform: {fileID: 1556810571}
 --- !u!114 &16939187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8235,6 +8235,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4412656500706282326, guid: cc7c4765384839f48ae4fa8b6e12bde0, type: 3}
   m_PrefabInstance: {fileID: 1202661477}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1202661480 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3926395633523824629, guid: cc7c4765384839f48ae4fa8b6e12bde0, type: 3}
+  m_PrefabInstance: {fileID: 1202661477}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1205172635
 GameObject:
   m_ObjectHideFlags: 0
@@ -11835,20 +11840,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab972b8361d42ea479c9be48661a3fb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  datosEventos: {fileID: 0}
+  datosEventos: {fileID: 11400000, guid: 0ef90f13b973f444fa844e06a2d3f683, type: 2}
   pivotsImpacto:
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
-  - id: 
-    transform: {fileID: 0}
+  - id: centro
+    transform: {fileID: 2015070367}
+  - id: ArmaMelee
+    transform: {fileID: 326910967}
+  - id: ArmaSecundaria
+    transform: {fileID: 2129269780}
+  - id: ArmaDistancia
+    transform: {fileID: 1756766260}
+  - id: pie_der
+    transform: {fileID: 1684957307}
+  - id: pie_izq
+    transform: {fileID: 2120668658}
 --- !u!114 &1442962837
 MonoBehaviour:
   m_ObjectHideFlags: 0

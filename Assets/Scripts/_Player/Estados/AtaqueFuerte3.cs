@@ -13,7 +13,7 @@ public class AtaqueFuerte3 : CombatState
         if (combatController.statsBase.maxAtaquesFuertes <= 3) combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Fuerte3");
         combatController.setAtacando(true);
-        combatController.ReproducirSonidoSlash();
+        combatController.Reproducir("slash");
     }
     public override void HandleInput()
     {

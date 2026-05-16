@@ -18,15 +18,14 @@ public class DispararState : CombatState
         if (ControladorCambiarPersonaje.instance.getEsMuisca()) 
         { 
             apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo());
-            combatController.ReproducirSonido(8, 5);
+            combatController.Reproducir("disparar_arco");
 
         }
 
         else
         {
             apuntado.EsferaDeDano();
-            combatController.ReproducirVFX(4, 2);
-            combatController.ReproducirSonido(1, 2);
+            combatController.Reproducir("disparo_arcabuz");
             CameraShakeManager.instance.ShakeExplosion();
         }
         

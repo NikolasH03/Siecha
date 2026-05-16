@@ -37066,15 +37066,15 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 0.33333334
-    functionName: AnimationEvent_ReproducirPieIzq
-    data: 
+    functionName: Reproducir
+    data: paso_izq_roca
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 4
     messageOptions: 0
   - time: 0.76666665
-    functionName: AnimationEvent_ReproducirPieDer
-    data: 
+    functionName: Reproducir
+    data: paso_der_roca
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 4

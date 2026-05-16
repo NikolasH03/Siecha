@@ -5,16 +5,10 @@ using UnityEngine;
 /// Componente que vive en cada personaje/enemigo y ejecuta sus eventos de animación.
 /// Conecta el Animator con AudioManager y VFXPool usando nombres legibles en lugar de índices.
 ///
-/// CONFIGURACIÓN EN EL INSPECTOR:
-///   1. Asigna el EventoAnimacionData correspondiente a este personaje.
-///   2. Agrega los pivots de impacto con sus IDs (deben coincidir con los pivotId del asset).
-///
 /// USO EN EL ANIMATOR:
 ///   En cada Animation Event, llama al método 'Reproducir' con el string del evento.
 ///   Ejemplo: Function = "Reproducir", String = "golpe_macana"
 ///
-///   Si el evento solo necesita sonido sin VFX (o viceversa), simplemente deja
-///   vacío el campo correspondiente en el EventoAnimacionData — el sistema lo maneja.
 /// </summary>
 public class EventosAnimacion : MonoBehaviour
 {
@@ -99,24 +93,26 @@ public class EventosAnimacion : MonoBehaviour
         if (evento.vfx != null)
             VFXPool.Instance.PlayVFX(evento.vfx, posicion, rotacion);
     }
+    public void ReproducirTransform(string idEvento, GameObject posicionEvento)
+    {
+        if (datosEventos == null) return;
 
-    // ════════════════════════════════════════════════════════════════════════
-    // MÉTODOS HEREDADOS — mantienen compatibilidad con ControladorCombate
-    // mientras migras los animation events al nuevo sistema.
-    // UNA VEZ MIGRADO TODO, PUEDES ELIMINAR ESTOS MÉTODOS.
-    // ════════════════════════════════════════════════════════════════════════
+        EventoAnimacionData.EventoEntry evento = datosEventos.GetEvento(idEvento);
+        if (evento == null) return;
 
-    /// @deprecated Usar Reproducir("nombre_evento") desde el Animation Event.
-    public void ReproducirVFX(int indexVFX, int indexPivot = 0) { }
+        Vector3 posicion = posicionEvento.transform.position;
+        Quaternion rotacion = posicionEvento.transform.rotation;
 
-    /// @deprecated Usar Reproducir("nombre_evento") desde el Animation Event.
-    public void ReproducirSonidoPivoteEstablecido(int indexSonido, int indexPivot = 0) { }
+        // Sonido: el aleatorio tiene prioridad sobre el único si ambos están asignados
+        if (evento.sonidoAleatorio != null)
+            AudioManager.Instance.PlayRandomSFX(evento.sonidoAleatorio, posicion);
+        else if (evento.sonido != null)
+            AudioManager.Instance.PlaySFX(evento.sonido, posicion);
 
-    /// @deprecated Usar Reproducir("nombre_evento") desde el Animation Event.
-    public void ReproducirSonidoAleatorio(int indexSonido, int indexPivot = 0) { }
-
-    /// @deprecated Usar Reproducir("nombre_evento") desde el Animation Event.
-    public void ReproducirSonidoTransform(int indexSonido, GameObject pivote) { }
+        // VFX: solo si está asignado
+        if (evento.vfx != null)
+            VFXPool.Instance.PlayVFX(evento.vfx, posicion, rotacion);
+    }
 
     // ════════════════════════════════════════════════════════════════════════
     // HELPERS INTERNOS
