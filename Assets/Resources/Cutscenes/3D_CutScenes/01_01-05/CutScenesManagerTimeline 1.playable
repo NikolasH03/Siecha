@@ -22,7 +22,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 29.5
+    m_Start: 38.83333333333331
     m_ClipIn: 0
     m_Asset: {fileID: -6982828850212198252}
     m_Duration: 10
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 24.066666984557113
+    m_Start: 33.400000317890424
     m_ClipIn: 0
     m_Asset: {fileID: -4437313913986186484}
     m_Duration: 1.3750000000000018
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 18.399999999999007
+    m_Start: 27.73333333333233
     m_ClipIn: 0
     m_Asset: {fileID: -5036617855994093943}
     m_Duration: 5.6666669845581055
@@ -347,7 +347,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 13.3
+    m_Start: 22.633333333333315
     m_ClipIn: 0
     m_Asset: {fileID: -412855490762644712}
     m_Duration: 3.3333333333333335
@@ -413,7 +413,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 13.3
+    m_PreExtrapolationTime: 22.633333333333315
     m_DisplayName: Stone
   m_Markers:
     m_Objects: []
@@ -457,7 +457,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 13.3
+    m_Start: 22.633333333333315
     m_ClipIn: 0
     m_Asset: {fileID: -1993457016902834857}
     m_Duration: 3.333333333333334
@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 18.399999999999007
+    m_Start: 27.73333333333233
     m_ClipIn: 0
     m_Asset: {fileID: 3014926273744156878}
     m_Duration: 5.6666669845581055
@@ -682,7 +682,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -2524166848127241389}
     m_Duration: 13.299999999999999
@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 29.5
+    m_Start: 38.83333333333331
     m_ClipIn: 0
     m_Asset: {fileID: -2940030708059366422}
     m_Duration: 10
@@ -841,7 +841,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 29.5
+    m_PreExtrapolationTime: 38.83333333333331
     m_DisplayName: Finished
   m_Markers:
     m_Objects: []
@@ -885,7 +885,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 16.63333333333334
+    m_Start: 25.966666666666658
     m_ClipIn: 0
     m_Asset: {fileID: -7274724902435651430}
     m_Duration: 1.7666666666666666
@@ -951,7 +951,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 16.63333333333334
+    m_PreExtrapolationTime: 25.966666666666658
     m_DisplayName: Stone_Hit
   m_Markers:
     m_Objects: []
@@ -1041,116 +1041,6 @@ MonoBehaviour:
   m_Loop: 0
   m_Version: 1
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
---- !u!114 &-1130998476219848131
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d21dcc2386d650c4597f3633c75a1f98, type: 3}
-  m_Name: Animation Track (5)
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0
-    m_ClipIn: 0
-    m_Asset: {fileID: 2547832515609624985}
-    m_Duration: 13.3
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: -1130998476219848131}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: -1
-    m_BlendOutDuration: -1
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 1
-    m_PreExtrapolationMode: 1
-    m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Camera
-  m_Markers:
-    m_Objects: []
-  m_InfiniteClipPreExtrapolation: 0
-  m_InfiniteClipPostExtrapolation: 0
-  m_InfiniteClipOffsetPosition: {x: 0, y: 0, z: 0}
-  m_InfiniteClipOffsetEulerAngles: {x: 0, y: 0, z: 0}
-  m_InfiniteClipTimeOffset: 0
-  m_InfiniteClipRemoveOffset: 0
-  m_InfiniteClipApplyFootIK: 1
-  mInfiniteClipLoop: 0
-  m_MatchTargetFields: 63
-  m_Position: {x: 0, y: 0, z: 0}
-  m_EulerAngles: {x: 0, y: 0, z: 0}
-  m_AvatarMask: {fileID: 0}
-  m_ApplyAvatarMask: 1
-  m_TrackOffset: 0
-  m_InfiniteClip: {fileID: 0}
-  m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
-  m_ApplyOffsets: 0
 --- !u!114 &-868386439490723487
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1195,7 +1085,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -4493524861963743061}
     m_Duration: 13.3
@@ -1261,7 +1151,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 0
+    m_PreExtrapolationTime: 9.333333333333334
     m_DisplayName: 02_02-rope
   m_Markers:
     m_Objects: []
@@ -1322,8 +1212,6 @@ MonoBehaviour:
   - {fileID: 9074548155568986717}
   - {fileID: -672308190436472635}
   - {fileID: 1632275132731482072}
-  - {fileID: -1130998476219848131}
-  - {fileID: 2838922248159050853}
   - {fileID: -6795063371712151930}
   - {fileID: -5492166495887016140}
   - {fileID: -3323203688339666806}
@@ -1366,7 +1254,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -7800707455128881075}
     m_Duration: 13.299999999999999
@@ -1486,7 +1374,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 18.400000317890445
+    m_Start: 27.733333651223763
     m_ClipIn: 0
     m_Asset: {fileID: -868386439490723487}
     m_Duration: 5.666666666666667
@@ -1552,7 +1440,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 18.400000317890445
+    m_PreExtrapolationTime: 27.733333651223763
     m_DisplayName: Free
   m_Markers:
     m_Objects: []
@@ -1574,28 +1462,6 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
---- !u!114 &2547832515609624985
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030f85c3f73729f4f976f66ffb23b875, type: 3}
-  m_Name: AnimationPlayableAsset
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 4313467962848399198, guid: f4f57d79b76eac5488ec0a3cc1cd4c0e, type: 3}
-  m_Position: {x: 0, y: 0, z: 0}
-  m_EulerAngles: {x: 0, y: 0, z: 0}
-  m_UseTrackMatchFields: 1
-  m_MatchTargetFields: 63
-  m_RemoveStartOffset: 1
-  m_ApplyFootIK: 1
-  m_Loop: 0
-  m_Version: 1
-  m_Rotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!114 &2743792998323040819
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1618,105 +1484,12 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 24.066666984557113
+    m_Start: 33.400000317890424
     m_ClipIn: 0
     m_Asset: {fileID: 5359310416040714144}
     m_Duration: 1.3750000000000018
     m_TimeScale: 1
     m_ParentTrack: {fileID: 2743792998323040819}
-    m_EaseInDuration: 0
-    m_EaseOutDuration: 0
-    m_BlendInDuration: 0
-    m_BlendOutDuration: 0
-    m_MixInCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_MixOutCurve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    m_BlendInCurveMode: 0
-    m_BlendOutCurveMode: 0
-    m_ExposedParameterNames: []
-    m_AnimationCurves: {fileID: 0}
-    m_Recordable: 0
-    m_PostExtrapolationMode: 0
-    m_PreExtrapolationMode: 0
-    m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 0
-    m_DisplayName: Active
-  m_Markers:
-    m_Objects: []
-  m_PostPlaybackState: 3
---- !u!114 &2838922248159050853
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21bf7f712d84d26478ebe6a299f21738, type: 3}
-  m_Name: Activation Track (7)
-  m_EditorClassIdentifier: 
-  m_Version: 3
-  m_AnimClip: {fileID: 0}
-  m_Locked: 0
-  m_Muted: 0
-  m_CustomPlayableFullTypename: 
-  m_Curves: {fileID: 0}
-  m_Parent: {fileID: 11400000}
-  m_Children: []
-  m_Clips:
-  - m_Version: 1
-    m_Start: 0
-    m_ClipIn: 0
-    m_Asset: {fileID: 5478853328604830336}
-    m_Duration: 13.299999999999999
-    m_TimeScale: 1
-    m_ParentTrack: {fileID: 2838922248159050853}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: 0
@@ -1816,7 +1589,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 24.066666984557113
+    m_Start: 33.400000317890424
     m_ClipIn: 0
     m_Asset: {fileID: -1818696918519327040}
     m_Duration: 1.375
@@ -1882,7 +1655,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 24.066666984557113
+    m_PreExtrapolationTime: 33.400000317890424
     m_DisplayName: Punch
   m_Markers:
     m_Objects: []
@@ -1926,7 +1699,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 18.399999999999007
+    m_Start: 27.73333333333233
     m_ClipIn: 0
     m_Asset: {fileID: 4738559172582937225}
     m_Duration: 5.6666669845581055
@@ -1992,7 +1765,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 18.399999999999007
+    m_PreExtrapolationTime: 27.73333333333233
     m_DisplayName: 02_05_FaldaCuerda
   m_Markers:
     m_Objects: []
@@ -2018,7 +1791,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 16.63333333333334
+    m_Start: 25.966666666666658
     m_ClipIn: 0
     m_Asset: {fileID: 2140624275203090222}
     m_Duration: 1.7666666666656674
@@ -2111,7 +1884,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: -407662388106862873}
     m_Duration: 13.3
@@ -2177,7 +1950,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 0
+    m_PreExtrapolationTime: 9.333333333333334
     m_DisplayName: 02_02
   m_Markers:
     m_Objects: []
@@ -2208,18 +1981,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
   m_Name: ActivationPlayableAsset
   m_EditorClassIdentifier: 
---- !u!114 &5478853328604830336
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fde0d25a170598d46a0b9dc16b4527a5, type: 3}
-  m_Name: ActivationPlayableAsset(Clone)(Clone)(Clone)
-  m_EditorClassIdentifier: 
 --- !u!114 &5589474372165578124
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2242,7 +2003,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 7012528713697894721}
     m_Duration: 13.3
@@ -2308,7 +2069,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 1
     m_PreExtrapolationMode: 1
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 0
+    m_PreExtrapolationTime: 9.333333333333334
     m_DisplayName: G1_Arrastre
   m_Markers:
     m_Objects: []
@@ -2374,7 +2135,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 24.066666984557113
+    m_Start: 33.400000317890424
     m_ClipIn: 0
     m_Asset: {fileID: 2006283909109000342}
     m_Duration: 1.375
@@ -2440,7 +2201,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 24.066666984557113
+    m_PreExtrapolationTime: 33.400000317890424
     m_DisplayName: 02_07_PunchFalda
   m_Markers:
     m_Objects: []
@@ -2478,7 +2239,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 0
+    m_Start: 9.333333333333334
     m_ClipIn: 0
     m_Asset: {fileID: 7583066908125849843}
     m_Duration: 13.299999999999999

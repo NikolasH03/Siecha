@@ -2,7 +2,12 @@ fileFormatVersion: 2
 guid: 8bd93320bc6dad742a898fc72f6f248b
 ScriptedImporter:
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: 'sweep1/sweepShape1:000:'
+    second: {fileID: 2100000, guid: 0210e0b7b1292fe4a8b16c79782a86e7, type: 2}
   serializedVersion: 2
   userData: 
   assetBundleName: 
