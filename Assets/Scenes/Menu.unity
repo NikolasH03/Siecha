@@ -14303,8 +14303,6 @@ GameObject:
   - component: {fileID: 930569976}
   - component: {fileID: 930569977}
   - component: {fileID: 930569978}
-  - component: {fileID: 930569980}
-  - component: {fileID: 930569979}
   m_Layer: 0
   m_Name: GameFlowManager
   m_TagString: Untagged
@@ -14359,24 +14357,8 @@ MonoBehaviour:
     sceneName: 
   - type: 2
     videoClip: {fileID: 0}
-    showTutorial: 1
-    TutorialID: 1
-    musicData: {fileID: 11400000, guid: 57cedf304fada2b459104051d0f66153, type: 2}
-    ambienceData: {fileID: 0}
-    requiresSceneLoad: 0
-    sceneName: Demo-Combate2
-  - type: 2
-    videoClip: {fileID: 0}
-    showTutorial: 1
+    showTutorial: 0
     TutorialID: 2
-    musicData: {fileID: 11400000, guid: 8b6c0326499113843b6a4713c6cde500, type: 2}
-    ambienceData: {fileID: 11400000, guid: 427af0e60f45b584d8df2fb3cc916ff1, type: 2}
-    requiresSceneLoad: 0
-    sceneName: 
-  - type: 2
-    videoClip: {fileID: 0}
-    showTutorial: 1
-    TutorialID: 3
     musicData: {fileID: 11400000, guid: 8b6c0326499113843b6a4713c6cde500, type: 2}
     ambienceData: {fileID: 11400000, guid: 427af0e60f45b584d8df2fb3cc916ff1, type: 2}
     requiresSceneLoad: 0
@@ -14410,35 +14392,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c288d410949112940bd2197b34639529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &930569979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930569975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d14d82c286b7ab143b10633c24e6339f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 0}
-  transicionFase2: {fileID: 0}
-  transicionFase3: {fileID: 0}
-  muerte: {fileID: 0}
---- !u!114 &930569980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930569975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc5621e945f9c06489c9c7cb49869ce8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  directorVictoria: {fileID: 0}
 --- !u!1 &931679105
 GameObject:
   m_ObjectHideFlags: 0

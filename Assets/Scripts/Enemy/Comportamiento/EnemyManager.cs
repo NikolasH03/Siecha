@@ -21,14 +21,17 @@ public class EnemyManager : MonoBehaviour
     private Coroutine bloqueoEsquiveCoroutine;
 
     public GameObject              Jugador          { get; private set; }
-    // Cacheado aqui para que las UtilityAI no llamen GetComponent cada tick.
     public DetectorObjetivoJugador DetectorObjetivo { get; private set; }
+
+    // ─── Singleton ────────────────────────────────────────────────────────────
 
     private void Awake()
     {
         if (instance == null) instance = this;
         else { Destroy(gameObject); return; }
     }
+
+    // ─── Inicialización ───────────────────────────────────────────────────────
 
     private void Start()
     {
@@ -39,9 +42,22 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator InicializarDespuesDeUnFrame()
     {
         yield return null;
+
         todosLosEnemigos.Clear();
         enemigosAtacando.Clear();
-        todosLosEnemigos.AddRange(FindObjectsOfType<Enemigo>());
+
+        foreach (var enemigo in FindObjectsOfType<Enemigo>())
+        {
+            // FIX CRÍTICO: antes solo se agregaban al lista con AddRange.
+            // BuscarJugador() nunca se llamaba, así que DetectarJugador.Player
+            // quedaba null (el intento en Awake falla porque EnemyManager.Jugador
+            // aún no está asignado en ese momento).
+            // Con WaveManager esto no se notaba porque OnOleadaActivada sí llama
+            // BuscarJugador(). Sin WaveManager, los enemigos nunca detectaban al jugador.
+            enemigo.BuscarJugador();
+            todosLosEnemigos.Add(enemigo);
+        }
+
         ReiniciarCoroutines();
     }
 
@@ -60,7 +76,7 @@ public class EnemyManager : MonoBehaviour
     {
         if (jugador == null)
         {
-            Debug.LogError("[EnemyManager] No se encontro objeto con tag Player.");
+            Debug.LogError("[EnemyManager] No se encontró objeto con tag 'Player'.");
             return;
         }
         Jugador          = jugador;
@@ -70,16 +86,21 @@ public class EnemyManager : MonoBehaviour
             Debug.LogWarning("[EnemyManager] El jugador no tiene DetectorObjetivoJugador.");
     }
 
+    // ─── API de oleadas ───────────────────────────────────────────────────────
+
     public void OnOleadaActivada(Transform oleada)
     {
         todosLosEnemigos.Clear();
         enemigosAtacando.Clear();
+
         foreach (var e in oleada.GetComponentsInChildren<Enemigo>(true))
         {
             e.BuscarJugador();
             todosLosEnemigos.Add(e);
         }
     }
+
+    // ─── Registro dinámico ────────────────────────────────────────────────────
 
     public void RegistrarEnemigo(Enemigo enemigo)
     {
@@ -94,6 +115,8 @@ public class EnemyManager : MonoBehaviour
         todosLosEnemigos.Remove(enemigo);
         enemigosAtacando.Remove(enemigo);
     }
+
+    // ─── Loops de IA ─────────────────────────────────────────────────────────
 
     private IEnumerator AILoop()
     {
@@ -154,6 +177,8 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
+    // ─── Limpieza y selección ─────────────────────────────────────────────────
+
     private void LimpiarEnemigos()
     {
         todosLosEnemigos.RemoveAll(e => e == null || e.EstaMuerto());
@@ -185,16 +210,18 @@ public class EnemyManager : MonoBehaviour
 
     private Enemigo SeleccionarMejor(List<Enemigo> candidatos)
     {
-        Enemigo mejor = null;
-        float   mejor_u = float.MinValue;
+        Enemigo mejor   = null;
+        float   mejorU  = float.MinValue;
         foreach (var c in candidatos)
         {
             if (c?.utilityGrupal == null) continue;
             float u = c.utilityGrupal.CalcularUtilidadAtacar();
-            if (u > mejor_u) { mejor_u = u; mejor = c; }
+            if (u > mejorU) { mejorU = u; mejor = c; }
         }
         return mejor;
     }
+
+    // ─── API pública ──────────────────────────────────────────────────────────
 
     public void LiberarEnemigo(Enemigo enemigo)
     {
@@ -209,12 +236,7 @@ public class EnemyManager : MonoBehaviour
         foreach (var e in todosLosEnemigos) e?.BuscarJugador();
     }
 
-    public bool AreAllEnemiesDead()
-    {
-        LimpiarEnemigos();
-        return todosLosEnemigos.Count == 0;
-    }
-
+    public bool AreAllEnemiesDead()      { LimpiarEnemigos(); return todosLosEnemigos.Count == 0; }
     public int  ContarEnemigosAtacando() { ActualizarListaAtacantes(); return enemigosAtacando.Count; }
     public bool HaySlotsDisponibles()    { ActualizarListaAtacantes(); return enemigosAtacando.Count < maxEnemigosAtacandoSimultaneamente; }
 
@@ -232,6 +254,7 @@ public class EnemyManager : MonoBehaviour
         float angulo = (360f / total) * idx + Random.Range(-15f, 15f);
         float rad    = angulo * Mathf.Deg2Rad;
         float radio  = radioDeseado + Random.Range(-0.5f, 0.5f);
+
         Vector3 offset   = new Vector3(Mathf.Cos(rad) * radio, 0f, Mathf.Sin(rad) * radio);
         Vector3 posicion = Jugador.transform.position + offset;
 

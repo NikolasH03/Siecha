@@ -80,7 +80,7 @@ private void Awake()
 
         if (currentSectionIndex >= sections.Length)
         {
-            Debug.Log("Juego completado. Ir a créditos.");
+            Debug.Log("Juego completado. Ir a crï¿½ditos.");
             ChangeState(new CreditsState(this));
             return;
         }
@@ -93,8 +93,8 @@ private void Awake()
 
             // Guardar datos antes de cambiar de escena
             var jugador = FindObjectOfType<ControladorCombate>();
-            if (jugador != null)
-                GameDataManager.Instance.GuardarDesdeJugador(jugador);
+            // if (jugador != null)
+            //     GameDataManager.Instance.GuardarDesdeJugador(jugador);
 
             // Activa la bandera para que cuando la escena termine de cargarse,
             // se reinicie el flujo desde la nueva escena
@@ -108,13 +108,13 @@ private void Awake()
             }
             else
             {
-                Debug.LogError($"[GameFlowManager] La escena '{nextConfig.sceneName}' no está en la lista de SceneLoader.");
+                Debug.LogError($"[GameFlowManager] La escena '{nextConfig.sceneName}' no estï¿½ en la lista de SceneLoader.");
             }
 
-            return; // No cambia de estado todavía
+            return; // No cambia de estado todavï¿½a
         }
 
-        //Si no requiere carga, continúa al siguiente estado directamente
+        //Si no requiere carga, continï¿½a al siguiente estado directamente
         ChangeState(CreateStateFromConfig(nextConfig));
     }
 
@@ -141,7 +141,7 @@ private void Awake()
     {
         Debug.Log("[GameFlowManager] Reiniciando flujo de juego completo...");
 
-        // Reiniciar índice y estado
+        // Reiniciar ï¿½ndice y estado
         currentSectionIndex = 0;
         currentState?.Exit();
         currentState = null;
