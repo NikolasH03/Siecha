@@ -104,7 +104,7 @@ Material:
     - _DstBlend: 10
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fog_Density: 0.8
+    - _Fog_Density: 2.5
     - _Fog_Fade_In_Dis: 19.71
     - _Fog_Fade_Power: 0.001
     - _Fog_Fade_in_distance: 8.72
@@ -149,7 +149,6 @@ Material:
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Uv_scale: {r: 100, g: 100, b: 0, a: 0}
   m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!114 &6651124836120953701
 MonoBehaviour:
   m_ObjectHideFlags: 11
