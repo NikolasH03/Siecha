@@ -14348,7 +14348,7 @@ MonoBehaviour:
   dialogueManager: {fileID: 440368925}
   sections:
   - type: 0
-    videoClip: {fileID: 32900000, guid: c659c413cdd372a40828d19ee228ef4a, type: 3}
+    videoClip: {fileID: 32900000, guid: 0896559aa94e24b489f602964533c65e, type: 3}
     showTutorial: 0
     TutorialID: 0
     musicData: {fileID: 0}
@@ -14372,7 +14372,7 @@ MonoBehaviour:
     requiresSceneLoad: 1
     sceneName: Demo-Combate2
   - type: 0
-    videoClip: {fileID: 32900000, guid: 90a4b820dd071824bbc3a826bf212847, type: 3}
+    videoClip: {fileID: 32900000, guid: 9666e57a707e5404f8fcc08d1e5c722f, type: 3}
     showTutorial: 0
     TutorialID: 0
     musicData: {fileID: 0}
