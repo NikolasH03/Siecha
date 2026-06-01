@@ -4,21 +4,27 @@ public enum TipoDecisionTactica { AtaqueLigero, AtaqueFuerte, Esquivar, Bloquear
 
 public class UtilityAI_Tactico
 {
-    private Enemigo enemigo;
-    private HealthComp salud;
-    private Transform jugador;
+    private readonly Enemigo    enemigo;
+    private readonly HealthComp salud;
+
+    private Transform Jugador => enemigo.JugadorActual;
+    private DetectorObjetivoJugador Detector => EnemyManager.instance?.DetectorObjetivo;
+
+    // Acceso a las capacidades del enemigo según sus stats actuales.
+    // Para el jefe: cada fase tiene diferentes capacidades configuradas en el SO.
+    private bool PuedeBloquear => enemigo.Stats != null && enemigo.Stats.PuedeBloquear;
+    private bool PuedeEsquivar => enemigo.Stats != null && enemigo.Stats.PuedeEsquivar;
 
     public UtilityAI_Tactico(Enemigo enemigo)
     {
         this.enemigo = enemigo;
-        this.salud = enemigo.GetComponent<HealthComp>();
-        this.jugador = enemigo.JugadorActual;
+        this.salud   = enemigo.GetHealthComp();
     }
 
     public TipoDecisionTactica DecidirAccionTactica()
     {
-        float uLigero = UtilidadAtaqueLigero();
-        float uFuerte = UtilidadAtaqueFuerte();
+        float uLigero   = UtilidadAtaqueLigero();
+        float uFuerte   = UtilidadAtaqueFuerte();
         float uEsquivar = UtilidadEsquivar();
         float uBloquear = UtilidadBloquear();
 
@@ -26,97 +32,78 @@ public class UtilityAI_Tactico
 
         if (max <= 0.1f) return TipoDecisionTactica.Ninguna;
 
-        if (JugadorAtacando())
+        if (SoyElObjetivoActual())
         {
-            if (max == uEsquivar) return TipoDecisionTactica.Esquivar;
-            if (max == uBloquear) return TipoDecisionTactica.Bloquear;
+            if (uEsquivar >= uBloquear && uEsquivar == max) return TipoDecisionTactica.Esquivar;
+            if (uBloquear == max)                           return TipoDecisionTactica.Bloquear;
         }
 
-        if (max == uFuerte) return TipoDecisionTactica.AtaqueFuerte;
-
+        if (uFuerte >= uLigero && uFuerte == max) return TipoDecisionTactica.AtaqueFuerte;
         return TipoDecisionTactica.AtaqueLigero;
     }
 
     public float UtilidadAtaqueLigero()
     {
-        float utilidad = 0.6f;
-
-        if (!JugadorBloqueando()) utilidad += 0.2f;
-
-        float vidaRatio = salud.GetVidaNormalizada();
-        if (vidaRatio > 0.5f) utilidad += 0.2f;
-
-        if (JugadorBloqueando()) utilidad -= 0.5f;
-
-        return Mathf.Clamp01(utilidad);
+        float u = 0.6f;
+        if (!JugadorBloqueando()) u += 0.2f;
+        if (salud.GetVidaNormalizada() > 0.5f) u += 0.2f;
+        if (JugadorBloqueando()) u -= 0.5f;
+        return Mathf.Clamp01(u);
     }
 
     public float UtilidadAtaqueFuerte()
     {
-        float utilidad = 0.4f;
-
-        if (JugadorBloqueando()) utilidad += 0.6f;
-
-        float vidaRatio = salud.GetVidaNormalizada();
-        if (vidaRatio > 0.5f) utilidad += 0.2f;
-        if (vidaRatio < 0.3f) utilidad -= 0.5f;
-
-        return Mathf.Clamp01(utilidad);
+        float u = 0.4f;
+        if (JugadorBloqueando())               u += 0.6f;
+        if (salud.GetVidaNormalizada() > 0.5f) u += 0.2f;
+        if (salud.GetVidaNormalizada() < 0.3f) u -= 0.5f;
+        return Mathf.Clamp01(u);
     }
 
     public float UtilidadEsquivar()
     {
-        float utilidad = 0f;
+        // Respetar capacidad del SO — Fase 2 del jefe (escudo) no esquiva
+        if (!PuedeEsquivar)                                return 0f;
+        if (!JugadorAtacando() || !SoyElObjetivoActual()) return 0f;
 
-        if (!JugadorAtacando()) return 0f;
-
-        utilidad += 0.6f;
-
-        float vidaRatio = salud.GetVidaNormalizada();
-
-        if (vidaRatio < 0.8f && vidaRatio > 0.5f)
-        {
-            utilidad += 0.3f; // Vida media-alta = mas esquivar
-        }
-
-        if (vidaRatio <= 0.5f)
-        {
-            utilidad -= 0.2f; // Vida critica = mejor bloquear
-        }
-
-        return Mathf.Clamp01(utilidad);
+        float u    = 0.6f;
+        float vida = salud.GetVidaNormalizada();
+        if (vida > 0.5f && vida < 0.8f) u += 0.3f;
+        if (vida <= 0.5f)               u -= 0.2f;
+        return Mathf.Clamp01(u);
     }
 
     public float UtilidadBloquear()
     {
-        float utilidad = 0f;
+        // Respetar capacidad del SO — Fase 1 del jefe (cuchillos) no bloquea
+        if (!PuedeBloquear)                                return 0f;
+        if (salud.EnGuardBreak)                            return 0f;
+        if (!JugadorAtacando() || !SoyElObjetivoActual())  return 0f;
 
-        if (!JugadorAtacando()) return 0f;
-
-        utilidad += 0.4f;
-
-        float vidaRatio = salud.GetVidaNormalizada();
-
-        if (vidaRatio <= 0.5f)
-            utilidad += 0.3f; // Vida menor a la mitad = bloquear
-
-        if (salud.DebeBloquear())
-            utilidad += 0.3f;
-
-        if (salud.EnGuardBreak)
-            return 0f;
-
-        return Mathf.Clamp01(utilidad);
+        float u    = 0.4f;
+        float vida = salud.GetVidaNormalizada();
+        if (vida <= 0.5f)         u += 0.3f;
+        if (salud.DebeBloquear()) u += 0.3f;
+        return Mathf.Clamp01(u);
     }
+
+    private bool SoyElObjetivoActual()
+    {
+        if (Detector == null) return false;
+        return Detector.EsSoyElObjetivo(enemigo.transform);
+    }
+
     private bool JugadorBloqueando()
     {
-        var combate = jugador.GetComponent<ControladorCombate>();
-        return combate != null && combate.getBloqueando();
+        if (Jugador == null) return false;
+        var c = Jugador.GetComponent<ControladorCombate>();
+        return c != null && c.getBloqueando();
     }
 
     private bool JugadorAtacando()
     {
-        var combate = jugador.GetComponent<ControladorCombate>();
-        return combate != null && combate.getAtacando();
+        if (Jugador == null) return false;
+        var c = Jugador.GetComponent<ControladorCombate>();
+        return c != null && c.getAtacando();
     }
 }

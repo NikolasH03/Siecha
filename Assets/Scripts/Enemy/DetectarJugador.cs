@@ -1,65 +1,105 @@
 using UnityEngine;
-using System.Collections;
-
 public class DetectarJugador : MonoBehaviour
 {
-    //Este script se encargara de detectar al jugador en un cono que representa la visión del enemigo, sin embargo, si el jugador se encuentra demasiado cerca del enemigo este será detectado
-    [Header("Ajustes de Detección de Jugador")]
-    [SerializeField] private float anguloDeDeteccion = 120f; //cono de visión del enemigo
-    [SerializeField] float radioDeDeteccion = 15f; //este valor debe ser el mismo del rango de patrulla del enemigo
-    [SerializeField] private float radioDeDeteccionAutomatica = 5f;
-    [SerializeField] private float rangoDeAtaque = 3f;
-    [SerializeField] private float tiempoPorDeteccion = 1f;
+    private float anguloDeDeteccion;
+    private float radioDeDeteccion;
+    private float radioDeDeteccionAutomatica;
+    private float tiempoPorDeteccion;
 
-    public Transform Player;
+    public Transform Player { get; private set; }
 
-    Temporizador temporizadorDeDetectarJugador;
-    
-    IEstrategiaDeDeteccion estrategiaDeDeteccion;
+    private Temporizador temporizadorDeDeteccion;
+    private IEstrategiaDeDeteccion estrategiaDeDeteccion;
+    private bool inicializado = false;
+
+    // ─── Inicialización ───────────────────────────────────────────────────────
 
     void Awake()
     {
         BuscarJugador();
     }
-    void Start()
+
+    /// <summary>
+    /// Llamado por Enemigo.Start() con los valores del EnemyStats.
+    /// Debe ejecutarse antes de que el enemigo entre en su primer estado.
+    /// </summary>
+    public void Inicializar(EnemyStats stats)
     {
-        temporizadorDeDetectarJugador = new Temporizador(tiempoPorDeteccion);
-        estrategiaDeDeteccion =
-            new EstrategiaDeDeteccionCono(anguloDeDeteccion, radioDeDeteccion, radioDeDeteccionAutomatica);
+        anguloDeDeteccion          = stats.AnguloDeDeteccion;
+        radioDeDeteccion           = stats.RadioDeDeteccion;
+        radioDeDeteccionAutomatica = stats.RadioDeDeteccionAutomatica;
+        tiempoPorDeteccion         = stats.TiempoPorDeteccion;
+
+        temporizadorDeDeteccion = new Temporizador(tiempoPorDeteccion);
+        estrategiaDeDeteccion   = new EstrategiaDeDeteccionCono(
+            anguloDeDeteccion,
+            radioDeDeteccion,
+            radioDeDeteccionAutomatica
+        );
+
+        inicializado = true;
     }
 
-    void Update() => temporizadorDeDetectarJugador.Tick(Time.deltaTime);
+    void Update()
+    {
+        if (!inicializado) return;
+        temporizadorDeDeteccion.Tick(Time.deltaTime);
+    }
+
+    // ─── API pública ──────────────────────────────────────────────────────────
 
     public void BuscarJugador()
     {
+        if (EnemyManager.instance == null)
+        {
+            Debug.LogWarning($"[{name}] BuscarJugador: EnemyManager no existe todavía.");
+            return;
+        }
+
+        if (EnemyManager.instance.Jugador == null)
+        {
+            Debug.LogWarning($"[{name}] BuscarJugador: EnemyManager.Jugador es null.");
+            return;
+        }
+
         Player = EnemyManager.instance.Jugador.transform;
     }
+
     public bool SePuedeDetectarAlJugador()
     {
-        return temporizadorDeDetectarJugador.EstaCorriendo || estrategiaDeDeteccion.Ejecutar(Player, transform, temporizadorDeDetectarJugador);
-    }
+        if (!inicializado || Player == null) return false;
 
-    public bool SePuedeAtacarAlJugador()
+        return temporizadorDeDeteccion.EstaCorriendo ||
+               estrategiaDeDeteccion.Ejecutar(Player, transform, temporizadorDeDeteccion);
+    }
+    
+    public bool SePuedeAtacarAlJugador(float rangoDeAtaque)
     {
-        var direccionAlJugador = Player.position - transform.position;
-        return direccionAlJugador.magnitude <= rangoDeAtaque;
+        if (Player == null) return false;
+        return Vector3.Distance(transform.position, Player.position) <= rangoDeAtaque;
     }
-    
-    void OnDrawGizmos() {
+
+    // ─── Gizmos ───────────────────────────────────────────────────────────────
+
+    void OnDrawGizmos()
+    {
+        // En editor (antes de Inicializar) usamos valores de respaldo para visualizar.
+        float angulo    = anguloDeDeteccion          > 0 ? anguloDeDeteccion          : 120f;
+        float radio     = radioDeDeteccion           > 0 ? radioDeDeteccion           : 15f;
+        float radioAuto = radioDeDeteccionAutomatica > 0 ? radioDeDeteccionAutomatica : 5f;
+
         Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, radio);
 
-        // Draw a spheres for the radii
-        Gizmos.DrawWireSphere(transform.position, radioDeDeteccion);
-        Gizmos.DrawWireSphere(transform.position, radioDeDeteccionAutomatica);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, radioAuto);
 
-        // Calculate our cone directions
-        Vector3 forwardConeDirection = Quaternion.Euler(0, radioDeDeteccion / 2, 0) * transform.forward * radioDeDeteccion;
-        Vector3 backwardConeDirection = Quaternion.Euler(0, -radioDeDeteccion / 2, 0) * transform.forward * radioDeDeteccion;
+        float mitad = angulo / 2f;
+        Vector3 der = Quaternion.Euler(0,  mitad, 0) * transform.forward * radio;
+        Vector3 izq = Quaternion.Euler(0, -mitad, 0) * transform.forward * radio;
 
-        // Draw lines to represent the cone
-        Gizmos.DrawLine(transform.position, transform.position + forwardConeDirection);
-        Gizmos.DrawLine(transform.position, transform.position + backwardConeDirection);
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + der);
+        Gizmos.DrawLine(transform.position, transform.position + izq);
     }
-    
- 
 }

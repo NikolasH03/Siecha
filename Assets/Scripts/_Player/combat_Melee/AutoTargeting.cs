@@ -3,63 +3,62 @@ using UnityEngine;
 
 public class AutoTargeting : MonoBehaviour
 {
-    [Header("Par�metros de b�squeda")]
-    [SerializeField] private float rangoBusqueda = 6f;
-    [SerializeField] private float anguloBusqueda = 120f;
+    [Header("Busqueda de objetivos")]
+    [SerializeField] private float rangoBusqueda   = 6f;
+    [SerializeField] private float anguloBusqueda  = 120f;
     [SerializeField] private LayerMask capaEnemigos;
     [SerializeField] private Transform referenciaRotacion;
-    [SerializeField] private float velocidadGiro = 10f;
+    [SerializeField] private float velocidadGiro   = 10f;
 
-    [Header("Desplazamiento hacia el objetivo")]
-    [SerializeField] private float distanciaMinimaAtaque = 1.6f;
-    [SerializeField] private float duracionAproximacion = 0.20f;
-    [SerializeField] private Ease easingAproximacion = Ease.OutQuad;
+    [Header("Aproximacion al atacar")]
+    [SerializeField] private float distanciaMinimaAtaque  = 1.6f;
+    [SerializeField] private float duracionAproximacion   = 0.20f;
+    [SerializeField] private Ease  easingAproximacion     = Ease.OutQuad;
 
     [Header("Desplazamiento sin objetivo")]
-    [SerializeField] private float distanciaDesplazamientoLibre = 2f; // Distancia cuando no hay enemigo
-    [SerializeField] private float duracionDesplazamientoLibre = 0.25f;
+    [SerializeField] private float distanciaDesplazamientoLibre = 2f;
+    [SerializeField] private float duracionDesplazamientoLibre  = 0.25f;
 
     [Header("Dash")]
-    [SerializeField] private float distanciaDash = 4f;
-    [SerializeField] private float duracionDash = 0.15f;
-    [SerializeField] private Ease easingDash = Ease.OutQuint;
+    [SerializeField] private float distanciaDash  = 4f;
+    [SerializeField] private float duracionDash   = 0.15f;
+    [SerializeField] private Ease  easingDash     = Ease.OutQuint;
 
     private Transform enemigoObjetivo;
-    private Tween movimientoTween;
+    private Tween     movimientoTween;
 
     public Transform EnemigoObjetivo => enemigoObjetivo;
 
+    // ─── Targeting ────────────────────────────────────────────────────────────
+
     public void BuscarSegunDireccionDeMirada(Vector2 inputMirar)
     {
-        if (inputMirar.sqrMagnitude < 0.1f)
-            return;
+        if (inputMirar.sqrMagnitude < 0.1f) return;
 
-        // Convertir input a direcci�n del mundo
-        Camera cam = Camera.main;
-        Vector3 forward = cam.transform.forward;
-        Vector3 right = cam.transform.right;
-        forward.y = 0;
-        right.y = 0;
-        forward.Normalize();
-        right.Normalize();
+        Camera cam    = Camera.main;
+        Vector3 fwd   = cam.transform.forward; fwd.y = 0; fwd.Normalize();
+        Vector3 right = cam.transform.right;  right.y = 0; right.Normalize();
 
-        Vector3 direccionMirada = (forward * inputMirar.y + right * inputMirar.x).normalized;
+        Vector3 dirMirada = (fwd * inputMirar.y + right * inputMirar.x).normalized;
 
-        // Buscar enemigos
         Collider[] enemigos = Physics.OverlapSphere(transform.position, rangoBusqueda, capaEnemigos);
-        float mejorPuntaje = Mathf.Cos(anguloBusqueda * 0.5f * Mathf.Deg2Rad);
+
+        float     mejorPuntaje  = Mathf.Cos(anguloBusqueda * 0.5f * Mathf.Deg2Rad);
         Transform mejorObjetivo = null;
 
         foreach (Collider col in enemigos)
         {
-            Vector3 dirEnemigo = (col.transform.position - transform.position).normalized;
+            // FIX: null check — Unity puede devolver colisores destruidos en el array
+            if (col == null) continue;
+
+            Vector3 dirEnemigo = (col.transform.position - transform.position);
             dirEnemigo.y = 0;
+            dirEnemigo.Normalize();
 
-            float dot = Vector3.Dot(direccionMirada, dirEnemigo);
-
+            float dot = Vector3.Dot(dirMirada, dirEnemigo);
             if (dot > mejorPuntaje)
             {
-                mejorPuntaje = dot;
+                mejorPuntaje  = dot;
                 mejorObjetivo = col.transform;
             }
         }
@@ -68,97 +67,90 @@ public class AutoTargeting : MonoBehaviour
         {
             enemigoObjetivo = mejorObjetivo;
 
-            // ROTACI�N HACIA EL ENEMIGO
-            Vector3 dir = (enemigoObjetivo.position - transform.position).normalized;
-            dir.y = 0;
-            Quaternion rot = Quaternion.LookRotation(dir);
-            referenciaRotacion.DORotateQuaternion(rot, 0.15f);
+            Vector3 dir = (enemigoObjetivo.position - transform.position);
+            dir.y = 0; dir.Normalize();
+            referenciaRotacion.DORotateQuaternion(Quaternion.LookRotation(dir), 0.15f);
 
-            // MOVIMIENTO HACIA EL ENEMIGO
             MoverHaciaObjetivoSiEsNecesario();
         }
         else
         {
-            // NO HAY ENEMIGO CERCA: Desplazarse un poco en la direcci�n de mirada
-            DesplazarseEnDireccion(direccionMirada, distanciaDesplazamientoLibre, duracionDesplazamientoLibre, easingAproximacion);
-
-            // Rotar hacia donde mira
-            Quaternion rot = Quaternion.LookRotation(direccionMirada);
-            referenciaRotacion.DORotateQuaternion(rot, 0.15f);
+            enemigoObjetivo = null;
+            DesplazarseEnDireccion(dirMirada, distanciaDesplazamientoLibre,
+                                   duracionDesplazamientoLibre, easingAproximacion);
+            referenciaRotacion.DORotateQuaternion(Quaternion.LookRotation(dirMirada), 0.15f);
         }
     }
 
     private void MoverHaciaObjetivoSiEsNecesario()
     {
-        if (enemigoObjetivo == null)
-            return;
+        if (enemigoObjetivo == null) return;
 
-        float distanciaActual = Vector3.Distance(transform.position, enemigoObjetivo.position);
+        float dist = Vector3.Distance(transform.position, enemigoObjetivo.position);
+        if (dist <= distanciaMinimaAtaque + 0.1f) return;
 
-        // Si ya estoy cerca, no me muevo
-        if (distanciaActual <= distanciaMinimaAtaque + 0.1f)
-            return;
+        Vector3 dir      = (enemigoObjetivo.position - transform.position).normalized;
+        Vector3 destino  = enemigoObjetivo.position - dir * distanciaMinimaAtaque;
 
-        // Punto final a la distancia exacta deseada
-        Vector3 direccion = (enemigoObjetivo.position - transform.position).normalized;
-        Vector3 posicionObjetivo = enemigoObjetivo.position - direccion * distanciaMinimaAtaque;
-
-        // Cancelar movimiento anterior si lo hay
         movimientoTween?.Kill();
-
-        // Deslizarse hacia la posici�n calculada
-        movimientoTween = transform.DOMove(posicionObjetivo, duracionAproximacion)
+        movimientoTween = transform.DOMove(destino, duracionAproximacion)
                                    .SetEase(easingAproximacion)
                                    .SetUpdate(UpdateType.Fixed);
     }
 
+    // ─── Dash ─────────────────────────────────────────────────────────────────
+
     /// <summary>
-    /// Realiza un dash hacia atr�s (independiente de la direcci�n del input)
+    /// Ejecuta el dash usando el input de movimiento si se proporciona.
+    /// Si no hay input (Vector2.zero o null), el dash va hacia atrás como dodge.
+    /// Esto permite:
+    ///   - Dash direccional: el jugador elige hacia donde escapar
+    ///   - Dash de dodge: sin input = siempre atrás (comportamiento anterior)
+    /// FIX: antes siempre iba hacia atrás ignorando el input que se pasaba
+    /// desde ControladorCombate.DesplazamientoDash().
     /// </summary>
-    public void EjecutarDash()
+    public void EjecutarDash(Vector2? inputMovimiento = null)
     {
-        // Obtener la direcci�n hacia atr�s basada en la rotaci�n actual del jugador
-        Vector3 direccionAtras = -referenciaRotacion.forward;
-        direccionAtras.y = 0;
-        direccionAtras.Normalize();
+        Vector3 direccion;
 
-        // Ejecutar el dash hacia atr�s
-        DesplazarseEnDireccion(direccionAtras, distanciaDash, duracionDash, easingDash);
+        if (inputMovimiento.HasValue && inputMovimiento.Value.sqrMagnitude > 0.1f)
+        {
+            // Convertir input 2D a dirección del mundo usando la cámara
+            Camera  cam   = Camera.main;
+            Vector3 fwd   = cam.transform.forward; fwd.y = 0; fwd.Normalize();
+            Vector3 right = cam.transform.right;   right.y = 0; right.Normalize();
+            direccion = (fwd * inputMovimiento.Value.y + right * inputMovimiento.Value.x).normalized;
+        }
+        else
+        {
+            // Sin input: dash de esquive hacia atrás
+            direccion = -referenciaRotacion.forward;
+            direccion.y = 0;
+            direccion.Normalize();
+        }
 
-        // NO rotamos al jugador durante el dash, mantiene su orientaci�n actual
+        DesplazarseEnDireccion(direccion, distanciaDash, duracionDash, easingDash);
     }
 
-    /// <summary>
-    /// Funci�n auxiliar para desplazarse en una direcci�n espec�fica
-    /// </summary>
-    private void DesplazarseEnDireccion(Vector3 direccion, float distancia, float duracion, Ease easing)
+    // ─── Movimiento base ──────────────────────────────────────────────────────
+
+    public void DesplazarseEnDireccion(Vector3 direccion, float distancia, float duracion, Ease easing)
     {
         direccion.y = 0;
         direccion.Normalize();
 
-        Vector3 posicionObjetivo = transform.position + direccion * distancia;
-
-        // Cancelar movimiento anterior
         movimientoTween?.Kill();
-
-        // Realizar el desplazamiento
-        movimientoTween = transform.DOMove(posicionObjetivo, duracion)
+        movimientoTween = transform.DOMove(transform.position + direccion * distancia, duracion)
                                    .SetEase(easing)
                                    .SetUpdate(UpdateType.Fixed);
     }
 
-    // Funci�n opcional para cancelar cualquier movimiento en curso
-    public void CancelarMovimiento()
-    {
-        movimientoTween?.Kill();
-    }
+    public void CancelarMovimiento() => movimientoTween?.Kill();
 
-    private void OnDestroy()
-    {
-        movimientoTween?.Kill();
-    }
+    private void OnDestroy() => movimientoTween?.Kill();
 
-    // Visualizaci�n en el editor
+    // ─── Gizmos ───────────────────────────────────────────────────────────────
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

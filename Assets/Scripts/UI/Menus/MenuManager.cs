@@ -1,5 +1,5 @@
+using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -8,56 +8,58 @@ public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance { get; private set; }
 
-    [Header("Men�s del Sistema")]
-    [SerializeField] private MenuInicial menuInicial;
-    [SerializeField] private MenuPrincipal menuPrincipal;
-    [SerializeField] private MenuPausa menuPausa;
-    [SerializeField] private MenuControles menuControles;
-    [SerializeField] private MenuCreditos menuCreditos;
-    [SerializeField] private MenuVolumen menuVolumen;
-    [SerializeField] private MenuGraficos menuGraficos;
+    [Header("Menus del Sistema")]
+    [SerializeField] private MenuInicial       menuInicial;
+    [SerializeField] private MenuPrincipal     menuPrincipal;
+    [SerializeField] private MenuPausa         menuPausa;
+    [SerializeField] private MenuControles     menuControles;
+    [SerializeField] private MenuCreditos      menuCreditos;
+    [SerializeField] private MenuVolumen       menuVolumen;
+    [SerializeField] private MenuGraficos      menuGraficos;
     [SerializeField] private MenuColeccionables menuColeccionables;
     [SerializeField] private MenuVisualizador3D menuVisualizador3D;
 
     [Header("Paneles de Gameplay")]
-    [SerializeField] private MenuMuerteTisqa menuMuerteTisqa;  
-    [SerializeField] private MenuMuertePaco menuMuertePaco;
-    [SerializeField] private MenuTotem menuTotem;
+    [SerializeField] private MenuMuerteTisqa   menuMuerteTisqa;
+    [SerializeField] private MenuMuertePaco    menuMuertePaco;
+    [SerializeField] private MenuTotem         menuTotem;
     [SerializeField] private List<PanelTutorial> PanelesTutorial;
 
-    [Header("Configuraci�n de Escenas")]
+    [Header("Configuracion de Escenas")]
     [SerializeField] private string[] escenasMenuPrincipal = { "Menu" };
-    [SerializeField] private string[] escenasGameplay = { "Capitulo1-Introduccion" };
+    [SerializeField] private string[] escenasGameplay      = { "Capitulo1-Introduccion" };
 
+    private Stack<MenuBase> menuStack    = new Stack<MenuBase>();
+    private MenuBase        currentMenu;
 
-    private Stack<MenuBase> menuStack = new Stack<MenuBase>();
-    private MenuBase currentMenu;
+    // FIX: flag centralizado para bloquear el menú de pausa durante cinemáticas.
+    // CinematicaManager llama IniciarModoCinematica/TerminarModoCinematica.
+    // Antes la lógica estaba en CinematicaJefe con una inyección de InputJugador.
+    private bool enCinematica = false;
 
-    public bool EstaEnGameplay => EsEscenaDeGameplay(SceneManager.GetActiveScene().name);
+    public bool EstaEnGameplay      => EsEscenaDeGameplay(SceneManager.GetActiveScene().name);
     public bool EstaEnMenuPrincipal => EsEscenaDeMenuPrincipal(SceneManager.GetActiveScene().name);
+
+    // ─── Singleton ────────────────────────────────────────────────────────────
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        if (Instance == null) Instance = this;
+        else { Destroy(gameObject); return; }
     }
+
     private void Start()
     {
         if (EstaEnMenuPrincipal && menuInicial != null && !menuInicial.IsOpen)
-        {
             OpenMenu(menuInicial);
-        }
     }
+
+    // ─── Update ───────────────────────────────────────────────────────────────
 
     private void Update()
     {
-        if (InputJugador.instance?.AbrirMenuPausa == true)
+        // No abrir menú de pausa durante cinemáticas
+        if (!enCinematica && InputJugador.instance?.AbrirMenuPausa == true)
         {
             if (menuPausa != null && (menuPrincipal == null || !menuPrincipal.IsOpen))
             {
@@ -67,108 +69,79 @@ public class MenuManager : MonoBehaviour
                     ControladorCambiarPersonaje.instance.OcultarTodosLosHUD();
                 }
             }
-                
-
         }
 
         if (InputJugador.instance != null &&
             InputJugador.instance.GetInputJugador().currentActionMap.name == "UI" &&
-            InputJugador.instance.Cancelar)
+            InputJugador.instance.Cancelar &&
+            !enCinematica) // tampoco cancelar durante cinemáticas
         {
             if (currentMenu != menuControles && currentMenu != menuVolumen && currentMenu != menuGraficos)
-            {
                 GoBack();
-            }
             else
-            {
                 GoBackToPreviousCoreMenu();
-            }
-            
         }
     }
-    // NUEVO: Verificar si hay paneles de gameplay activos
-    private bool EsPanelDeGameplayActivo()
+
+    // ─── API de Cinemáticas ───────────────────────────────────────────────────
+    // Llamados por CinematicaManager. MenuManager gestiona el estado de input
+    // porque ya es el responsable de toda la navegación de UI/Input en el juego.
+
+    /// <summary>
+    /// Bloquea el menú de pausa y cambia el input a UI para que el jugador
+    /// no pueda interactuar durante la cinemática.
+    /// </summary>
+    public void IniciarModoCinematica()
     {
-        return (currentMenu == menuMuerteTisqa ||
-                currentMenu == menuMuertePaco ||
-                currentMenu == menuTotem);
+        enCinematica = true;
+        InputJugador.instance?.GuardarUltimoGameplayMap();
+        InputJugador.instance?.CambiarInputUI();
     }
 
-    // NUEVOS: M�todos para abrir paneles desde FSM y t�tems
+    /// <summary>
+    /// Restaura el estado de input anterior y desbloquea el menú de pausa.
+    /// </summary>
+    public void TerminarModoCinematica()
+    {
+        enCinematica = false;
+        if (EstaEnGameplay)
+            InputJugador.instance?.VolverAGameplay();
+    }
+
+    // ─── Paneles de Gameplay ──────────────────────────────────────────────────
+
     public void MostrarPanelMuerteTisqa()
     {
         if (menuMuerteTisqa != null && !menuMuerteTisqa.IsOpen)
-        {
             OpenMenu(menuMuerteTisqa);
-            Debug.Log("Panel muerte tisqa abierto");
-        }
     }
 
     public void MostrarPanelMuertePaco()
     {
         if (menuMuertePaco != null && !menuMuertePaco.IsOpen)
-        {
             OpenMenu(menuMuertePaco);
-            Debug.Log("Panel muerte paco abierto");
-        }
     }
+
     public void MostrarPanelTotem()
     {
         if (menuTotem != null && !menuTotem.IsOpen)
-        {
             OpenMenu(menuTotem);
-            Debug.Log("Panel totem abierto");
-        }
-    }
-    // ========== EVENTOS DE CAMBIO DE ESCENA ==========
-    private void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void OnDisable()
+    public void AbrirPanelTutorial(int indexPanel)
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (indexPanel >= 0 && indexPanel < PanelesTutorial.Count)
+            OpenMenu(PanelesTutorial[indexPanel]);
+        else
+            Debug.LogWarning($"[MenuManager] Indice de tutorial invalido: {indexPanel}");
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        CloseAllMenus();
-
-        if (EsEscenaDeMenuPrincipal(scene.name))
-        {
-            StartCoroutine(AbrirMenuInicialEnProximoFrame());
-        }
-        else if (EsEscenaDeGameplay(scene.name))
-        {
-            InputJugador.instance?.VolverAGameplay();
-        }
-    }
-    private System.Collections.IEnumerator AbrirMenuInicialEnProximoFrame()
-    {
-        yield return null;
-        if (menuInicial != null)
-        {
-            OpenMenu(menuInicial);
-        }
-    }
-
-    private System.Collections.IEnumerator AbrirMenuPrincipalEnProximoFrame()
-    {
-        yield return null; // Esperar un frame para que todo se inicialice
-        if (menuPrincipal != null)
-        {
-            OpenMenu(menuPrincipal);
-        }
-    }
+    // ─── Navegación ───────────────────────────────────────────────────────────
 
     public void OpenMenu(MenuBase menu)
     {
-        // Solo guardar gameplay map si estamos viniendo desde gameplay
         if (EstaEnGameplay)
-        {
             InputJugador.instance?.GuardarUltimoGameplayMap();
-        }
 
         if (currentMenu != null)
         {
@@ -178,8 +151,6 @@ public class MenuManager : MonoBehaviour
 
         currentMenu = menu;
         currentMenu.OpenMenu();
-
-        // Cambiar a input de UI
         InputJugador.instance?.CambiarInputUI();
     }
 
@@ -187,13 +158,9 @@ public class MenuManager : MonoBehaviour
     {
         if (menuStack.Count > 0)
         {
-            if (currentMenu != null)
-                currentMenu.CloseMenu();
-
+            currentMenu?.CloseMenu();
             currentMenu = menuStack.Pop();
             currentMenu.OpenMenu();
-
-            // Mantener en UI porque hay m�s men�s
         }
         else if (currentMenu != null)
         {
@@ -205,22 +172,17 @@ public class MenuManager : MonoBehaviour
                 return;
             }
 
-            // �ltimo men�
             currentMenu.CloseMenu();
             currentMenu = null;
 
             if (EstaEnGameplay)
             {
-                // Volver a gameplay
                 ControladorCambiarPersonaje.instance.ActivarHUDPausa();
                 InputJugador.instance?.VolverAGameplay();
             }
-            else if (EstaEnMenuPrincipal)
+            else if (EstaEnMenuPrincipal && menuInicial != null)
             {
-                if (menuInicial != null)
-                {
-                    OpenMenu(menuInicial);
-                }
+                OpenMenu(menuInicial);
             }
         }
     }
@@ -228,34 +190,22 @@ public class MenuManager : MonoBehaviour
     public void CloseAllMenus()
     {
         while (menuStack.Count > 0)
-        {
             menuStack.Pop().CloseMenu();
-        }
 
-        if (currentMenu != null)
-        {
-            currentMenu.CloseMenu();
-            currentMenu = null;
-        }
+        currentMenu?.CloseMenu();
+        currentMenu = null;
 
-        // Decidir input seg�n contexto
         if (EstaEnGameplay)
-        {
             InputJugador.instance?.VolverAGameplay();
-        }
-        // En men� principal, mantener UI input
     }
+
     public void GoBackToPreviousCoreMenu()
     {
-        // Cerrar el men� actual
-        if (currentMenu != null)
-            currentMenu.CloseMenu();
+        currentMenu?.CloseMenu();
 
-        // Vaciar todos los submen�s del stack que sean parte de las opciones
         while (menuStack.Count > 0)
         {
             var menu = menuStack.Pop();
-
             if (menu != menuControles && menu != menuVolumen && menu != menuGraficos)
             {
                 currentMenu = menu;
@@ -264,63 +214,64 @@ public class MenuManager : MonoBehaviour
             }
         }
 
-        if (EstaEnGameplay && menuPausa != null)
-        {
-            OpenMenu(menuPausa);
-        }
-        else if (EstaEnMenuPrincipal && menuPrincipal != null)
-        {
-            OpenMenu(menuPrincipal);
-        }
-    }
-    public void AbrirPanelTutorial(int indexPanel)
-    {
-        if (indexPanel >= 0 && indexPanel < PanelesTutorial.Count)
-        {
-            OpenMenu(PanelesTutorial[indexPanel]);
-        }
-        else
-        {
-            Debug.LogWarning($"[MenuManager] indice de tutorial inv�lido: {indexPanel}");
-        }
+        if (EstaEnGameplay && menuPausa != null)         OpenMenu(menuPausa);
+        else if (EstaEnMenuPrincipal && menuPrincipal != null) OpenMenu(menuPrincipal);
     }
 
+    // ─── Cambio de escena ─────────────────────────────────────────────────────
 
-    public bool EsEscenaDeGameplay(string nombreEscena)
+    private void OnEnable()  => SceneManager.sceneLoaded += OnSceneLoaded;
+    private void OnDisable() => SceneManager.sceneLoaded -= OnSceneLoaded;
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        foreach (string escena in escenasGameplay)
-        {
-            if (nombreEscena.Equals(escena, System.StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
+        // Al cambiar de escena siempre salimos del modo cinemática
+        enCinematica = false;
+
+        CloseAllMenus();
+
+        if (EsEscenaDeMenuPrincipal(scene.name))
+            StartCoroutine(AbrirMenuInicialEnProximoFrame());
+        else if (EsEscenaDeGameplay(scene.name))
+            InputJugador.instance?.VolverAGameplay();
+    }
+
+    private IEnumerator AbrirMenuInicialEnProximoFrame()
+    {
+        yield return null;
+        if (menuInicial != null) OpenMenu(menuInicial);
+    }
+
+    // ─── Helpers ──────────────────────────────────────────────────────────────
+
+    public bool EsEscenaDeGameplay(string nombre)
+    {
+        foreach (var e in escenasGameplay)
+            if (nombre.Equals(e, System.StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
 
-    public bool EsEscenaDeMenuPrincipal(string nombreEscena)
+    public bool EsEscenaDeMenuPrincipal(string nombre)
     {
-        foreach (string escena in escenasMenuPrincipal)
-        {
-            if (nombreEscena.Equals(escena, System.StringComparison.OrdinalIgnoreCase))
-                return true;
-        }
+        foreach (var e in escenasMenuPrincipal)
+            if (nombre.Equals(e, System.StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
-    public bool EstaEnPausa()
-    {
-        return currentMenu.Pause;
-    }
 
-    // M�todos de acceso r�pido
-    public MenuInicial MenuInicial => menuInicial;
-    public MenuPrincipal MenuPrincipal => menuPrincipal;
-    public MenuPausa MenuPausa => menuPausa;
-    public MenuControles MenuControles => menuControles;
-    public MenuCreditos MenuCreditos => menuCreditos;
-    public MenuVolumen MenuVolumen => menuVolumen;
-    public MenuMuerteTisqa MenuMuerteTisqa => menuMuerteTisqa;
-    public MenuMuertePaco MenuMuertePaco => menuMuertePaco;
-    public MenuTotem MenuTotem => menuTotem;
-    public MenuGraficos MenuGraficos => menuGraficos;
+    public bool EstaEnPausa() => currentMenu != null && currentMenu.Pause;
+
+    // ─── Acceso rápido ────────────────────────────────────────────────────────
+
+    public MenuInicial        MenuInicial        => menuInicial;
+    public MenuPrincipal      MenuPrincipal      => menuPrincipal;
+    public MenuPausa          MenuPausa          => menuPausa;
+    public MenuControles      MenuControles      => menuControles;
+    public MenuCreditos       MenuCreditos       => menuCreditos;
+    public MenuVolumen        MenuVolumen        => menuVolumen;
+    public MenuMuerteTisqa    MenuMuerteTisqa    => menuMuerteTisqa;
+    public MenuMuertePaco     MenuMuertePaco     => menuMuertePaco;
+    public MenuTotem          MenuTotem          => menuTotem;
+    public MenuGraficos       MenuGraficos       => menuGraficos;
     public MenuColeccionables MenuColeccionables => menuColeccionables;
     public MenuVisualizador3D MenuVisualizador3D => menuVisualizador3D;
 }

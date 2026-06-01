@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c8eec9a07a3ad44b2773af486377ae, type: 3}
+  m_Name: LiderPanche
+  m_EditorClassIdentifier: 
+  statsFaseUno: {fileID: 11400000, guid: fb8524c24f568694b8586c68db6fd207, type: 2}
+  statsFaseDos: {fileID: 11400000, guid: 5582759d4b2c6db4f90a92e1862b032e, type: 2}
+  statsFaseTres: {fileID: 11400000, guid: 8a4962316d6420846a297cf56bd0a51d, type: 2}
+  umbralFaseDos: 0.6
+  umbralFaseTres: 0.3
+  prefabArmaFaseUno: {fileID: 0}
+  prefabArmaFaseDos: {fileID: 0}
+  prefabArmaFaseTres: {fileID: 0}

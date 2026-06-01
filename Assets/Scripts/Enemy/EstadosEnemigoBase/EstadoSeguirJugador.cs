@@ -18,6 +18,7 @@ public class EstadoSeguirJugador : EstadoBase
     public override void OnEnter()
     {
         animator.CrossFade(RunningHash, duracionTransicion);
+        agent.isStopped = false;
         agent.speed = velocidadPersecucion;
     }
 
@@ -27,21 +28,22 @@ public class EstadoSeguirJugador : EstadoBase
 
         if (jugador == null)
         {
-            Debug.LogWarning($"[{enemigo.name}] Jugador null en EstadoSeguir, volviendo a patrullar");
+            Debug.LogWarning($"[{enemigo.name}] Jugador null en EstadoSeguir, volviendo a patrullar.");
             enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
             return;
         }
+
         if (!enemigo.detectarJugador.SePuedeDetectarAlJugador())
         {
-            Debug.Log($"[{enemigo.name}] Perdió detección del jugador, volviendo a patrullar");
             enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
             return;
         }
 
         agent.SetDestination(jugador.position);
 
-        // Si llegó a rango de ataque Y tiene permiso, cambiar a atacar
-        if (enemigo.EstaAtacando() && enemigo.detectarJugador.SePuedeAtacarAlJugador())
+        // FIX: SePuedeAtacarAlJugador ahora requiere el rango como parÃ¡metro
+        // para evitar tener el dato duplicado entre DetectarJugador y EnemyStats.
+        if (enemigo.EstaAtacando() && enemigo.detectarJugador.SePuedeAtacarAlJugador(enemigo.RangoDeAtaque))
         {
             enemigo.CambiarAEstado<EstadoAtacarJugador>();
         }

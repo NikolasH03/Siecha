@@ -162,17 +162,10 @@ public class ControladorCombate : MonoBehaviour
     public void EquiparArma(ArmaData nuevaArma)
     {
         if (nuevaArma == null) return;
-
-
+        
         armaInstanciada = Instantiate(nuevaArma.prefabArmaPrincipal, puntoSujecionArmaPrincipal);
-        //armaInstanciada.transform.localPosition = Vector3.zero;
-        //armaInstanciada.transform.localRotation = Quaternion.identity;
-        //armaInstanciada.transform.localScale = Vector3.one;
 
         armaSecundariaInstanciada = Instantiate(nuevaArma.prefabArmaSecundaria, puntoSujecionArmaSecundaria);
-        //armaSecundariaInstanciada.transform.localPosition = Vector3.zero;
-        //armaSecundariaInstanciada.transform.localRotation = Quaternion.identity;
-        //armaSecundariaInstanciada.transform.localScale = Vector3.one;
 
         vfxPrincipal = armaInstanciada.GetComponent<ArmaVFX>();
         vfxSecundaria = armaSecundariaInstanciada.GetComponent<ArmaVFX>();
@@ -286,7 +279,7 @@ public class ControladorCombate : MonoBehaviour
     }
     public void DesplazamientoDash(Vector2? inputDireccion)
     {
-        targeting.EjecutarDash();
+        targeting.EjecutarDash(inputDireccion); 
     }
 
     public void Reproducir(string evento)
