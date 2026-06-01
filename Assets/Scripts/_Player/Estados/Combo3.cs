@@ -9,7 +9,7 @@ public class Combo3 : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "fuerte";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Combo3");
         combatController.setAtacando(true);

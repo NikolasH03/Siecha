@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: SlashTisqa
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: 56d76b892b977c747a6ed3cb5b5a9dc4, type: 2}
+  - {fileID: 11400000, guid: 23eee12bac30bc14cb911dd183472f55, type: 2}
+  - {fileID: 11400000, guid: ea22a4e3e1f3b1044b2296dc33419611, type: 2}
+  - {fileID: 11400000, guid: 716de62360026184ea62f4b32f805ba6, type: 2}

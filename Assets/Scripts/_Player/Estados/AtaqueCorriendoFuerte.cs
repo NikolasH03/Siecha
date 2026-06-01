@@ -6,7 +6,7 @@ public class AtaqueCorriendoFuerte : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "fuerte";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("AtaqueCorriendoFuerte");
         combatController.setAtacando(true);

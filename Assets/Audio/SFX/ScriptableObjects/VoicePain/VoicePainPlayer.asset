@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: VoicePainPlayer
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: a047f084564f4c941951cb2612f9b51d, type: 2}
+  - {fileID: 11400000, guid: 81cd4961ce96f4345888db94296b8708, type: 2}
+  - {fileID: 11400000, guid: cd474903505e34845890842d3ae6f2e0, type: 2}
+  - {fileID: 11400000, guid: 3d1dc1b78af849844861114874b0a095, type: 2}

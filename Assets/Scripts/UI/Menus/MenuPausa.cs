@@ -21,24 +21,28 @@ public class MenuPausa : MenuBaseConNavegacion
         if (botonReanudar && botonOpciones && botonColeccionables && botonMenuPrincipal && botonSalir)
         {
             ConfigurarNavegacionBoton(botonReanudar,
-                arriba: botonSalir, abajo: botonOpciones);
+                izquierda: botonSalir, derecha: botonOpciones);
 
             ConfigurarNavegacionBoton(botonOpciones,
-                arriba: botonReanudar, abajo: botonColeccionables);
+                izquierda: botonReanudar, derecha: botonColeccionables);
 
             ConfigurarNavegacionBoton(botonColeccionables,
-                arriba: botonOpciones, abajo: botonMenuPrincipal);
+                izquierda: botonOpciones, derecha: botonMenuPrincipal);
 
             ConfigurarNavegacionBoton(botonMenuPrincipal,
-                arriba: botonColeccionables, abajo: botonSalir);
+                izquierda: botonColeccionables, derecha: botonSalir);
 
             ConfigurarNavegacionBoton(botonSalir,
-                arriba: botonMenuPrincipal, abajo: botonReanudar);
+                izquierda: botonMenuPrincipal, derecha: botonReanudar);
 
 
             primerSeleccionable = botonReanudar;
         }
     }
+    //public void Start()
+    //{
+    //    AudioManager.Instance.PlaySFX(AudioManager.Instance.efecto_AbrirMenuPausa, this.transform.position);
+    //}
 
     public void Reanudar()
     {
@@ -67,6 +71,7 @@ public class MenuPausa : MenuBaseConNavegacion
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Menu");
+        GameFlowManager.Instance.ReiniciarFlujoDeJuego();
     }
     public void SalirJuego()
     {

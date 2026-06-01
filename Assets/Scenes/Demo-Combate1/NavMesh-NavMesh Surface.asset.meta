@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+<<<<<<<< HEAD:Assets/Scenes/Demo-Combate1/NavMesh-NavMesh Surface.asset.meta
 guid: 9854f2ab6d959374dbb63c8b347b7d04
+========
+guid: 1a44844e883b8d64f8d082ae6c792070
+>>>>>>>> origin/Nicolas:Assets/Scenes/Demo-Combate1/NavMesh-NavMesh Surface 1.asset.meta
+=======
+guid: 77c01465734c5dd4ab4e8c8de988ac2b
+>>>>>>> origin/Nicolas
 NativeFormatImporter:
   externalObjects: {}
   mainObjectFileID: 23800000

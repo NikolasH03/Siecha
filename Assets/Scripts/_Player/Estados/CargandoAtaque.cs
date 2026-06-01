@@ -5,9 +5,10 @@ public class CargandoAtaque : CombatState
     public CargandoAtaque(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc) { }
     public override void Enter()
     {
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("CargarAtaque");
         combatController.setAtacando(true);
+        combatController.Reproducir("inicio_cargado");
 
     }
     public override void HandleInput()

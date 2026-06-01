@@ -11,6 +11,7 @@ public class EsquivaState : CombatState
         combatController.anim.SetBool("dashing", true);
         combatController.anim.SetTrigger("Esquiva");
         combatController.InvulneravilidadJugador();
+        combatController.DesplazamientoDash(combatController.ultimoInputMovimiento);
     }
 
     public override void HandleInput()

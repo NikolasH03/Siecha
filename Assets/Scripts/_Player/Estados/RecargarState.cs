@@ -45,6 +45,11 @@ public class RecargarState : CombatState
         //}
     }
 
+    public override void Update()
+    {
+        apuntado.EstaApuntando(apuntado.ObtenerPosicionObjetivo());
+    }
+
     private void OnFinMinijuego(bool fuePerfecta)
     {
         esperandoResultado = false;

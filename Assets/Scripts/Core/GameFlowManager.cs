@@ -16,7 +16,6 @@ public class GameFlowManager : MonoBehaviour
 
     [Header("Managers")]
     public DialogueManager dialogueManager;
-    public TutorialManager tutorialManager;
 
     [Header("Game Sections")]
     public SectionConfig[] sections; 
@@ -51,7 +50,10 @@ private void Awake()
             startGameplay = false;
             Debug.Log("arranca el flujo de juego");
             if (sections.Length > 0)
+            {
                 ChangeState(CreateStateFromConfig(sections[currentSectionIndex]));
+            }
+ 
         }
     }
 
@@ -63,8 +65,6 @@ private void Awake()
     private void Update()
     {
         currentState?.Update();
-
-        //Debug.Log("estado actual: " + currentState);
     }
 
     public void ChangeState(GameState newState)
@@ -90,6 +90,11 @@ private void Awake()
         if (nextConfig.requiresSceneLoad)
         {
             Debug.Log($"[GameFlowManager] Cargando nueva escena: {nextConfig.sceneName}");
+
+            // Guardar datos antes de cambiar de escena
+            var jugador = FindObjectOfType<ControladorCombate>();
+            if (jugador != null)
+                GameDataManager.Instance.GuardarDesdeJugador(jugador);
 
             // Activa la bandera para que cuando la escena termine de cargarse,
             // se reinicie el flujo desde la nueva escena
@@ -132,4 +137,24 @@ private void Awake()
             default: return new ExplorationState(this, config);
         }
     }
+    public void ReiniciarFlujoDeJuego()
+    {
+        Debug.Log("[GameFlowManager] Reiniciando flujo de juego completo...");
+
+        // Reiniciar índice y estado
+        currentSectionIndex = 0;
+        currentState?.Exit();
+        currentState = null;
+
+        // Reiniciar datos del jugador
+        if (GameDataManager.Instance != null)
+        {
+            GameDataManager.Instance.ReiniciarDatosJugador();
+        }
+
+        // Asegurar que el flujo vuelva a arrancar cuando cargue la escena
+        startGameplay = false;
+
+    }
+
 }

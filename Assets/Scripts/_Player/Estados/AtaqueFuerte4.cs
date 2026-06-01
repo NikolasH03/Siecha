@@ -8,10 +8,11 @@ public class AtaqueFuerte4 : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "fuerte";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Fuerte4");
         combatController.setAtacando(true);
+        combatController.Reproducir("slash");
     }
     public override void Exit()
     {

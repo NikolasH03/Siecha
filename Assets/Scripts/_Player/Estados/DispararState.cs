@@ -15,13 +15,17 @@ public class DispararState : CombatState
     {
         combatController.anim.SetTrigger("Disparo");
         combatController.InvulneravilidadJugador();
-        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo()); }
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) 
+        { 
+            apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo());
+            combatController.Reproducir("disparar_arco");
+
+        }
 
         else
         {
             apuntado.EsferaDeDano();
-            combatController.ReproducirVFX(4, 2);
-            combatController.ReproducirSonido(4, 2);
+            combatController.Reproducir("disparo_arcabuz");
             CameraShakeManager.instance.ShakeExplosion();
         }
         

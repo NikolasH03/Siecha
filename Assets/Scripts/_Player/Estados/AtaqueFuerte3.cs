@@ -9,10 +9,11 @@ public class AtaqueFuerte3 : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "fuerte";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         if (combatController.statsBase.maxAtaquesFuertes <= 3) combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Fuerte3");
         combatController.setAtacando(true);
+        combatController.Reproducir("slash");
     }
     public override void HandleInput()
     {

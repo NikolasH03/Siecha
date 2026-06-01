@@ -4,6 +4,7 @@ public class GameDataManager : MonoBehaviour
 {
     public static GameDataManager Instance { get; private set; }
 
+    public bool DatosJugadorGuardados = false;
     private void Awake()
     {
         if (Instance == null)
@@ -19,55 +20,38 @@ public class GameDataManager : MonoBehaviour
     // ===============================
     //         GUARDADO
     // ===============================
-    public void GuardarDatosJugador(
-        float vidaMax,
-        float vidaActual,
-        float estaminaMax,
-        int numMuertes,
-        int dinero,
-        bool[] coleccionables)
+    public void GuardarDesdeJugador(ControladorCombate jugador)
     {
-        PlayerPrefs.SetFloat("VidaMax", vidaMax);
-        PlayerPrefs.SetFloat("VidaActual", vidaActual);
-        PlayerPrefs.SetFloat("EstaminaMax", estaminaMax);
+        var stats = jugador.stats;
 
-        PlayerPrefs.SetInt("NumMuertes", numMuertes);
-        PlayerPrefs.SetInt("Dinero", dinero);
+        PlayerPrefs.SetFloat("VidaMax", stats.VidaMax);
+        PlayerPrefs.SetFloat("VidaActual", stats.VidaActual);
+        PlayerPrefs.SetFloat("EstaminaMax", stats.EstaminaMax);
+        PlayerPrefs.SetInt("NumMuertes", jugador.muertesActuales);
+        PlayerPrefs.SetInt("Dinero", InventarioEconomia.instance.getDinero());
 
-        for (int i = 0; i < coleccionables.Length; i++)
-        {
-            PlayerPrefs.SetInt("Coleccionable_" + i, coleccionables[i] ? 1 : 0);
-        }
+        GuardarColeccionables();
 
-        PlayerPrefs.Save(); 
-        Debug.Log("Datos del jugador guardados");
+        PlayerPrefs.Save();
+        DatosJugadorGuardados = true;
+        Debug.Log("[GameData] Datos guardados.");
     }
 
     // ===============================
     //         CARGA
     // ===============================
-    public void CargarDatosJugador(
-        out float vidaMax,
-        out float vidaActual,
-        out float estaminaMax,
-        out int numMuertes,
-        out int dinero,
-        out bool[] coleccionables)
+    public void CargarEnJugador(ControladorCombate jugador)
     {
-        vidaMax = PlayerPrefs.GetFloat("VidaMax", 100f);
-        vidaActual = PlayerPrefs.GetFloat("VidaActual", vidaMax);
-        estaminaMax = PlayerPrefs.GetFloat("EstaminaMax", 100f);
+        var stats = jugador.stats;
 
-        numMuertes = PlayerPrefs.GetInt("NumMuertes", 0);
-        dinero = PlayerPrefs.GetInt("Dinero", 0);
+        jugador.CargarEstadisticasActuales(PlayerPrefs.GetFloat("VidaMax"), PlayerPrefs.GetFloat("EstaminaMax"), PlayerPrefs.GetFloat("VidaActual"));
+        jugador.SetNumeroMuertes(PlayerPrefs.GetInt("NumMuertes"));  
+        InventarioEconomia.instance.SetDinero(PlayerPrefs.GetInt("Dinero"));
 
-        coleccionables = new bool[5];
-        for (int i = 0; i < coleccionables.Length; i++)
-        {
-            coleccionables[i] = PlayerPrefs.GetInt("Coleccionable_" + i, 0) == 1;
-        }
+        CargarColeccionables();
 
-        Debug.Log("Datos del jugador cargados");
+        DatosJugadorGuardados = false;
+        Debug.Log("[GameData] Datos cargados al jugador.");
     }
 
     // ===============================
@@ -77,6 +61,50 @@ public class GameDataManager : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
-        Debug.Log("Datos del jugador reiniciados");
+        DatosJugadorGuardados = false;
+        Debug.Log("[GameData] Datos reiniciados.");
     }
+
+    public void GuardarColeccionables()
+    {
+        var inventario = InventarioColeccionables.instance;
+        if (inventario == null)
+        {
+            Debug.LogWarning("[GameData] No se encontró el InventarioColeccionables para guardar.");
+            return;
+        }
+
+        for (int i = 0; i < inventario.TotalColeccionables(); i++)
+        {
+            int id = inventario.GetDatos(i).id;
+            bool desbloqueado = inventario.EstaDesbloqueado(id);
+            PlayerPrefs.SetInt("Coleccionable_" + id, desbloqueado ? 1 : 0);
+        }
+
+        PlayerPrefs.Save();
+        Debug.Log("[GameData] Coleccionables guardados.");
+    }
+    public void CargarColeccionables()
+    {
+        var inventario = InventarioColeccionables.instance;
+        if (inventario == null)
+        {
+            Debug.LogWarning("[GameData] No se encontró el InventarioColeccionables para cargar.");
+            return;
+        }
+
+        for (int i = 0; i < inventario.TotalColeccionables(); i++)
+        {
+            int id = inventario.GetDatos(i).id;
+            if (PlayerPrefs.GetInt("Coleccionable_" + id, 0) == 1)
+            {
+                inventario.Desbloquear(id);
+            }
+        }
+
+        Debug.Log("[GameData] Coleccionables cargados y aplicados.");
+    }
+
+
 }
+

@@ -14,7 +14,7 @@ public class DanoState : CombatState
 
         if (combatController.stats.VidaActual <= 0)
         {
-            combatController.muertesActuales++;
+            combatController.AumentarNumeroMuertes();
 
             if (combatController.muertesActuales >= combatController.muertesMaximas)
                 stateMachine.ChangeState(new MuerteDefinitivaState(stateMachine, combatController));
@@ -28,16 +28,16 @@ public class DanoState : CombatState
         {
 
             combatController.InvulneravilidadJugador();
-            combatController.OrientarJugador();
+            combatController.OrientarJugador(combatController.ultimoInputMovimiento);
             combatController.anim.SetTrigger("Dano");
-            combatController.ReproducirVFX(5, 5);
-            combatController.ReproducirSonido(5, 5);
+            combatController.Reproducir("recibe_impacto");
             CameraShakeManager.instance.ShakeGolpeFuerte();
 
         }
 
+        //DialogueManager.instance.PlayRandomDialogue("Esquive", true);
+
 
     }
-
 }
 

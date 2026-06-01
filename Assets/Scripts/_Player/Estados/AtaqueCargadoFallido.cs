@@ -6,7 +6,7 @@ public class AtaqueCargadoFallido : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "ligero";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("CargadoFallido");
         combatController.setAtacando(true);

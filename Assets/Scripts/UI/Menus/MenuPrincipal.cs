@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class MenuPrincipal : MenuBaseConNavegacion
 {
-    [Header("Botones del Menú Principal")]
+    [Header("Botones del Menï¿½ Principal")]
     [SerializeField] private Button botonJugar;
     [SerializeField] private Button botonOpciones;
     [SerializeField] private Button botonCreditos;
@@ -12,6 +12,7 @@ public class MenuPrincipal : MenuBaseConNavegacion
     {
         if (botonJugar && botonOpciones && botonCreditos && botonSalir)
         {
+
             ConfigurarNavegacionBoton(botonJugar,
                 arriba: botonSalir, abajo: botonOpciones);
 

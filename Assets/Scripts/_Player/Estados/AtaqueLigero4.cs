@@ -7,10 +7,11 @@ public class AtaqueLigero4 : CombatState
     public override void Enter()
     {
         combatController.tipoAtaque = "ligero";
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         if (combatController.statsBase.maxAtaquesLigeros <= 4) combatController.InvulneravilidadJugador();
         combatController.anim.SetTrigger("Ligero4");
         combatController.setAtacando(true);
+        combatController.Reproducir("slash");
     }
     public override void HandleInput()
     {

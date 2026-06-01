@@ -31,6 +31,13 @@ public class InventarioEconomia : MonoBehaviour
         if (ControladorCambiarPersonaje.instance.getEsMuisca()) { return dineroTisqa; }
         else { return dineroPaco; }      
     }
+    public void SetDinero(int cont)
+    {
+        if (ControladorCambiarPersonaje.instance.getEsMuisca()) { dineroTisqa = cont; }
+        else { dineroPaco = cont; }
+
+        uiEconomia.RefrescarUI();
+    }
     public void AumentarDinero(int cont)
     {
         if (ControladorCambiarPersonaje.instance.getEsMuisca()) { dineroTisqa += cont; }

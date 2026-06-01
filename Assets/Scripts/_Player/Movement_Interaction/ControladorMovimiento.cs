@@ -8,7 +8,7 @@ public class ControladorMovimiento : MonoBehaviour
     public float VelocidadCorriendo = 600f;
     public float VelocidadActual;
     [Range(0.0f, 0.3f)]
-    public float RotationSmoothTime = 0.3f;
+    public float RotationSmoothTime = 0.1f;
     [SerializeField] float SpeedChangeRate = 50f;
 
     [SerializeField] float sensibilidad = 1f;
@@ -24,6 +24,9 @@ public class ControladorMovimiento : MonoBehaviour
 
     //coordenadas para animaciones de movimiento
     private float x, y;
+    private float xActual;
+    private float yActual;
+    private float velocidadSuavizado = 10f;
     private Animator anim;
 
     //rotacion de la camara
@@ -75,8 +78,11 @@ public class ControladorMovimiento : MonoBehaviour
         y = InputJugador.instance.moverse.y;
 
 
-        anim.SetFloat("Velx", x);
-        anim.SetFloat("Vely", y);
+        xActual = Mathf.Lerp(xActual, x, velocidadSuavizado * Time.deltaTime);
+        yActual = Mathf.Lerp(yActual, y, velocidadSuavizado * Time.deltaTime);
+
+        anim.SetFloat("Velx", xActual);
+        anim.SetFloat("Vely", yActual);
 
     }
     public void CambiarVelocidad(bool EstaCorriendo)

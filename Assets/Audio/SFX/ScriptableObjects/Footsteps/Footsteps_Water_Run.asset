@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: Footsteps_Water_Run
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: 2923a1264e7da644b80d48de3cfd02b6, type: 2}
+  - {fileID: 11400000, guid: 6517de35e3ad1e34eb5e22d1fcd69497, type: 2}
+  - {fileID: 11400000, guid: d73765aad3c890046a7957b505947172, type: 2}
+  - {fileID: 11400000, guid: 9e60223a293efd04fa0e0355c6799908, type: 2}
+  - {fileID: 11400000, guid: bed37bc8f8e9d5c4fa538cae7f49fffe, type: 2}

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Estoque
   m_EditorClassIdentifier: 
   nombre: Estoque
-  "da\xF1oGolpeFuerte": 2
-  "da\xF1oGolpeLigero": 4
-  "da\xF1oGolpeCargado": 12
-  "da\xF1oGolpeFuerteGuardia": 4
-  "da\xF1oGolpeLigeroGuardia": 2
-  prefabArmaPrincipal: {fileID: 422111958330211089, guid: 58b8a663f441f04468094a9205298dd6, type: 3}
-  prefabArmaSecundaria: {fileID: 1742284803876724017, guid: f66385c97271b9d45905d630e3d0399d, type: 3}
+  danoGolpeFuerte: 6
+  danoGolpeLigero: 7
+  danoGolpeCargado: 9
+  danoGolpeFuerteGuardia: 7
+  danoGolpeLigeroGuardia: 3
+  prefabArmaPrincipal: {fileID: 7206013468772476052, guid: 8ed580d19dbf2ee4288d63d1d22b6194, type: 3}
+  prefabArmaSecundaria: {fileID: 6870289579515822118, guid: d3c62e5b487beaf4a8d851ab1d9e9284, type: 3}

@@ -18,16 +18,13 @@ public class ApuntarState : CombatState
         combatController.anim.SetTrigger("Apuntar");
         apuntado.TransicionarLayerPeso(1, 1f, 0.2f);
         combatController.CambiarCanMove(true);
+        //combatController.ReproducirSonido(1, 2);
     }
 
     public override void HandleInput()
     {
 
-        if (!InputJugador.instance.apuntar)
-        {
-            stateMachine.ChangeState(new IdleDistanciaState(stateMachine, combatController));
-            return;
-        }
+  
         if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
         {
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
@@ -53,6 +50,11 @@ public class ApuntarState : CombatState
                 stateMachine.ChangeState(new DispararState(stateMachine, combatController));
                 return;
             }
+        }
+        if (!InputJugador.instance.apuntar)
+        {
+            stateMachine.ChangeState(new IdleDistanciaState(stateMachine, combatController));
+            return;
         }
     }
     public override void Update()

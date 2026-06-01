@@ -6,10 +6,10 @@ public class PerderGuardiaState : CombatState
 
     public override void Enter()
     {
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.InvulneravilidadJugador();
-        combatController.anim.SetTrigger("Dano");
-        combatController.ReproducirVFX(7, 5);
+        combatController.anim.SetTrigger("GuardBreak");
+        combatController.Reproducir("perder_guardia");
 
     }
     public override void Exit()

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Windows;
 
 public class InputJugador : MonoBehaviour
 {
@@ -9,9 +10,12 @@ public class InputJugador : MonoBehaviour
     public static InputJugador instance;
 
     private PlayerInput playerInput;
+    public string ControlSchemeActual { get; private set; }
+    public bool UsaGamepad => ControlSchemeActual == "Console";
+    public event System.Action<string> OnControlSchemeChanged;
 
     // ========== GAMEPLAY INPUTS ==========
-    public Vector2 moverse { get; private set; }
+    public Vector2 moverse;
     public Vector2 mirar { get; private set; }
 
     public bool correr { get; private set; }
@@ -73,6 +77,7 @@ public class InputJugador : MonoBehaviour
         }
 
         playerInput = GetComponent<PlayerInput>();
+        ControlSchemeActual = playerInput.currentControlScheme;
 
         var meleeMap = playerInput.actions.FindActionMap("GameplayMelee", true);
         var distanciaMap = playerInput.actions.FindActionMap("GameplayDistancia", true);
@@ -84,6 +89,8 @@ public class InputJugador : MonoBehaviour
         navegarAction = uiMap?.FindAction("Navegar", true);
         pointAction = uiMap?.FindAction("Point", true);
         visualizarAction = uiMap?.FindAction("Visualizar", true);
+
+        playerInput.onControlsChanged += OnControlsChanged;
     }
     private void Update()
     {
@@ -185,7 +192,6 @@ public class InputJugador : MonoBehaviour
 
     private void OnEnable()
     {
-        playerInput.onControlsChanged += OnControlsChanged;
 
         ataqueLigeroAction.started += OnAtaqueStarted;
         ataqueLigeroAction.performed += OnAtaquePerformed;
@@ -247,6 +253,17 @@ public class InputJugador : MonoBehaviour
     }
     private void OnControlsChanged(PlayerInput obj)
     {
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInput>();
+
+        if (playerInput == null) return;
+
+        if (ControlSchemeActual != playerInput.currentControlScheme)
+        {
+            ControlSchemeActual = playerInput.currentControlScheme;
+            OnControlSchemeChanged?.Invoke(ControlSchemeActual);
+        }
+
         ResetGameplayInputs();
     }
     private void ResetGameplayInputs()
@@ -276,10 +293,8 @@ public class InputJugador : MonoBehaviour
     }
 
 
-    public PlayerInput GetInputJugador()
-    {
-        return playerInput;
-    }
+public PlayerInput GetInputJugador() => playerInput;
+
 }
 
 

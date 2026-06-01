@@ -30,10 +30,10 @@ public class IdleDistanciaState : CombatState
             stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
 
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
+        //if (InputJugador.instance.cambiarProtagonista)
+        //{
+        //    ControladorCambiarPersonaje.instance.CambiarProtagonista();
+        //}
         if (InputJugador.instance.apuntar)
         {
             stateMachine.ChangeState(new ApuntarState(stateMachine, combatController));

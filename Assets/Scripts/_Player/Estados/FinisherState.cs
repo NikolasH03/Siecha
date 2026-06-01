@@ -30,6 +30,7 @@ public class FinisherState : CombatState
         combatController.setAtacando(false);
         combatController.camaraFinisher.LookAt = null;
         combatController.camaraFinisher.gameObject.SetActive(false);
+        combatController.stats.CurarPorcentajeVida();
         target.FinalizarFinisher();
 
     }

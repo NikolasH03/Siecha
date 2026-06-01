@@ -20,7 +20,9 @@ public class EstadoRomperGuardia : EstadoBase
     public override void OnEnter()
     {
         Debug.Log("Guard Break!!!");
+        enemigo.ActivarInvulnerabilidad();
         animator.CrossFade(GuardBreakHash, duracionTransicion);
+        agent.isStopped = true;
         tempGuardBreak.Reiniciar();
         tempGuardBreak.Empezar();
     }
@@ -32,6 +34,7 @@ public class EstadoRomperGuardia : EstadoBase
 
     public override void OnExit()
     {
-        
+        agent.isStopped = false;
+        enemigo.DesactivarInvulnerabilidad();
     }
 }

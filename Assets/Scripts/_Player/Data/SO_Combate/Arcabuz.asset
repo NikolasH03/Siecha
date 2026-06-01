@@ -15,4 +15,4 @@ MonoBehaviour:
   nombre: Arcabuz
   danoDisparo: 4
   "da\xF1oDisparoGuardia": 8
-  prefab: {fileID: 0}
+  prefab: {fileID: 7186334264363642693, guid: 5a75b036a17700740999b3e296b0014d, type: 3}

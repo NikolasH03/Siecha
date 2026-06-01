@@ -4,7 +4,6 @@ using UnityEngine;
 public class TotemMejora : MonoBehaviour
 {
     [SerializeField] private GameObject canvasInteractuar;
-    [SerializeField] private GameObject HUDJugador;
     private bool jugadorCerca = false;
     private bool yaUsoTotem = false;
     private ControladorCombate jugador;
@@ -20,7 +19,7 @@ public class TotemMejora : MonoBehaviour
         if (jugadorCerca && InputJugador.instance.Interactuar)
         {
             MenuManager.Instance.MostrarPanelTotem();
-            HUDJugador.SetActive(false);
+            ControladorCambiarPersonaje.instance.OcultarTodosLosHUD();
             canvasInteractuar.SetActive(false);
         }
     }
@@ -52,7 +51,7 @@ public class TotemMejora : MonoBehaviour
     public void AumentarVida()
     {
         jugador?.AumentarVidaTotem(100f);
-        HUDJugador.SetActive(true);
+        ControladorCambiarPersonaje.instance.ActivarHUDPausa();
         jugador.setAtacando(false);
         yaUsoTotem = true;
     }
@@ -60,7 +59,7 @@ public class TotemMejora : MonoBehaviour
     public void AumentarEstamina()
     {
         jugador?.AumentarEstaminaTotem(100f);
-        HUDJugador.SetActive(true);
+        ControladorCambiarPersonaje.instance.ActivarHUDPausa();
         jugador.setAtacando(false);
         yaUsoTotem = true;
     }

@@ -54,7 +54,7 @@
                     "name": "Disparar",
                     "type": "Button",
                     "id": "6189bc37-3898-4375-9280-e854fe961fc2",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Tap(pressPoint=0.8),Hold(duration=1,pressPoint=0.8)",
                     "initialStateCheck": false
@@ -63,7 +63,7 @@
                     "name": "Recargar",
                     "type": "Button",
                     "id": "add5b8de-4551-4832-97a1-965a6da8aacb",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -72,7 +72,7 @@
                     "name": "Interactuar",
                     "type": "Button",
                     "id": "60aca047-dc9a-4503-9371-c3a4776f49ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -81,7 +81,7 @@
                     "name": "Esquivar",
                     "type": "Button",
                     "id": "9356aefe-96bb-47e0-8382-12506859cf54",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -90,7 +90,7 @@
                     "name": "CambiarArmaMelee",
                     "type": "Button",
                     "id": "43a9251b-c6dc-4738-8f11-9f8a5ed519ab",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -99,7 +99,7 @@
                     "name": "CambiarProtagonista",
                     "type": "Button",
                     "id": "793d7d4c-d325-47e4-983f-83068bdc1d5b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -252,7 +252,7 @@
                 {
                     "name": "",
                     "id": "eaedf96d-b3b4-4381-8a17-de6f6f2815ac",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/leftTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",
@@ -274,7 +274,7 @@
                 {
                     "name": "",
                     "id": "785d37fa-5486-44cf-8642-df72ebfa86f8",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/rightTrigger",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",
@@ -350,6 +350,17 @@
                 },
                 {
                     "name": "",
+                    "id": "749221bb-ec3f-4f37-bda3-b7986dd7286f",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "CambiarArmaMelee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5b2a592d-4439-4a68-ad16-305bd99aa45a",
                     "path": "<Keyboard>/q",
                     "interactions": "",
@@ -406,7 +417,7 @@
                 {
                     "name": "",
                     "id": "9cbc40e0-0fdc-48d9-8241-49d1beb3b957",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",
@@ -473,7 +484,7 @@
                     "name": "AtaqueLigero",
                     "type": "Button",
                     "id": "addc9f4f-17bf-4c35-8a5b-308bc30bd91a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "Tap(pressPoint=0.8),Hold(duration=1,pressPoint=0.8)",
                     "initialStateCheck": false
@@ -482,7 +493,7 @@
                     "name": "AtaqueFuerte",
                     "type": "Button",
                     "id": "16ed7992-31e4-46b6-ae86-8e84dc066548",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -491,7 +502,7 @@
                     "name": "Esquivar",
                     "type": "Button",
                     "id": "25063191-52ae-478a-8ea8-bb15b8bea531",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -509,7 +520,7 @@
                     "name": "Interactuar",
                     "type": "Button",
                     "id": "be71b761-c21f-4c11-b4b7-0b920c15f712",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -518,7 +529,7 @@
                     "name": "AbrirMenuPausa",
                     "type": "Button",
                     "id": "96013c8e-fa37-4db5-a8e9-0ae7c4d2b9e5",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -527,7 +538,7 @@
                     "name": "CambiarArmaDistancia",
                     "type": "Button",
                     "id": "dae905dc-8a99-41e4-9d8e-5117e09b360a",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -536,7 +547,7 @@
                     "name": "CambiarProtagonista",
                     "type": "Button",
                     "id": "725d2540-c14a-4a0f-b231-147b37408b35",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -557,7 +568,7 @@
                 {
                     "name": "",
                     "id": "bb104213-7cab-41f2-9574-2611681c97da",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",
@@ -579,7 +590,7 @@
                 {
                     "name": "",
                     "id": "e1726e56-01df-4e7e-8736-14063ee8a242",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",
@@ -787,6 +798,17 @@
                 },
                 {
                     "name": "",
+                    "id": "773ab996-8f67-4efa-9bb4-4396a4fae39f",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "CambiarArmaDistancia",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "fdded9a5-4740-4fcf-9865-c4428852bd81",
                     "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
@@ -843,7 +865,7 @@
                 {
                     "name": "",
                     "id": "8f102cf0-7ce0-4934-91b2-ace9e76e4cd7",
-                    "path": "<Gamepad>/buttonNorth",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",

@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f0b99cad5d04f479c863ab7a51b52d, type: 3}
   m_Name: TisqaStats
   m_EditorClassIdentifier: 
-  vidaBase: 200
+  vidaBase: 40
   estaminaBase: 30
-  danoBase: 10
   curacionEstamina: 5
   maxAtaquesLigeros: 4
   maxAtaquesFuertes: 3

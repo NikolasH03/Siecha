@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 5a3e543156e414144bc5a145c52ac1b6
+=======
+guid: abef64a7e1f6e1a4aaeecc89100f87e0
+>>>>>>> origin/Nicolas
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

@@ -7,6 +7,7 @@ public class MenuCreditos : MenuBaseConNavegacion
 
     protected override void ConfigurarNavegacion()
     {
+        AudioManager.Instance.StopMusic();
         if (botonVolver)
             primerSeleccionable = botonVolver;
     }
@@ -14,5 +15,6 @@ public class MenuCreditos : MenuBaseConNavegacion
     public void VolverAtras()
     {
         MenuManager.Instance.GoBack();
+        // AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
     }
 }

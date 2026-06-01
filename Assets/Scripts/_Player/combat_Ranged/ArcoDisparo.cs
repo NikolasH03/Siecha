@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class ArcoDisparo : MonoBehaviour
 {
-    [Header("Configuración de Disparo")]
+    [Header("Configuraciï¿½n de Disparo")]
     private Rigidbody proyectilRB;
     private float velocidad = 80f;
 
-    [Header("Configuración de Colisiones")]
+    [Header("Configuraciï¿½n de Colisiones")]
     [SerializeField] private LayerMask capasDeteccion = -1; 
 
-    [Header("Configuración de Destrucción")]
-    [SerializeField] private float tiempoVidaMaximo = 5f;
-    [SerializeField] private float distanciaMaxima = 150f;
-    [SerializeField] private float alturaMaxima = 50f;
+    [Header("Configuraciï¿½n de Destrucciï¿½n")]
+    [SerializeField] private float tiempoVidaMaximo = 8f;
+    [SerializeField] private float distanciaMaxima = 900f;
+    //[SerializeField] private float alturaMaxima = 50f;
 
 
     private HealthComp enemigo;
@@ -27,7 +27,7 @@ public class ArcoDisparo : MonoBehaviour
     {
         proyectilRB = GetComponent<Rigidbody>();
 
-        gameObject.layer = LayerMask.NameToLayer("Proyectil");
+        gameObject.layer = LayerMask.NameToLayer("Arma");
 
         posicionInicial = transform.position;
         tiempoInicio = Time.time;
@@ -58,21 +58,21 @@ public class ArcoDisparo : MonoBehaviour
         float distanciaRecorrida = Vector3.Distance(transform.position, posicionInicial);
         if (distanciaRecorrida > distanciaMaxima)
         {
-            Debug.Log($"Flecha destruida por distancia máxima: {distanciaRecorrida}m");
+            Debug.Log($"Flecha destruida por distancia mï¿½xima: {distanciaRecorrida}m");
             DestruirFlecha();
             return;
         }
 
-        if (transform.position.y > alturaMaxima)
-        {
-            Debug.Log($"Flecha destruida por altura máxima: {transform.position.y}m");
-            DestruirFlecha();
-            return;
-        }
+        //if (transform.position.y > alturaMaxima)
+        //{
+        //    Debug.Log($"Flecha destruida por altura mï¿½xima: {transform.position.y}m");
+        //    DestruirFlecha();
+        //    return;
+        //}
 
         if (transform.position.y < posicionInicial.y - 20f)
         {
-            Debug.Log("Flecha destruida por caer al vacío");
+            Debug.Log("Flecha destruida por caer al vacï¿½o");
             DestruirFlecha();
             return;
         }
@@ -118,11 +118,11 @@ public class ArcoDisparo : MonoBehaviour
                 enemigo.recibeDano(player.EntregarDanoArmaDistancia());
                 enemigo.setRecibiendoDano(true);
 
-                Debug.Log($"Flecha impactó enemigo: {enemyCollider.gameObject.name}");
+                Debug.Log($"Flecha impactï¿½ enemigo: {enemyCollider.gameObject.name}");
             }
         }
 
-        // ReproducirEfectoImpactoEnemigo();
+        player.ReproducirTransform("flecha_impacta", this.gameObject);
 
         DestruirFlecha();
     }
@@ -131,13 +131,11 @@ public class ArcoDisparo : MonoBehaviour
     {
         yaImpacto = true;
 
-        Debug.Log($"Flecha impactó obstáculo: {obstaculoCollider.gameObject.name}");
+        Debug.Log($"Flecha impactï¿½ obstï¿½culo: {obstaculoCollider.gameObject.name}");
 
-        // ReproducirEfectoImpactoObstaculo();
+        player.ReproducirTransform("flecha_bloqueada", this.gameObject);
 
         ClavaEnPared(obstaculoCollider);
-
-        //DestruirFlecha();
     }
 
     private void DestruirFlecha()

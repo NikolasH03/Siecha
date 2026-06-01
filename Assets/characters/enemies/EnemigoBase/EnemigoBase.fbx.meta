@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Accesorios_MAT
-    second: {fileID: 2100000, guid: 62e75f93e42663e40be97f1f77349e1e, type: 2}
+    second: {fileID: 2100000, guid: 66b0c227e0f352d4fbc42d6aedf6d652, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Falda_Muisca_MAT
-    second: {fileID: 2100000, guid: a27573816c3bcb041b0cc86e1fa8a7b9, type: 2}
+    second: {fileID: 2100000, guid: 1064b9ee5d18578409baa679da56dd8b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

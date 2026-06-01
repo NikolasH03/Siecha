@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: VoicePainEnemy
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: 605bc9ce03b32cc49ba0c31b285441a7, type: 2}
+  - {fileID: 11400000, guid: 87d4bace50d38e443965caac5a605de9, type: 2}
+  - {fileID: 11400000, guid: c434f6aeb3aefb848be5b0195cb2bc4b, type: 2}
+  - {fileID: 11400000, guid: d5589adb3a193d24bbdd3c19b84c3e00, type: 2}
+  - {fileID: 11400000, guid: c10ed1ffa0f702f48a387e98bc52c72e, type: 2}
+  - {fileID: 11400000, guid: 336279c5eeaebb24cb93ac610460e151, type: 2}
+  - {fileID: 11400000, guid: 0ecb73d019571a2498e46ab3d8f27001, type: 2}
+  - {fileID: 11400000, guid: bb33644c514f12a46afb3cfa93d3ff73, type: 2}
+  - {fileID: 11400000, guid: db4849b1a072e124baaba3ebb659256f, type: 2}
+  - {fileID: 11400000, guid: d5129c9af2e0c42429682edd1651eea2, type: 2}
+  - {fileID: 11400000, guid: 5f7d2ebdc691bcf49901d59016f14db9, type: 2}
+  - {fileID: 11400000, guid: 2160f79117b9b1642a73123d9a31750d, type: 2}
+  - {fileID: 11400000, guid: 61fea3258722d3649927b55479e35610, type: 2}
+  - {fileID: 11400000, guid: d19edde31e7e9eb40aa4a2ccfcade54c, type: 2}
+  - {fileID: 11400000, guid: 680bea702d3b6d44098ad8b1e7ed69c7, type: 2}

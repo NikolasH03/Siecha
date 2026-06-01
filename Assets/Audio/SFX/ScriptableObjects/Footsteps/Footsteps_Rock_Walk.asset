@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: Footsteps_Rock_Walk
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: a0d5a34bdb07b894da6b60c24fe1f859, type: 2}
+  - {fileID: 11400000, guid: 87070d6c26b50a3479d0b5d6162f36fd, type: 2}
+  - {fileID: 11400000, guid: 40e61519b11fadc48a733611f3c43c30, type: 2}
+  - {fileID: 11400000, guid: 1c8f12b7e21816f4594ab120197c8635, type: 2}
+  - {fileID: 11400000, guid: b31e7b412f91c844ebbf84718cb8088e, type: 2}
+  - {fileID: 11400000, guid: bdfa666b32734634dba310b46dca795f, type: 2}
+  - {fileID: 11400000, guid: 94e2f2de1bf2fc443bc0fe9cd6942a46, type: 2}
+  - {fileID: 11400000, guid: a35ac1765446b8e43b71dfffd09a09db, type: 2}
+  - {fileID: 11400000, guid: bf45c476eef4c6b469bb6610064128ba, type: 2}

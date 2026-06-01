@@ -1,46 +1,47 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Playables;
 
 public class FightState : GameState
 {
     private CombatZoneBarrier[] barriers;
     private bool combatEnded = false;
 
+    // Director de cinemática de victoria (opcional).
+    // Si está en null → placeholder, avanza inmediatamente.
+    private PlayableDirector directorVictoria;
+
     public FightState(GameFlowManager manager, SectionConfig config) : base(manager, config) { }
 
     public override void Enter()
     {
-        Debug.Log("[CombatState] Entrando al estado de combate");
+        Debug.Log("[FightState] Entrando.");
 
-        if (config.musicData != null)
-            AudioManager.Instance.PlayMusic(config.musicData);
-
-        if (config.ambienceData != null)
-            AudioManager.Instance.PlayAmbience(config.ambienceData);
+        if (config.musicData    != null) AudioManager.Instance.PlayMusic(config.musicData);
+        if (config.ambienceData != null) AudioManager.Instance.PlayAmbience(config.ambienceData);
 
         barriers = Object.FindObjectsOfType<CombatZoneBarrier>();
+        foreach (var b in barriers) b.SetBarrierActive(true);
 
-        foreach (var barrier in barriers)
-        {
-            barrier.SetBarrierActive(true);
-            Debug.Log($"[CombatState] Activando barrera: {barrier.name}");
-        }
+        if (config.showTutorial)
+            GameFlowManager.Instance.StartCoroutine(MostrarTutorialConRetraso(config.TutorialID, 2f));
+
+        // Buscar cinemática de victoria de este combate en escena (opcional)
+        BuscadorCinematicaCombate buscador = Object.FindObjectOfType<BuscadorCinematicaCombate>();
+        if (buscador != null) directorVictoria = buscador.DirectorVictoria;
 
         GameFlowManager.Instance.StartCoroutine(CheckCombatEndRoutine());
     }
 
     private IEnumerator CheckCombatEndRoutine()
     {
-        yield return new WaitForSeconds(2f); // peque�o delay de seguridad
+        yield return new WaitForSeconds(2f);
 
         while (!combatEnded)
         {
-            if (EnemyManager.instance == null)
-                yield break;
+            if (EnemyManager.instance == null) yield break;
 
-            bool allDead = EnemyManager.instance.AreAllEnemiesDead();
-
-            if (allDead)
+            if (EnemyManager.instance.AreAllEnemiesDead())
             {
                 EndCombat();
                 yield break;
@@ -53,32 +54,46 @@ public class FightState : GameState
     private void EndCombat()
     {
         if (combatEnded) return;
-
         combatEnded = true;
-        Debug.Log("[CombatState] Todos los enemigos han sido derrotados.");
 
-        foreach (var barrier in barriers)
-            barrier.SetBarrierActive(false);
+        Debug.Log("[FightState] Todos los enemigos derrotados.");
+        foreach (var b in barriers) b.SetBarrierActive(false);
 
-        var nextConfig = GameFlowManager.Instance.GetNextSectionConfig();
-        if (nextConfig != null && nextConfig.requiresSceneLoad)
+        // Cinemática de victoria (puede ser null → placeholder)
+        if (CinematicaManager.Instance != null)
         {
-            Debug.Log("[CombatState] Esperando a que el jugador active el trigger de cambio de escena...");
+            CinematicaManager.Instance.Reproducir(directorVictoria, onTerminada: ContinuarFlujo);
+        }
+        else
+        {
+            ContinuarFlujo();
+        }
+    }
+
+    private void ContinuarFlujo()
+    {
+        var siguiente = GameFlowManager.Instance.GetNextSectionConfig();
+        if (siguiente != null && siguiente.requiresSceneLoad)
+        {
+            Debug.Log("[FightState] Esperando trigger del jugador para cambiar escena.");
             return;
         }
-
-        // Si no requiere cambio de escena, continuar normalmente
         GameFlowManager.Instance.GoToNextSection();
     }
+
+    private IEnumerator MostrarTutorialConRetraso(int index, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        MenuManager.Instance?.AbrirPanelTutorial(index);
+    }
+
+    public override void Update() { }
 
     public override void Exit()
     {
         if (barriers != null)
-        {
-            foreach (var barrier in barriers)
-                barrier.SetBarrierActive(false);
-        }
-    }
+            foreach (var b in barriers) b.SetBarrierActive(false);
 
-    public override void Update() { }
+        CinematicaManager.Instance?.ForzarDetener();
+    }
 }

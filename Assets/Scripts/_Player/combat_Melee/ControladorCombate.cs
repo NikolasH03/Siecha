@@ -9,6 +9,7 @@ using UnityEngine.Windows;
 public class ControladorCombate : MonoBehaviour
 {
     public Animator anim;
+    public bool PuedePausar = false;
 
     //ataque
     [SerializeField] bool atacando = false;
@@ -17,7 +18,7 @@ public class ControladorCombate : MonoBehaviour
     [SerializeField] bool bloqueando = false;
 
     //intanciar arma melee
-    [SerializeField] private ArmaData armaActual;
+    [SerializeField] private ArmaData armaMelee;
     [SerializeField] private Transform puntoSujecionArmaPrincipal;
     [SerializeField] private Transform puntoSujecionArmaSecundaria;
     private GameObject armaInstanciada;
@@ -26,7 +27,7 @@ public class ControladorCombate : MonoBehaviour
     private ArmaVFX vfxSecundaria;
     public CinemachineVirtualCamera camaraFinisher;
 
-    //Daño del arma a distancia
+    //Dano del arma a distancia
     [SerializeField] private ArmaDistanciaData armaDistancia;
     private bool tieneBufoDisparo = false;
 
@@ -36,7 +37,7 @@ public class ControladorCombate : MonoBehaviour
     public List<TipoInputCombate> secuenciaInputs = new List<TipoInputCombate>();
     public Dictionary<string, Combo> combos;
 
-    //colliders necesarios para generar daño
+    //colliders necesarios para generar daï¿½o
     private Collider ColliderArma;
     private Collider ColliderArmaSecundaria;
     [SerializeField] Collider ColliderPierna;
@@ -56,18 +57,36 @@ public class ControladorCombate : MonoBehaviour
     public int muertesActuales = 0;
     public int muertesMaximas = 5;
 
+    private const float PorcentajeCuracionPorMuerte = 0.15f;
+    
     //referencias a otros codigos
     [SerializeField] private EventosAnimacion eventosAnimacion;
     [SerializeField] ControladorCambioArmas cambioArma;
     private ControladorMovimiento controladorMovimiento;
     private CombatStateMachine fsm;
     private AutoTargeting targeting;
+    [HideInInspector] public Vector2 ultimoInputMovimiento;
     //[SerializeField] HabilidadesJugador habilidadesJugador;
 
+    private void OnEnable()
+    {
+        HealthComp.OnEnemyMuerto += CurarPorMuerteEnemigo;
+    }
+
+    private void OnDisable()
+    {
+        HealthComp.OnEnemyMuerto -= CurarPorMuerteEnemigo;
+    }
     void Awake()
     {
         stats = new EstadisticasCombate(statsBase);
-        EquiparArma(armaActual);
+
+        if (GameDataManager.Instance.DatosJugadorGuardados)
+        {
+            GameDataManager.Instance.CargarEnJugador(this);
+        }
+
+        EquiparArma(armaMelee);
     }
     private void Start()
     {
@@ -130,6 +149,10 @@ public class ControladorCombate : MonoBehaviour
             fsm.ChangeState(new DanoState(fsm, this, Dano));
         }
     }
+    private void CurarPorMuerteEnemigo()
+    {
+        stats.CurarVida(stats.VidaMax * PorcentajeCuracionPorMuerte);
+    }
 
     public int VerificarArmaEquipada()
     {
@@ -139,17 +162,10 @@ public class ControladorCombate : MonoBehaviour
     public void EquiparArma(ArmaData nuevaArma)
     {
         if (nuevaArma == null) return;
-
-
+        
         armaInstanciada = Instantiate(nuevaArma.prefabArmaPrincipal, puntoSujecionArmaPrincipal);
-        armaInstanciada.transform.localPosition = Vector3.zero;
-        armaInstanciada.transform.localRotation = Quaternion.identity;
-        armaInstanciada.transform.localScale = Vector3.one;
 
         armaSecundariaInstanciada = Instantiate(nuevaArma.prefabArmaSecundaria, puntoSujecionArmaSecundaria);
-        armaSecundariaInstanciada.transform.localPosition = Vector3.zero;
-        armaSecundariaInstanciada.transform.localRotation = Quaternion.identity;
-        armaSecundariaInstanciada.transform.localScale = Vector3.one;
 
         vfxPrincipal = armaInstanciada.GetComponent<ArmaVFX>();
         vfxSecundaria = armaSecundariaInstanciada.GetComponent<ArmaVFX>();
@@ -157,32 +173,32 @@ public class ControladorCombate : MonoBehaviour
         vfxPrincipal?.DesactivarTrail();
         vfxSecundaria?.DesactivarTrail();
 
-        armaActual = nuevaArma;
+        armaMelee = nuevaArma;
     }
 
-    public int EntregarDañoArmaMelee(bool enemigoBloqueando)
+    public int EntregarDanoArmaMelee(bool enemigoBloqueando)
     {
         if (!enemigoBloqueando)
         {
             if (tipoAtaque == "ligero")
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigero;
+                return armaMelee.danoGolpeLigero;
             }
             else if (tipoAtaque == "fuerte")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeFuerte;
+                return armaMelee.danoGolpeFuerte;
             }
             else if (tipoAtaque == "cargado")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeCargado;
+                return armaMelee.danoGolpeCargado;
             }
             else
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigero;
+                return armaMelee.danoGolpeLigero;
             }
         }
         else
@@ -190,22 +206,22 @@ public class ControladorCombate : MonoBehaviour
             if (tipoAtaque == "ligero")
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigeroGuardia;
+                return armaMelee.danoGolpeLigeroGuardia;
             }
             else if (tipoAtaque == "fuerte")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeFuerteGuardia;
+                return armaMelee.danoGolpeFuerteGuardia;
             }
             else if (tipoAtaque == "cargado")
             {
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaActual.dañoGolpeCargado;
+                return armaMelee.danoGolpeCargado;
             }
             else
             {
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaActual.dañoGolpeLigeroGuardia;
+                return armaMelee.danoGolpeLigeroGuardia;
             }
         }
     }
@@ -257,18 +273,22 @@ public class ControladorCombate : MonoBehaviour
 
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
     }
-    public void OrientarJugador()
+    public void OrientarJugador(Vector2? inputDireccion)
     {
-        targeting.BuscarYOrientar();
+        targeting.BuscarSegunDireccionDeMirada(InputJugador.instance.moverse);
     }
-    public void ReproducirVFX(int indexVFX, int indexPivot = 0)
+    public void DesplazamientoDash(Vector2? inputDireccion)
     {
-        eventosAnimacion.ReproducirVFX(indexVFX, indexPivot);
+        targeting.EjecutarDash(inputDireccion); 
     }
 
-    public void ReproducirSonido(int indexSonido, int indexPivot = 0)
+    public void Reproducir(string evento)
     {
-        eventosAnimacion.ReproducirSonidoImpacto(indexSonido, indexPivot);
+        eventosAnimacion.Reproducir(evento);
+    }
+    public void ReproducirTransform(string evento, GameObject pivote)
+    {
+        eventosAnimacion.ReproducirTransform(evento, pivote);
     }
 
     // funciones para los Animation Events
@@ -280,7 +300,7 @@ public class ControladorCombate : MonoBehaviour
     public void TerminarAtaqueCargado()
     {
         DesactivarVentanaCombo();
-        fsm.ChangeState(new CooldownCargadoState(fsm, this, 0.5f));
+        fsm.ChangeState(new CooldownCargadoState(fsm, this, 0.2f));
     }
     public void TerminarEstadoDano()
     {
@@ -351,6 +371,7 @@ public class ControladorCombate : MonoBehaviour
         setAtacando(false);
         inputBufferCombo = TipoInputCombate.Ninguno;
         puedeHacerCombo = false;
+        TerminarInvulnerabilidad();
 
         // Apuntado/Distancia
         ControladorApuntado apuntado = GetComponent<ControladorApuntado>();
@@ -402,22 +423,6 @@ public class ControladorCombate : MonoBehaviour
         ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
     }
-    public void AnimationEvent_ReproducirPieIzq(int indexVFX)
-    {
-        eventosAnimacion.ReproducirVFX(indexVFX, 3);
-        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 3);
-    }
-    public void AnimationEvent_ReproducirPieDer(int indexVFX)
-    {
-        eventosAnimacion.ReproducirVFX(indexVFX, 4);
-        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 4);
-    }
-
-    public void AnimationEvent_ReproducirBloqueo(int indexVFX)
-    {
-        eventosAnimacion.ReproducirVFX(indexVFX, 0);
-        eventosAnimacion.ReproducirSonidoImpacto(indexVFX, 0);
-    }
     public void ActivarTrailArmaPrincipal()
     {
         vfxPrincipal?.ActivarTrail();
@@ -451,6 +456,22 @@ public class ControladorCombate : MonoBehaviour
 
 
     //setters y getters
+
+    public void CargarEstadisticasActuales(float vidaMax, float EstaminaMax, float VidaActual)
+    {
+        stats.CargarEstadisticasActuales(vidaMax, EstaminaMax, VidaActual);
+    }
+
+    public void AumentarNumeroMuertes()
+    {
+        muertesActuales++;
+        HUDJugador hudJugador = GetComponent<HUDJugador>();
+        hudJugador.ActualizarContadorMuertes();
+    }
+    public void SetNumeroMuertes(int muertes)
+    {
+        muertesActuales = muertes;
+    }
 
     public bool getAtacando()
     {

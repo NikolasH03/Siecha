@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: Footsteps_Wood_Walk
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: be320aa6fe1e45a48b85d99b37451fa3, type: 2}
+  - {fileID: 11400000, guid: 10c45d8368d2ac944a6097ff148f4b91, type: 2}
+  - {fileID: 11400000, guid: 3815be099fff52340a590bb34f73623e, type: 2}
+  - {fileID: 11400000, guid: 0a1d318d0ead65a46b84cea7a8af7c9d, type: 2}
+  - {fileID: 11400000, guid: 0faf9a0b0e7f3134ea83b54cf0803a58, type: 2}
+  - {fileID: 11400000, guid: 283b047316ee0a245994f3ff75735d66, type: 2}
+  - {fileID: 11400000, guid: f83ba73e798c6de4bb082044538adb51, type: 2}
+  - {fileID: 11400000, guid: a93a9627beb3b104f9d3d91f3afd92c3, type: 2}
+  - {fileID: 11400000, guid: 20e7f037e0f10d246a90c3c4fddee104, type: 2}
+  - {fileID: 11400000, guid: f1f805c5aa960d2498e16690c6da971f, type: 2}

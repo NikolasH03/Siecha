@@ -18,6 +18,7 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
     //logica para cambiar el personaje
     private bool esMuisca;
+    public bool PuedePausar = false;
 
     //otras referencias
     [SerializeField] EnemyManager enemigos;
@@ -36,10 +37,8 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         objetivoCamaraMuisca = muisca.transform.Find("camaraTarget");
         objetivoCamaraEspanol = espanol.transform.Find("camaraTarget");
-    }
-    void Start()
-    {
-        activarEspanol();
+        activarMuisca();
+        enemigos.ActualizarJugador();
     }
 
     public void CambiarProtagonista()

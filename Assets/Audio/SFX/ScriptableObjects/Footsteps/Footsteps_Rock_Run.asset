@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: Footsteps_Rock_Run
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: 96adc4bb1428f814b826dba182728e3b, type: 2}
+  - {fileID: 11400000, guid: 2e63ac8e0ba98b24baa6ba7970e1d536, type: 2}
+  - {fileID: 11400000, guid: 84661024aa053da4ea2f4ec4637bce77, type: 2}
+  - {fileID: 11400000, guid: 1a39f81ff76a4be4c91163829d0bc171, type: 2}
+  - {fileID: 11400000, guid: 9ec734a09e771fa41999f199f92a46bd, type: 2}
+  - {fileID: 11400000, guid: 43cd353032d8d72468d4745cc7272532, type: 2}
+  - {fileID: 11400000, guid: 9a9645cd7f8b8ad4d85e584bfd4c1e06, type: 2}
+  - {fileID: 11400000, guid: 4c140a1f5fa606646b8a73247ea6430b, type: 2}
+  - {fileID: 11400000, guid: c3881cba5504c154080fed204ba13363, type: 2}
+  - {fileID: 11400000, guid: 6f271abf5aaf1d64eb8075f77efc9c2c, type: 2}

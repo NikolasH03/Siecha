@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: ImpactDamageAlejandro
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: 0cc9b79ce64435b41b81de58600b4991, type: 2}
+  - {fileID: 11400000, guid: 3a515b3c0a58be045a51bdff4df173b9, type: 2}
+  - {fileID: 11400000, guid: 21ee579ec6fd71840bf35189d4b7632f, type: 2}
+  - {fileID: 11400000, guid: ce85bf4cd996a3b4aaf44b2246c4176f, type: 2}
+  - {fileID: 11400000, guid: 0efdb643cc20ec645a21fd88c42cf54f, type: 2}
+  - {fileID: 11400000, guid: b400889d394690045b890abca530ba16, type: 2}

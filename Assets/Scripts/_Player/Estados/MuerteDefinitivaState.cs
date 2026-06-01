@@ -20,5 +20,6 @@ public class MuerteDefinitivaState : CombatState
     {
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene("Menu");
+        GameFlowManager.Instance.ReiniciarFlujoDeJuego();
     }
 }

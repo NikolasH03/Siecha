@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfcfb47c6a7e38b47bd4db46bd89027f, type: 3}
+  m_Name: ImpactDamageTisqa
+  m_EditorClassIdentifier: 
+  variations:
+  - {fileID: 11400000, guid: b542ffa1a57b25f4bbf1a30e6db3e9c9, type: 2}
+  - {fileID: 11400000, guid: 3d649f6a87b7eee49a371a67bea8b837, type: 2}
+  - {fileID: 11400000, guid: ff298582463962341bfe1f4f853d1dac, type: 2}
+  - {fileID: 11400000, guid: 8a88b125e0cd68d408599f75fdc97f8b, type: 2}
+  - {fileID: 11400000, guid: 996614ca11ee59c4bb1a78594ca7fec8, type: 2}

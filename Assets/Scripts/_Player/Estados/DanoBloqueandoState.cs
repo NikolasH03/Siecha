@@ -19,9 +19,9 @@ public class DanoBloqueandoState : CombatState
             stateMachine.ChangeState(new PerderGuardiaState(stateMachine, combatController));
             return;
         }
-        combatController.OrientarJugador();
+        combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("DanoBloqueando");
-        combatController.ReproducirVFX(0, 0);
+        combatController.Reproducir("bloqueo");
         combatController.EmpezarRegeneracionEstamina();
 
     }
