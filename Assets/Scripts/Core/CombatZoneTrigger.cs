@@ -30,6 +30,7 @@ public class CombatZoneTrigger : MonoBehaviour
         if (activado) return;
         if (soloJugador && !other.CompareTag("Player")) return;
 
+        other.gameObject.SetActive(false);
         activado = true;
         gameObject.SetActive(false);
 
