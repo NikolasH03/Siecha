@@ -80,6 +80,11 @@ public class CinematicaManager : MonoBehaviour
 
         directorActivo.stopped -= OnDirectorTerminado;
         directorActivo.Stop();
+        var cam = GameObject.Find("camara")
+            ?.GetComponent<Camera>();
+
+        if (cam != null)
+            cam.enabled = false;
         directorActivo.gameObject.SetActive(false);
         directorActivo = null;
 
@@ -93,12 +98,13 @@ public class CinematicaManager : MonoBehaviour
 
     private void OnDirectorTerminado(PlayableDirector director)
     {
-        director.stopped -= OnDirectorTerminado;
+        
         director.gameObject.SetActive(false);
         directorActivo = null;
-
+        ForzarDetener();
         FinalizarCinematica();
 
+        director.stopped -= OnDirectorTerminado;
         // Callback DESPUÉS de reanudar para que el estado ya tenga input activo
         var cb = callbackActivo;
         callbackActivo = null;

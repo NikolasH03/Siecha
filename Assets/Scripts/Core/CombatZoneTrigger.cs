@@ -23,6 +23,7 @@ public class CombatZoneTrigger : MonoBehaviour
     [Tooltip("Si está activo, solo el jugador puede activar este trigger.")]
     [SerializeField] private bool soloJugador = true;
 
+    private GameObject player;
     private bool activado = false;
 
     private void OnTriggerEnter(Collider other)
@@ -30,7 +31,8 @@ public class CombatZoneTrigger : MonoBehaviour
         if (activado) return;
         if (soloJugador && !other.CompareTag("Player")) return;
 
-        other.gameObject.SetActive(false);
+        player=other.gameObject;
+        player.SetActive(false);
         activado = true;
         gameObject.SetActive(false);
 
@@ -42,12 +44,14 @@ public class CombatZoneTrigger : MonoBehaviour
         else
         {
             // Sin cinemática: avanzar directamente
+            player.gameObject.SetActive(true);
             Avanzar();
         }
     }
 
     private void Avanzar()
     {
+        player.gameObject.SetActive(true);
         GameFlowManager.Instance.GoToNextSection();
     }
 }

@@ -29,14 +29,6 @@ public class BossStats : ScriptableObject
     [Tooltip("Al llegar a este % de vida, transiciona a fase 3.")]
     [Range(0f, 1f)] public float umbralFaseTres = 0.33f;
 
-    [Header("Armas Visuales por Fase")]
-    [Tooltip("GameObject con los meshes/colisores de la fase 1. Se activa al iniciar.")]
-    public GameObject prefabArmaFaseUno;
-    [Tooltip("GameObject con los meshes/colisores de la fase 2.")]
-    public GameObject prefabArmaFaseDos;
-    [Tooltip("GameObject con los meshes/colisores de la fase 3.")]
-    public GameObject prefabArmaFaseTres;
-
     // Helper para obtener stats por numero de fase (1, 2 o 3)
     public EnemyStats ObtenerStatsDeFase(int fase)
     {

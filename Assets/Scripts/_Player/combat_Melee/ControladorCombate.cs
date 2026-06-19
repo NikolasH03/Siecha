@@ -81,7 +81,7 @@ public class ControladorCombate : MonoBehaviour
     {
         stats = new EstadisticasCombate(statsBase);
 
-        if (GameDataManager.Instance.DatosJugadorGuardados)
+        if (GameDataManager.Instance != null && GameDataManager.Instance.DatosJugadorGuardados)
         {
             GameDataManager.Instance.CargarEnJugador(this);
         }

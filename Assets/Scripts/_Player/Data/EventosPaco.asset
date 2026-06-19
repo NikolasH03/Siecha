@@ -21,7 +21,7 @@ MonoBehaviour:
   - id: disparo_arcabuz
     sonido: {fileID: 11400000, guid: 2337a8e95b52c434eaee2c5ba965b5a4, type: 2}
     sonidoAleatorio: {fileID: 0}
-    vfx: {fileID: 0}
+    vfx: {fileID: 11400000, guid: b67feac1e0aa4c24484733ea4d25df0c, type: 2}
     pivotId: ArmaDistancia
   - id: disparo_bloqueado
     sonido: {fileID: 11400000, guid: 72d3361c2dec7d2408719d7dc88a3198, type: 2}

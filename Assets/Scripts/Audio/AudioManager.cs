@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// Manager global de audio. Persiste entre escenas (DontDestroyOnLoad).
@@ -37,6 +39,7 @@ public class AudioManager : MonoBehaviour
     [Tooltip("Ambiente: bosque, aldea, cueva, etc.")]
     [SerializeField] private SoundLibrary ambientSounds;
 
+    [SerializeField] private SoundData musicMenuTemp;
     // ─── Object Pool ─────────────────────────────────────────────────────────
     // En lugar de crear y destruir un GameObject por sonido (lo que genera
     // Garbage Collection spikes en combate), mantenemos una cola de AudioSources
@@ -72,6 +75,11 @@ public class AudioManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         InitPool();
+    }
+
+    private void Start()
+    {
+        PlayMusic(musicMenuTemp);
     }
 
     /// <summary>

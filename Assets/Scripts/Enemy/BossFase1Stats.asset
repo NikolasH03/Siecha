@@ -24,7 +24,7 @@ MonoBehaviour:
   danoAtaqueFuerte: 15
   maxAtaquesLigerosEnCombo: 3
   maxAtaquesFuertesEnCombo: 2
-  tiempoEntreAtaquesCombo: 0.5
+  tiempoEntreAtaquesCombo: 0.2
   cooldownDespuesDeCombo: 1.5
   duracionDanoRecibido: 1.1
   velocidadEnEstadoSeguir: 4
@@ -36,7 +36,7 @@ MonoBehaviour:
   radioDeDeteccion: 15
   radioDeDeteccionAutomatica: 5
   tiempoPorDeteccion: 1
-  rangoDeAtaque: 3
+  rangoDeAtaque: 2
   puedeBloquear: 0
   puedeEsquivar: 1
   multiplicadorAgresividad: 1

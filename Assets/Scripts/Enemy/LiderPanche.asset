@@ -15,8 +15,5 @@ MonoBehaviour:
   statsFaseUno: {fileID: 11400000, guid: fb8524c24f568694b8586c68db6fd207, type: 2}
   statsFaseDos: {fileID: 11400000, guid: 5582759d4b2c6db4f90a92e1862b032e, type: 2}
   statsFaseTres: {fileID: 11400000, guid: 8a4962316d6420846a297cf56bd0a51d, type: 2}
-  umbralFaseDos: 0.6
-  umbralFaseTres: 0.3
-  prefabArmaFaseUno: {fileID: 0}
-  prefabArmaFaseDos: {fileID: 0}
-  prefabArmaFaseTres: {fileID: 0}
+  umbralFaseDos: 0.9
+  umbralFaseTres: 0.4

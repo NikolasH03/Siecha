@@ -26,6 +26,7 @@ public class FightState : GameState
         if (config.showTutorial)
             GameFlowManager.Instance.StartCoroutine(MostrarTutorialConRetraso(config.TutorialID, 2f));
 
+        
         // Buscar cinemáticas de este combate en escena
         BuscadorCinematicaCombate buscador = Object.FindObjectOfType<BuscadorCinematicaCombate>();
         if (buscador != null) directorVictoria = buscador.DirectorVictoria;

@@ -54,7 +54,6 @@ public class BossEstadoMuerte : EstadoBase
             OnBossMuertoListo?.Invoke(boss);
         }
     }
-
     // No tiene OnExit: el jefe no sale de este estado por su cuenta.
     // BossBattleState llama HealthComp.Eliminar() después de la cinemática.
 }
