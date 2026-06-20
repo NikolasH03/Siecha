@@ -20,7 +20,7 @@ public class EnemyManager : MonoBehaviour
     private Coroutine gestionSlotsCoroutine;
     private Coroutine bloqueoEsquiveCoroutine;
 
-    public GameObject              Jugador          { get; private set; }
+    public GameObject Jugador;
     public DetectorObjetivoJugador DetectorObjetivo { get; private set; }
 
     // ─── Singleton ────────────────────────────────────────────────────────────
@@ -88,6 +88,7 @@ public class EnemyManager : MonoBehaviour
 
     // ─── API de oleadas ───────────────────────────────────────────────────────
 
+    //DEPRECATED
     public void OnOleadaActivada(Transform oleada)
     {
         todosLosEnemigos.Clear();

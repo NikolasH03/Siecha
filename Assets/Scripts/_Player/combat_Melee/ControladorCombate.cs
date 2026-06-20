@@ -80,39 +80,64 @@ public class ControladorCombate : MonoBehaviour
     void Awake()
     {
         stats = new EstadisticasCombate(statsBase);
-
-        if (GameDataManager.Instance != null && GameDataManager.Instance.DatosJugadorGuardados)
-        {
+ 
+        if (GameDataManager.Instance.DatosJugadorGuardados)
             GameDataManager.Instance.CargarEnJugador(this);
-        }
-
+ 
         EquiparArma(armaMelee);
-    }
-    private void Start()
-    {
         
         ColliderArma = armaInstanciada.GetComponent<Collider>();
         ColliderArmaSecundaria = armaSecundariaInstanciada.GetComponent<Collider>();
-
+ 
         ColliderArma.enabled = false;
         ColliderArmaSecundaria.enabled = false;
         ColliderPierna.enabled = false;
-
+ 
         normalLayerIndex = LayerMask.NameToLayer("Player");
         InvulnerabilidadLayerIndex = LayerMask.NameToLayer("JugadorInvulnerable");
-
+ 
         anim = GetComponent<Animator>();
         controladorMovimiento = GetComponent<ControladorMovimiento>();
         targeting = GetComponent<AutoTargeting>();
-
+        
         fsm = new CombatStateMachine();
-        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
         combos = ComboDatabase.Combos;
     }
+ 
+    private void Start()
+    {
+        if (gameObject.activeSelf)
+        {
+            fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
+        }
+    }
+
     public void Update()
     {
         fsm.Update();
     }
+    public void AlActivarse()
+    {
+        // 1. Limpiar cualquier residuo visual o de estado de la FSM anterior.
+        ResetCompleto();
+     
+        // 2. Reiniciar la FSM a un estado conocido según el arma actual.
+        fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
+     
+        // 3. Sincronizar el input map con el arma actual de este personaje.
+        SincronizarInputConArmaActual();
+    }
+    
+    private void SincronizarInputConArmaActual()
+    {
+        int armaActual = cambioArma.getterArma();
+     
+        if (armaActual == 1)
+            InputJugador.instance.CambiarInputMelee();
+        else if (armaActual == 2)
+            InputJugador.instance.CambiarInputDistancia();
+    }
+
     public void EmpezarRegeneracionEstamina()
     {
         if (regeneracionCoroutine != null) StopCoroutine(regeneracionCoroutine);
@@ -319,18 +344,23 @@ public class ControladorCombate : MonoBehaviour
     public void TerminarEstadoRecarga()
     {
         anim.speed = 1f;
-
+ 
         if (InputJugador.instance.apuntar)
         {
+            // El jugador sigue en modo distancia. El layer permanece abierto.
+            // ApuntarState asume que el layer ya está activo.
             fsm.ChangeState(new ApuntarState(fsm, this));
         }
         else if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
         {
+            // Sale del modo distancia. ResetCompleto() cierra el layer
+            // via TransicionarLayerPeso y NoEstaApuntando().
             ResetCompleto();
             fsm.ChangeState(new MoverseDistanciaState(fsm, this));
         }
         else
         {
+            // Sale del modo distancia. Igual que arriba.
             ResetCompleto();
             fsm.ChangeState(new IdleDistanciaState(fsm, this));
         }

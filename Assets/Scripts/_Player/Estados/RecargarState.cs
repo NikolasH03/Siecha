@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RecargarState : CombatState
@@ -7,6 +5,9 @@ public class RecargarState : CombatState
     private ControladorApuntado apuntado;
     private bool esperandoResultado;
     private bool fueInterrumpido = false;
+    
+    private const float TIMEOUT_SEGUNDOS = 5f;
+    private float tiempoEnEstado = 0f;
 
     public RecargarState(CombatStateMachine fsm, ControladorCombate cc) : base(fsm, cc)
     {
@@ -15,54 +16,45 @@ public class RecargarState : CombatState
 
     public override void Enter()
     {
-        combatController.anim.SetTrigger("Recarga");
+        tiempoEnEstado = 0f;
+        fueInterrumpido = false;
 
+        combatController.anim.SetTrigger("Recarga");
+        
         if (!ControladorCambiarPersonaje.instance.getEsMuisca())
         {
             esperandoResultado = true;
             apuntado.IniciarMinijuegoRecarga(OnFinMinijuego);
         }
-
-        fueInterrumpido = false;
+        combatController.CambiarCanMove(true);
     }
 
     public override void HandleInput()
     {
-        //if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
-        //{
-        //    fueInterrumpido = true;
-        //    stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-        //    return;
-        //}
-
-        //if (InputJugador.instance.cambiarArmaMelee)
-        //{
-        //    fueInterrumpido = true;
-        //    combatController.CambiarArmaMelee();
-        //    InputJugador.instance.CambiarInputMelee();
-        //    stateMachine.ChangeState(new IdleMeleeState(stateMachine, combatController));
-        //    return;
-        //}
+        // Espacio reservado para esquivar o cambiar arma durante recarga.
+        // Si se implementa, marcar fueInterrumpido = true y llamar
+        // apuntado.CancelarMinijuegoRecarga() si esperandoResultado.
     }
 
     public override void Update()
     {
+        tiempoEnEstado += Time.deltaTime;
         apuntado.EstaApuntando(apuntado.ObtenerPosicionObjetivo());
+
+        if (tiempoEnEstado >= TIMEOUT_SEGUNDOS)
+        {
+            Debug.LogWarning("RecargarState: timeout. Revisa el Animation Event TerminarEstadoRecarga.");
+            combatController.TerminarEstadoRecarga();
+        }
     }
 
     private void OnFinMinijuego(bool fuePerfecta)
     {
         esperandoResultado = false;
-        if (fuePerfecta)
-        {
-            combatController.anim.speed = 1.5f;
-            combatController.ActivarBufoDisparo();
-        }
-        else
-        {
-            combatController.anim.speed = 0.5f;
-        }
+        combatController.anim.speed = fuePerfecta ? 1.5f : 0.5f;
+        if (fuePerfecta) combatController.ActivarBufoDisparo();
     }
+
     public void MarcarComoInterrumpido()
     {
         fueInterrumpido = true;
@@ -76,30 +68,10 @@ public class RecargarState : CombatState
 
     public override void Exit()
     {
-        if (fueInterrumpido)
-        {
-            Debug.Log("Recarga interrumpida - cleanup completo");
+        combatController.anim.speed = 1f;
 
-            combatController.anim.speed = 1f;
-
-            if (apuntado != null)
-            {
-                apuntado.TransicionarLayerPeso(1, 0f, 0.1f);
-                apuntado.NoEstaApuntando();
-                apuntado.SetEstaApuntando(false);
-
-                if (esperandoResultado)
-                {
-                    apuntado.CancelarMinijuegoRecarga();
-                }
-            }
-
-            combatController.CambiarCanMove(false);
-        }
-        else
-        {
-            Debug.Log("Recarga completada normalmente - sin cleanup visual");
-        }
+        if (esperandoResultado && apuntado != null)
+            apuntado.CancelarMinijuegoRecarga();
 
         esperandoResultado = false;
         fueInterrumpido = false;
