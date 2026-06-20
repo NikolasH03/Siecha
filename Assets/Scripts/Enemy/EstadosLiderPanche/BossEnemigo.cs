@@ -117,6 +117,7 @@ public class BossEnemigo : Enemigo
         cinematicaEnCurso = true;
         PausarParaCinematica();
         OnCambioFase?.Invoke(this, nuevaFase);
+        ReanudarDesdeFase(nuevaFase);
     }
 
     // ─── API para BossBattleState ─────────────────────────────────────────────

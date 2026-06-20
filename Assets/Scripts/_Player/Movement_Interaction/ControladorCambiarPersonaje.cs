@@ -38,7 +38,7 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         objetivoCamaraMuisca = muisca.transform.Find("camaraTarget");
         objetivoCamaraEspanol = espanol.transform.Find("camaraTarget");
         activarMuisca();
-        enemigos.ActualizarJugador();
+        enemigos?.ActualizarJugador();
     }
 
     public void CambiarProtagonista()
@@ -52,7 +52,7 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         {
             activarEspanol();
         }
-        enemigos.ActualizarJugador();
+        enemigos?.ActualizarJugador();
         SincronizarInputConPersonajeActivo();
     }
     public void activarMuisca()
@@ -106,7 +106,7 @@ public class ControladorCambiarPersonaje : MonoBehaviour
         if (controladorArmas != null)
         {
             int armaActual = controladorArmas.getterArma();
-            //Debug.Log($"Sincronizando input para {(esMuisca ? "Muisca" : "Español")} - Arma: {armaActual}");
+            //Debug.Log($"Sincronizando input para {(esMuisca ? "Muisca" : "Espaï¿½ol")} - Arma: {armaActual}");
 
             if (armaActual == 1)
             {

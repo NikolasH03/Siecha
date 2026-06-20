@@ -3,7 +3,42 @@ guid: 0e787c3336f8255479aefc49364da7e1
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: model2_Lanza_Jabali_MAT
+    second: {fileID: 2100000, guid: 585d48b91091ea640acb120b79eb9163, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: model_LiderPanche_skinnedt_model_Body1
+    second: {fileID: 2100000, guid: 056f16ddad6d0934b94588bac2eb5c34, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: model_LiderPanche_skinnedt_model_Eyes
+    second: {fileID: 2100000, guid: 5733539ceef40b2409097fd63bb21e3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: model_LiderPanche_skinnedt_model_standardSurface2
+    second: {fileID: 2100000, guid: ce679a31acdb2af4fbe9b71cbb508c93, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: model_LiderPanche_skinnedt_model_standardSurface3
+    second: {fileID: 2100000, guid: 9336b6bd065a15a43815845035396673, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: openPBR_shader1
+    second: {fileID: 2100000, guid: 19ad96065d27693408e9ac30feadb1b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: standardSurface2
+    second: {fileID: 2100000, guid: ce679a31acdb2af4fbe9b71cbb508c93, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

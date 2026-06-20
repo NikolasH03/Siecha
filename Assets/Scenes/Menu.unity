@@ -227,7 +227,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6907311}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 03a2e48495c47d5489c0b4f2378db7cd, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -297,7 +297,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10969008}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 03a2e48495c47d5489c0b4f2378db7cd, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -4222,7 +4222,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258087607}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 03a2e48495c47d5489c0b4f2378db7cd, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -14302,9 +14302,6 @@ GameObject:
   m_Component:
   - component: {fileID: 930569976}
   - component: {fileID: 930569977}
-  - component: {fileID: 930569978}
-  - component: {fileID: 930569980}
-  - component: {fileID: 930569979}
   m_Layer: 0
   m_Name: GameFlowManager
   m_TagString: Untagged
@@ -14329,7 +14326,6 @@ Transform:
   - {fileID: 440368924}
   - {fileID: 479672903}
   - {fileID: 1645543980}
-  - {fileID: 126014642526295495}
   - {fileID: 727190239}
   - {fileID: 225001841}
   - {fileID: 998583196}
@@ -14350,7 +14346,15 @@ MonoBehaviour:
   dialogueManager: {fileID: 440368925}
   sections:
   - type: 0
-    videoClip: {fileID: 32900000, guid: c659c413cdd372a40828d19ee228ef4a, type: 3}
+    videoClip: {fileID: 32900000, guid: 4157e52130b2f094ba5cf7dbb5815d48, type: 3}
+    showTutorial: 0
+    TutorialID: 0
+    musicData: {fileID: 0}
+    ambienceData: {fileID: 0}
+    requiresSceneLoad: 0
+    sceneName: 
+  - type: 0
+    videoClip: {fileID: 32900000, guid: 0896559aa94e24b489f602964533c65e, type: 3}
     showTutorial: 0
     TutorialID: 0
     musicData: {fileID: 0}
@@ -14359,86 +14363,21 @@ MonoBehaviour:
     sceneName: 
   - type: 2
     videoClip: {fileID: 0}
-    showTutorial: 1
-    TutorialID: 1
-    musicData: {fileID: 11400000, guid: 57cedf304fada2b459104051d0f66153, type: 2}
-    ambienceData: {fileID: 0}
-    requiresSceneLoad: 0
-    sceneName: Demo-Combate2
-  - type: 2
-    videoClip: {fileID: 0}
-    showTutorial: 1
+    showTutorial: 0
     TutorialID: 2
     musicData: {fileID: 11400000, guid: 8b6c0326499113843b6a4713c6cde500, type: 2}
     ambienceData: {fileID: 11400000, guid: 427af0e60f45b584d8df2fb3cc916ff1, type: 2}
-    requiresSceneLoad: 0
-    sceneName: 
-  - type: 2
-    videoClip: {fileID: 0}
-    showTutorial: 1
-    TutorialID: 3
-    musicData: {fileID: 11400000, guid: 8b6c0326499113843b6a4713c6cde500, type: 2}
-    ambienceData: {fileID: 11400000, guid: 427af0e60f45b584d8df2fb3cc916ff1, type: 2}
-    requiresSceneLoad: 0
-    sceneName: 
-  - type: 3
-    videoClip: {fileID: 0}
-    showTutorial: 0
-    TutorialID: 0
-    musicData: {fileID: 11400000, guid: 04a4dbd77b0ef0b409ec76533bc402ba, type: 2}
-    ambienceData: {fileID: 0}
     requiresSceneLoad: 1
     sceneName: Demo-Combate2
   - type: 0
-    videoClip: {fileID: 32900000, guid: 90a4b820dd071824bbc3a826bf212847, type: 3}
+    videoClip: {fileID: 32900000, guid: 9666e57a707e5404f8fcc08d1e5c722f, type: 3}
     showTutorial: 0
     TutorialID: 0
-    musicData: {fileID: 0}
+    musicData: {fileID: 11400000, guid: 9081ac6a39759634ca25e398b76df7c7, type: 2}
     ambienceData: {fileID: 0}
-    requiresSceneLoad: 0
-    sceneName: 
+    requiresSceneLoad: 1
+    sceneName: Menu
   startGameplay: 0
---- !u!114 &930569978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930569975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c288d410949112940bd2197b34639529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &930569979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930569975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d14d82c286b7ab143b10633c24e6339f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  intro: {fileID: 0}
-  transicionFase2: {fileID: 0}
-  transicionFase3: {fileID: 0}
-  muerte: {fileID: 0}
---- !u!114 &930569980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 930569975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc5621e945f9c06489c9c7cb49869ce8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  directorVictoria: {fileID: 0}
 --- !u!1 &931679105
 GameObject:
   m_ObjectHideFlags: 0
@@ -15439,6 +15378,7 @@ MonoBehaviour:
   uiSounds: {fileID: 0}
   musicSounds: {fileID: 0}
   ambientSounds: {fileID: 0}
+  musicMenuTemp: {fileID: 11400000, guid: 9081ac6a39759634ca25e398b76df7c7, type: 2}
   poolSize: 20
 --- !u!1 &1000930413
 GameObject:
@@ -20736,7 +20676,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1406765502}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 9bac63453cf9ccd458c7c539b76347b6, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 9666e57a707e5404f8fcc08d1e5c722f, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -23102,7 +23042,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1566908655}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 03a2e48495c47d5489c0b4f2378db7cd, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -23486,7 +23426,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1632829560}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 03a2e48495c47d5489c0b4f2378db7cd, type: 3}
+  m_VideoClip: {fileID: 0}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -30986,11 +30926,11 @@ Transform:
   m_GameObject: {fileID: 2680057279023591549}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 37.311676, y: 19.371096, z: 1.929306}
+  m_LocalPosition: {x: 108.45764, y: 18.71813, z: 200.70248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 930569976}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!222 &190834477412923775
 CanvasRenderer:
@@ -34857,6 +34797,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 930569976}
+  - {fileID: 126014642526295495}
   - {fileID: 738427880}
   - {fileID: 1985217147}
   - {fileID: 1999531030}

@@ -2,15 +2,22 @@ using UnityEngine;
 using UnityEngine.Playables;
 
 /// <summary>
-/// Componente opcional en escenas de combate normal.
-/// Si existe, FightState reproduce la cinemática de victoria al terminar.
-/// Si no existe (o DirectorVictoria es null), avanza sin cinemática.
+/// Componente en escena que agrupa los PlayableDirectors de un combate normal.
+/// FightState lo busca en Enter() para obtener las referencias.
+///
+/// Cada escena de combate puede tener su propia cinemática de entrada y salida.
+/// Dejar cualquier campo en null = modo placeholder (salta inmediatamente).
 /// </summary>
 public class BuscadorCinematicaCombate : MonoBehaviour
 {
-    [Tooltip("Cinemática que se reproduce al derrotar a todos los enemigos. " +
-             "Dejar null = avanzar directamente sin cinemática.")]
+    [Header("Cinemáticas de este combate")]
+    [Tooltip("Se reproduce al ENTRAR en el combate (inicio de FightState).")]
+    [SerializeField] private PlayableDirector directorEntrada;
+
+    [Tooltip("Se reproduce al SALIR del combate cuando el jugador activa " +
+             "el CombatZoneTrigger. Asignarlo en el trigger, no aquí.")]
     [SerializeField] private PlayableDirector directorVictoria;
 
+    public PlayableDirector DirectorEntrada  => directorEntrada;
     public PlayableDirector DirectorVictoria => directorVictoria;
 }

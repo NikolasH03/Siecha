@@ -7,8 +7,8 @@ public class FightState : GameState
     private CombatZoneBarrier[] barriers;
     private bool combatEnded = false;
 
-    // Director de cinemática de victoria (opcional).
-    // Si está en null → placeholder, avanza inmediatamente.
+    // Director de victoria — se usa solo si el combate termina sin trigger
+    // (todos los enemigos mueren Y no hay CombatZoneTrigger en escena).
     private PlayableDirector directorVictoria;
 
     public FightState(GameFlowManager manager, SectionConfig config) : base(manager, config) { }
@@ -26,15 +26,33 @@ public class FightState : GameState
         if (config.showTutorial)
             GameFlowManager.Instance.StartCoroutine(MostrarTutorialConRetraso(config.TutorialID, 2f));
 
-        // Buscar cinemática de victoria de este combate en escena (opcional)
+        
+        // Buscar cinemáticas de este combate en escena
         BuscadorCinematicaCombate buscador = Object.FindObjectOfType<BuscadorCinematicaCombate>();
         if (buscador != null) directorVictoria = buscador.DirectorVictoria;
 
-        GameFlowManager.Instance.StartCoroutine(CheckCombatEndRoutine());
+        // Cinemática de ENTRADA al combate (puede ser null → placeholder)
+        PlayableDirector directorEntrada = buscador?.DirectorEntrada;
+
+        if (CinematicaManager.Instance != null)
+        {
+            // Reproducir intro y luego iniciar el loop de detección de fin
+            CinematicaManager.Instance.Reproducir(
+                directorEntrada,
+                onTerminada: () => GameFlowManager.Instance.StartCoroutine(CheckCombatEndRoutine())
+            );
+        }
+        else
+        {
+            GameFlowManager.Instance.StartCoroutine(CheckCombatEndRoutine());
+        }
     }
+
+    // ─── Detección de fin de combate ──────────────────────────────────────────
 
     private IEnumerator CheckCombatEndRoutine()
     {
+        // Delay de seguridad para que los enemigos terminen de inicializarse
         yield return new WaitForSeconds(2f);
 
         while (!combatEnded)
@@ -57,17 +75,23 @@ public class FightState : GameState
         combatEnded = true;
 
         Debug.Log("[FightState] Todos los enemigos derrotados.");
-        foreach (var b in barriers) b.SetBarrierActive(false);
+        foreach (var b in barriers)
+            if (b != null) b.SetBarrierActive(false);
 
-        // Cinemática de victoria (puede ser null → placeholder)
+        // Si hay CombatZoneTrigger en escena, él se encarga de avanzar
+        // (el jugador decide cuándo activarlo). No avanzamos automáticamente.
+        var trigger = Object.FindObjectOfType<CombatZoneTrigger>();
+        if (trigger != null && trigger.gameObject.activeSelf)
+        {
+            Debug.Log("[FightState] Esperando que el jugador active el CombatZoneTrigger.");
+            return;
+        }
+
+        // Sin trigger: avanzar directamente (con cinemática de victoria si la hay)
         if (CinematicaManager.Instance != null)
-        {
             CinematicaManager.Instance.Reproducir(directorVictoria, onTerminada: ContinuarFlujo);
-        }
         else
-        {
             ContinuarFlujo();
-        }
     }
 
     private void ContinuarFlujo()
@@ -75,7 +99,7 @@ public class FightState : GameState
         var siguiente = GameFlowManager.Instance.GetNextSectionConfig();
         if (siguiente != null && siguiente.requiresSceneLoad)
         {
-            Debug.Log("[FightState] Esperando trigger del jugador para cambiar escena.");
+            Debug.Log("[FightState] Esperando trigger de cambio de escena.");
             return;
         }
         GameFlowManager.Instance.GoToNextSection();
@@ -92,7 +116,8 @@ public class FightState : GameState
     public override void Exit()
     {
         if (barriers != null)
-            foreach (var b in barriers) b.SetBarrierActive(false);
+            foreach (var b in barriers)
+                if (b != null) b.SetBarrierActive(false);
 
         CinematicaManager.Instance?.ForzarDetener();
     }
