@@ -24,11 +24,11 @@ public class ApuntarState : CombatState
 
     public override void HandleInput()
     {
-        if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
-        {
-            stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-            return;
-        }
+        // if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
+        // {
+        //     stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
+        //     return;
+        // }
 
         if (InputJugador.instance.AtaqueLigero)
         {

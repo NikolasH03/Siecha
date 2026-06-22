@@ -100,7 +100,7 @@ public class ArenaWaveSpawner : MonoBehaviour
     private bool oleadaEnCurso = false;
 
     // Cache de ParticleSystems: uno por spawn point (hijo directo).
-    private List<ParticleSystem> vfxPortales = new();
+    private List<GameObject> vfxPortales = new();
 
     // ─── Eventos públicos ─────────────────────────────────────────────────────
 
@@ -150,11 +150,10 @@ public class ArenaWaveSpawner : MonoBehaviour
     {
         foreach (var punto in spawnPoints)
         {
-            var ps = punto != null ? punto.GetComponentInChildren<ParticleSystem>() : null;
-            if (ps == null && punto != null)
-                Debug.LogWarning($"[ArenaWaveSpawner] El spawn point '{punto.name}' no tiene ParticleSystem hijo. " +
-                                 "El enemigo aparecerá sin VFX de portal.");
-            vfxPortales.Add(ps);
+            GameObject vfxHijo = punto.childCount > 0 ? punto.GetChild(0).gameObject : null;
+            if (vfxHijo == null)
+                Debug.LogWarning($"[ArenaWaveSpawner] '{punto.name}' no tiene hijo VFX.");
+            vfxPortales.Add(vfxHijo);
         }
     }
 
@@ -362,13 +361,13 @@ public class ArenaWaveSpawner : MonoBehaviour
     private void ActivarVFXPortal(int indice)
     {
         if (indice < 0 || indice >= vfxPortales.Count) return;
-        vfxPortales[indice]?.Play();
+        vfxPortales[indice]?.SetActive(true);
     }
 
     private void DesactivarVFXPortal(int indice)
     {
         if (indice < 0 || indice >= vfxPortales.Count) return;
-        vfxPortales[indice]?.Stop();
+        vfxPortales[indice]?.SetActive(false);
     }
 
     // ─── Espera de fin de oleada ──────────────────────────────────────────────

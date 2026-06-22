@@ -4,12 +4,23 @@ public class MenuMuerteTisqa : MenuMuerteBase
 {
     [Header("Referencias Tisqa")]
     [SerializeField] private HUDJugador tisqa; 
-
-    private void Start()
+    
+    public override void OpenMenu()
     {
-        MenuManager.Instance.CloseAllMenus();
-        tisqa = GameObject.FindWithTag("Player").GetComponent<HUDJugador>();
-        tisqa.ActualizarContadorMuertes();  
+        // Buscamos al Player fresco de la escena actual
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        
+        if (playerObj != null)
+        {
+            tisqa = playerObj.GetComponent<HUDJugador>();
+            tisqa.ActualizarContadorMuertes();
+        }
+        else
+        {
+            Debug.LogWarning("[MenuMuerteTisqa] No se encontró al Player en la escena al intentar abrir el menú.");
+        }
+        
+        base.OpenMenu(); 
     }
 
     public override void Continuar()
@@ -18,9 +29,19 @@ public class MenuMuerteTisqa : MenuMuerteBase
         {
             tisqa.Reaparecer();
         }
+        else
+        {
+            // Fail-safe: Si por algún motivo la referencia se perdió, la busca en caliente
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                tisqa = playerObj.GetComponent<HUDJugador>();
+                tisqa.Reaparecer();
+            }
+        }
 
         MenuManager.Instance?.GoBack();
 
-        Debug.Log("tisqa contin�a despu�s de morir");
+        Debug.Log("Tisqa continúa después de morir");
     }
 }

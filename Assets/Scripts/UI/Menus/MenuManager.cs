@@ -231,7 +231,11 @@ public class MenuManager : MonoBehaviour
         CloseAllMenus();
 
         if (EsEscenaDeMenuPrincipal(scene.name))
+        {
             StartCoroutine(AbrirMenuInicialEnProximoFrame());
+            GameDataManager.Instance.ReiniciarDatosJugador();
+        }
+            
         else if (EsEscenaDeGameplay(scene.name))
             InputJugador.instance?.VolverAGameplay();
     }

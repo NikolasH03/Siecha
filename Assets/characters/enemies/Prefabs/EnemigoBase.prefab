@@ -1080,15 +1080,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
       propertyPath: m_LocalScale.x
-      value: 17
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
       propertyPath: m_LocalScale.y
-      value: 17
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
       propertyPath: m_LocalScale.z
-      value: 17
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1214,13 +1214,6 @@ MonoBehaviour:
   stats: {fileID: 11400000, guid: ddb59df3734c2de409cc198e3fd836e2, type: 2}
   detectarJugador: {fileID: 2454069945617320238}
   ColliderArma: {fileID: 5040940025774764124}
-  rangoDeAtaque: 1
-  tiempoDeEspera: 1.5
-  radioDePatrulla: 15
-  velocidadEnEstadoSeguir: 4
-  distanciaEsquivar: 3
-  velocidadEsquivar: 10
-  duracionDanoRecibido: 1.1
 --- !u!114 &388923621287874599
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1233,14 +1226,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065164772668d894c9a9fe40424f6489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vidaMax: 20
   imagenBarraVida: {fileID: 2578098066703500752}
-  staminaMax: 10
-  regeneracionStamina: 1
-  delayRegeneracionStamina: 5
-  duracionGuardBreak: 2
   imagenBarraStamina: {fileID: 3704728828108038061}
-  duracionStun: 2
   uiBarrasNormales: {fileID: 3857576925733657577}
   uiFinisher: {fileID: 2715985332850688113}
 --- !u!114 &2454069945617320238
@@ -1255,12 +1242,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fc8fc7a2eaa4844b73eb59b1b046e43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anguloDeDeteccion: 120
-  radioDeDeteccion: 8
-  radioDeDeteccionAutomatica: 5
-  rangoDeAtaque: 3
-  tiempoPorDeteccion: 1
-  Player: {fileID: 0}
 --- !u!195 &3056045201343521769
 NavMeshAgent:
   m_ObjectHideFlags: 0

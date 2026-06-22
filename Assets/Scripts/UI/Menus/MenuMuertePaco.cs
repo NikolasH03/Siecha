@@ -5,11 +5,21 @@ public class MenuMuertePaco : MenuMuerteBase
     [Header("Referencias Paco")]
     [SerializeField] private HUDJugador paco;
 
-    private void Start()
+    public override void OpenMenu()
     {
-        MenuManager.Instance.CloseAllMenus();
-        paco = GameObject.FindWithTag("Player").GetComponent<HUDJugador>();
-        paco.ActualizarContadorMuertes();
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        
+        if (playerObj != null)
+        {
+            paco = playerObj.GetComponent<HUDJugador>();
+            paco.ActualizarContadorMuertes();
+        }
+        else
+        {
+            Debug.LogWarning("[MenuMuertePaco] No se encontró al Player en la escena al intentar abrir el menú.");
+        }
+        
+        base.OpenMenu(); 
     }
 
     public override void Continuar()
@@ -18,9 +28,18 @@ public class MenuMuertePaco : MenuMuerteBase
         {
             paco.Reaparecer();
         }
+        else
+        {
+            // Fail-safe: Si por alguna razón la referencia se volvió null, la busca en caliente
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj != null)
+            {
+                paco = playerObj.GetComponent<HUDJugador>();
+                paco.Reaparecer();
+            }
+        }
 
         MenuManager.Instance?.GoBack();
-
-        Debug.Log("paco contin�a despu�s de morir");
+        Debug.Log("Paco continúa después de morir");
     }
 }

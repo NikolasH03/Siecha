@@ -27,7 +27,7 @@ public class UtilityAI_Grupal
         return AccionGrupal.Retirarse;
     }
 
-    public float CalcularUtilidadAtacar()
+    public virtual float CalcularUtilidadAtacar()
     {
         if (Jugador == null) return 0f;
 
