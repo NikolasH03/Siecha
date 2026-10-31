@@ -40,37 +40,13 @@ public class MoverseMeleeState : CombatState
             stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
         }
 
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
+        IntentaCambiarProtagonista();
         
-        if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-            return;
-        }
-        if (InputJugador.instance.bloquear)
-        {
-            if (combatController.stats.EstaminaActual <= 0) return;
+        if (IntentaHacerAccionDefensiva()) return;
+        
+       IntentaCorrer();
 
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
-            return;
-        }
-        if (InputJugador.instance.correr && InputJugador.instance.moverse.sqrMagnitude > 0.01f)
-        {
-            anim.SetBool("running", true);
-            movimiento.CambiarVelocidad(true);
-        }
-        if (!InputJugador.instance.correr || InputJugador.instance.moverse.sqrMagnitude < 0.01f)
-        {
-            anim.SetBool("running", false);
-            movimiento.CambiarVelocidad(false);
-        }
-
-        if (TryExecuteFinisher()) return;
+        if (IntentaEjecutarFinisher()) return;
 
         if (InputJugador.instance.AtaqueLigero && !combatController.anim.GetBool("running"))
         {

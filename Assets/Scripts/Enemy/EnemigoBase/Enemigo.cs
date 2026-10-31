@@ -11,40 +11,42 @@ public class Enemigo : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private Animator animator;
 
-    private MaquinaDeEstados maquinaDeEstados;
-    private HealthComp vidaEnemigo;
-
-    [Header("Utility AI")]
-    public UtilityAI_Grupal utilityGrupal;
-    public UtilityAI_Tactico utilityTactico;
-
-    protected bool atacando = false;
-    private bool disponibleParaAtacar = true;
-
     [Header("Stats del Enemigo")]
     [SerializeField] private EnemyStats stats;
 
-    [Header("Sistema de Combo")]
-    private int        ataqueActualEnCombo = 0;
-    private bool       estaEnCombo         = false;
-    private TipoAtaque tipoAtaqueActual    = TipoAtaque.Ligero;
-
     [Header("Deteccion")]
-    [SerializeField] public DetectarJugador detectarJugador;
+    public DetectarJugador detectarJugador;
 
     [Header("Colision de arma")]
-    [SerializeField] public Collider ColliderArma;
+    public Collider ColliderArma;
+
+    // IA (la crea InicializarBase)
+    public UtilityAI_Grupal  utilityGrupal;
+    public UtilityAI_Tactico utilityTactico;
+
+    private MaquinaDeEstados maquinaDeEstados;
+    private HealthComp       vidaEnemigo;
+
+    // Slot de ataque: lo concede EnemyManager (OrdenarAtacar) y se devuelve con TerminarAtaque.
+    protected bool atacando;
+    private   bool  disponibleParaAtacar = true;
+    private   float disponibleDesde;
+    private   float momentoOrdenAtacar;
+
+    // Combo
+    private int        ataqueActualEnCombo;
+    private bool       estaEnCombo;
+    private TipoAtaque tipoAtaqueActual = TipoAtaque.Ligero;
 
     private EstadoAtacarJugador estadoAtacarActual;
 
-    // Layers de fisica
+    // Layers de física
     private int layerNormal;
     private int layerInvulnerable;
 
-    // Cache de estados
-    private Dictionary<Type, IEstado> estadosCache = new Dictionary<Type, IEstado>();
+    private readonly Dictionary<Type, IEstado> estadosCache = new Dictionary<Type, IEstado>();
 
-    // Estados reactivos — protected para que BossEnemigo pueda reusarlos
+    // Estados reactivos — protected para que subclases (distancia, jefe) puedan reusarlos
     protected EstadoRebirDano     estadoRecibirDano;
     protected EstadoMuerte        estadoMuerte;
     protected EstadoStun          estadoStun;
@@ -52,31 +54,40 @@ public class Enemigo : MonoBehaviour
     protected EstadoRomperGuardia estadoRompeGuardia;
     protected EstadoDeEsquivar    estadoEsquivar;
 
-    // ─── Propiedades públicas ─────────────────────────────────────────────────
+    // ─── Propiedades ──────────────────────────────────────────────────────────
 
-    public Transform    JugadorActual       => detectarJugador?.Player;
+    public Transform    JugadorActual       => detectarJugador != null ? detectarJugador.Player : null;
     public EnemyStats   Stats               => stats;
+    public NavMeshAgent Agent               => agent;
+    public Animator     Animator            => animator;
     public int          AtaqueActualEnCombo => ataqueActualEnCombo;
     public bool         EstaEnCombo         => estaEnCombo;
     public TipoAtaque   TipoAtaqueActual    => tipoAtaqueActual;
-    public NavMeshAgent Agent               => agent;
-    public Animator     Animator            => animator;
 
-    // Parámetros leídos del SO
+    // Parámetros leídos del SO (con valor de respaldo si aún no hay stats)
     public float RangoDeAtaque           => stats != null ? stats.RangoDeAtaque           : 3f;
     public float VelocidadEnEstadoSeguir => stats != null ? stats.VelocidadEnEstadoSeguir : 4f;
     public float DistanciaEsquivar       => stats != null ? stats.DistanciaEsquivar       : 3f;
     public float VelocidadEsquivar       => stats != null ? stats.VelocidadEsquivar       : 10f;
-    public float DuracionDanoRecibido    => stats != null ? stats.DuracionDanoRecibido    : 1.1f;
+    public float DuracionDanoRecibido    => stats != null ? stats.DuracionDanoRecibido    : 2f;
     public float TiempoDeEspera          => stats != null ? stats.TiempoDeEspera          : 1.5f;
-    public float RadioDePatrulla         => stats != null ? stats.RadioDePatrulla          : 15f;
+    public float RadioDePatrulla         => stats != null ? stats.RadioDePatrulla         : 15f;
 
-    // Acceso protegido para subclases
-    protected HealthComp                  VidaEnemigo  => vidaEnemigo;
-    protected MaquinaDeEstados            FSM          => maquinaDeEstados;
-    protected Dictionary<Type, IEstado>   EstadosCache => estadosCache;
+    /// <summary>Nombre del estado actual de la FSM (para herramientas de diagnóstico).</summary>
+    public string NombreEstadoActual
+    {
+        get
+        {
+            var estado = maquinaDeEstados?.ObtenerEstadoActual();
+            return estado != null ? estado.GetType().Name : "-";
+        }
+    }
 
-    // ─── Awake ────────────────────────────────────────────────────────────────
+    protected HealthComp                VidaEnemigo  => vidaEnemigo;
+    protected MaquinaDeEstados          FSM          => maquinaDeEstados;
+    protected Dictionary<Type, IEstado> EstadosCache => estadosCache;
+
+    // ─── Inicialización ───────────────────────────────────────────────────────
 
     public void Awake()
     {
@@ -90,9 +101,7 @@ public class Enemigo : MonoBehaviour
         layerInvulnerable = LayerMask.NameToLayer("EnemigoInvulnerable");
     }
 
-    // ─── Start ─────────────────────────────────────────────────────────────── 
-    // protected virtual para que BossEnemigo pueda controlar su propia init.
-
+    // protected virtual: el jefe controla su propia inicialización.
     protected virtual void Start()
     {
         if (stats == null)
@@ -108,7 +117,7 @@ public class Enemigo : MonoBehaviour
         InicializarEstadoInicial();
     }
 
-    // Separado de Start para que BossEnemigo llame solo lo que necesita.
+    // Separado de Start para que el jefe llame solo lo que necesita.
     protected void InicializarBase()
     {
         detectarJugador.Inicializar(stats);
@@ -116,15 +125,15 @@ public class Enemigo : MonoBehaviour
 
         maquinaDeEstados = new MaquinaDeEstados();
 
-        if (EnemyManager.instance != null)
-        {
-            utilityGrupal  = new UtilityAI_Grupal(this, EnemyManager.instance);
-            utilityTactico = new UtilityAI_Tactico(this);
-        }
-        else
+        if (EnemyManager.instance == null)
         {
             Debug.LogError($"[{name}] EnemyManager no encontrado.");
+            return;
         }
+
+        EnemyManager.instance.RegistrarEnemigo(this);
+        utilityGrupal  = new UtilityAI_Grupal(this, EnemyManager.instance);
+        utilityTactico = new UtilityAI_Tactico(this);
     }
 
     protected virtual void InicializarEstadosReactivos()
@@ -136,12 +145,12 @@ public class Enemigo : MonoBehaviour
         estadoRompeGuardia = new EstadoRomperGuardia(this, animator, agent, vidaEnemigo);
         estadoEsquivar     = new EstadoDeEsquivar(this, animator, agent, vidaEnemigo, DistanciaEsquivar, VelocidadEsquivar);
 
-        estadosCache[typeof(EstadoRebirDano)]      = estadoRecibirDano;
-        estadosCache[typeof(EstadoMuerte)]         = estadoMuerte;
-        estadosCache[typeof(EstadoStun)]           = estadoStun;
-        estadosCache[typeof(EstadoDeBloqueo)]      = estadoBloqueo;
-        estadosCache[typeof(EstadoRomperGuardia)]  = estadoRompeGuardia;
-        estadosCache[typeof(EstadoDeEsquivar)]     = estadoEsquivar;
+        estadosCache[typeof(EstadoRebirDano)]     = estadoRecibirDano;
+        estadosCache[typeof(EstadoMuerte)]        = estadoMuerte;
+        estadosCache[typeof(EstadoStun)]          = estadoStun;
+        estadosCache[typeof(EstadoDeBloqueo)]     = estadoBloqueo;
+        estadosCache[typeof(EstadoRomperGuardia)] = estadoRompeGuardia;
+        estadosCache[typeof(EstadoDeEsquivar)]    = estadoEsquivar;
     }
 
     protected virtual void ConfigurarTransicionesReactivas()
@@ -160,78 +169,163 @@ public class Enemigo : MonoBehaviour
         maquinaDeEstados.SetEstado(estadoInicial);
     }
 
-    // ─── Helpers de transición — protected para subclases ────────────────────
+    // ─── Máquina de estados ───────────────────────────────────────────────────
 
-    protected void Desde(IEstado de, IEstado a, IPredicate c) =>
-        maquinaDeEstados.AgregarTransicion(de, a, c);
-
-    protected void DesdeCualquier(IEstado a, IPredicate c) =>
-        maquinaDeEstados.AgregarTransicionGlobal(a, c);
-
-    protected void RegistrarEstadoEnCache(Type tipo, IEstado estado) =>
-        estadosCache[tipo] = estado;
-
-    // ─── Loop ─────────────────────────────────────────────────────────────────
-
-    void Update()
+    private void Update()
     {
         maquinaDeEstados.Update();
         vidaEnemigo.TickTimers(Time.deltaTime);
     }
 
-    void FixedUpdate() => maquinaDeEstados.FixedUpdate();
+    private void FixedUpdate() => maquinaDeEstados.FixedUpdate();
 
-    // ─── Comportamiento (llamado por EnemyManager) ────────────────────────────
+    protected void Desde(IEstado de, IEstado a, IPredicate condicion) =>
+        maquinaDeEstados.AgregarTransicion(de, a, condicion);
+
+    protected void DesdeCualquier(IEstado a, IPredicate condicion) =>
+        maquinaDeEstados.AgregarTransicionGlobal(a, condicion);
+
+    protected void RegistrarEstadoEnCache(Type tipo, IEstado estado) =>
+        estadosCache[tipo] = estado;
+
+    public void CambiarAEstado<T>() where T : IEstado
+    {
+        Type tipo = typeof(T);
+
+        if (maquinaDeEstados == null)
+        {
+            Debug.LogError($"[{name}] La FSM no está inicializada al pedir {tipo.Name}.");
+            return;
+        }
+
+        // Si el cache tiene la entrada pero con valor null, se recrea en vez de pasar null a la FSM.
+        if (!estadosCache.TryGetValue(tipo, out IEstado estado) || estado == null)
+        {
+            estado = CrearEstado<T>();
+            if (estado == null)
+            {
+                Debug.LogError($"[{name}] No se pudo crear estado: {tipo.Name}");
+                return;
+            }
+            estadosCache[tipo] = estado;
+        }
+
+        maquinaDeEstados.CambiarEstado(estado);
+    }
+
+    /// <summary>
+    /// Punto único de salida de los estados reactivos (stun, bloqueo, daño...): devuelve al enemigo
+    /// al comportamiento que le corresponde. Sin slot de ataque NO persigue: rodea.
+    /// </summary>
+    public virtual void VolverAComportamientoBase()
+    {
+        if (!detectarJugador.SePuedeDetectarAlJugador())
+        {
+            TerminarAtaque();
+            CambiarAEstado<EstadoPatrullaEnemigo>();
+        }
+        else if (atacando)
+        {
+            CambiarAEstado<EstadoSeguirJugador>();
+        }
+        else
+        {
+            CambiarAEstado<EstadoRodearJugador>();
+        }
+    }
+
+    /// <summary>
+    /// Lo llama EnemyManager si la IA del enemigo lanzó una excepción: libera el slot e intenta volver a un
+    /// estado seguro; si tampoco se puede, lo deja quieto (mejor parado que persiguiendo al jugador sin control).
+    /// </summary>
+    public void RecuperarDeError()
+    {
+        TerminarAtaque();
+        FinalizarCombo();
+
+        try
+        {
+            VolverAComportamientoBase();
+        }
+        catch (Exception)
+        {
+            if (agent != null) agent.isStopped = true;
+        }
+    }
+
+    /// <summary>Crea bajo demanda los estados de movimiento/ataque (se cachean en CambiarAEstado).</summary>
+    protected virtual IEstado CrearEstado<T>() where T : IEstado
+    {
+        Type tipo = typeof(T);
+
+        if (tipo == typeof(EstadoPatrullaEnemigo)) return new EstadoPatrullaEnemigo(this, animator, agent, RadioDePatrulla, TiempoDeEspera);
+        if (tipo == typeof(EstadoSeguirJugador))   return new EstadoSeguirJugador(this, animator, agent, VelocidadEnEstadoSeguir);
+        if (tipo == typeof(EstadoAtacarJugador))   return new EstadoAtacarJugador(this, animator, agent, RangoDeAtaque);
+        if (tipo == typeof(EstadoRodearJugador))   return new EstadoRodearJugador(this, animator, agent);
+        return null;
+    }
+
+    // ─── Comportamiento (lo invoca EnemyManager) ──────────────────────────────
 
     public virtual void EvaluarComportamiento()
     {
         if (vidaEnemigo == null || vidaEnemigo.EstaMuerto) return;
-        if (estaEnCombo || vidaEnemigo.EstaStuneado || vidaEnemigo.EnGuardBreak || vidaEnemigo.EstaSiendoDanado) return;
+        if (EstaOcupado()) return;
 
         if (!detectarJugador.SePuedeDetectarAlJugador())
         {
+            TerminarAtaque();
             CambiarAEstado<EstadoPatrullaEnemigo>();
             return;
         }
 
-        AccionGrupal accion = utilityGrupal.DecidirAccion();
-
-        switch (accion)
+        if (utilityGrupal.DecidirAccion() == AccionGrupal.Atacar)
         {
-            case AccionGrupal.Atacar:
-                if (atacando && detectarJugador.SePuedeAtacarAlJugador(RangoDeAtaque))
-                {
-                    TipoDecisionTactica tactica = utilityTactico.DecidirAccionTactica();
-                    tipoAtaqueActual = tactica == TipoDecisionTactica.AtaqueFuerte
-                        ? TipoAtaque.Fuerte : TipoAtaque.Ligero;
-                    CambiarAEstado<EstadoAtacarJugador>();
-                }
-                else if (atacando)
-                    CambiarAEstado<EstadoSeguirJugador>();
-                else
-                    CambiarAEstado<EstadoRodearJugador>();
-                break;
-
-            case AccionGrupal.Flanquear:
-            case AccionGrupal.Rodear:
-            case AccionGrupal.Retirarse:
-            case AccionGrupal.Defender:
-                atacando = false;
-                disponibleParaAtacar = true;
-                CambiarAEstado<EstadoRodearJugador>();
-                break;
-
-            default:
-                Debug.LogWarning($"[{name}] AccionGrupal no manejada: {accion}");
-                CambiarAEstado<EstadoRodearJugador>();
-                break;
+            EjecutarAccionAtacar();
+            return;
         }
+
+        // Rodear, retirarse, etc.: devuelve el slot de ataque y rodea.
+        TerminarAtaque();
+        CambiarAEstado<EstadoRodearJugador>();
     }
+
+    private void EjecutarAccionAtacar()
+    {
+        if (!atacando)
+        {
+            CambiarAEstado<EstadoRodearJugador>();
+            return;
+        }
+
+        if (!detectarJugador.SePuedeAtacarAlJugador(RangoDeAtaque))
+        {
+            CambiarAEstado<EstadoSeguirJugador>();
+            return;
+        }
+
+        tipoAtaqueActual = utilityTactico.DecidirAccionTactica() == TipoDecisionTactica.AtaqueFuerte
+            ? TipoAtaque.Fuerte
+            : TipoAtaque.Ligero;
+
+        CambiarAEstado<EstadoAtacarJugador>();
+    }
+
+    /// <summary>
+    /// True si el enemigo está en medio de algo que no se debe interrumpir.
+    /// Solo cuentan flags que duran lo mismo que su estado de la FSM. EnGuardBreak NO está aquí:
+    /// su temporizador sigue corriendo cuando el stun ya terminó, y dejaba al enemigo sin evaluar
+    /// su IA (persiguiendo al jugador) durante esa cola. Durante la guardia rota ya lo cubre EstaStuneado.
+    /// </summary>
+    private bool EstaOcupado() =>
+        estaEnCombo
+        || vidaEnemigo.EstaStuneado
+        || vidaEnemigo.EstaSiendoDanado
+        || vidaEnemigo.getBloqueando();
 
     public virtual void VerificarBloqueoYEsquive()
     {
         if (vidaEnemigo.EstaMuerto || vidaEnemigo.EnGuardBreak || vidaEnemigo.EstaStuneado) return;
-        if (estaEnCombo) return;
         if (!JugadorEstaAtacando()) return;
 
         TipoDecisionTactica decision = utilityTactico.DecidirAccionTactica();
@@ -242,55 +336,16 @@ public class Enemigo : MonoBehaviour
             maquinaDeEstados.CambiarEstado(estadoEsquivar);
     }
 
-    // ─── Sistema de estados ───────────────────────────────────────────────────
+    // ─── Cambio de stats en runtime (fases del jefe) ──────────────────────────
 
-    public void CambiarAEstado<T>() where T : IEstado
-    {
-        Type tipo = typeof(T);
-        if (!estadosCache.ContainsKey(tipo))
-        {
-            IEstado nuevo = CrearEstado<T>();
-            if (nuevo == null)
-            {
-                Debug.LogError($"[{name}] No se pudo crear estado: {tipo.Name}");
-                return;
-            }
-            estadosCache[tipo] = nuevo;
-        }
-        maquinaDeEstados.CambiarEstado(estadosCache[tipo]);
-    }
-
-    protected virtual IEstado CrearEstado<T>() where T : IEstado
-    {
-        Type tipo = typeof(T);
-        if (tipo == typeof(EstadoPatrullaEnemigo))
-            return new EstadoPatrullaEnemigo(this, animator, agent, RadioDePatrulla, TiempoDeEspera);
-        if (tipo == typeof(EstadoSeguirJugador))
-            return new EstadoSeguirJugador(this, animator, agent, VelocidadEnEstadoSeguir);
-        if (tipo == typeof(EstadoAtacarJugador))
-            return new EstadoAtacarJugador(this, animator, agent, RangoDeAtaque);
-        if (tipo == typeof(EstadoRodearJugador))
-            return new EstadoRodearJugador(this, animator, agent);
-        return null;
-    }
-
-    // ─── Cambio de stats en runtime (para fases del jefe) ────────────────────
-
-    /// <summary>
-    /// Actualiza los stats activos y limpia el cache de estados que usan
-    /// parámetros de movimiento/ataque. Los estados reactivos se mantienen.
-    /// </summary>
+    /// <summary>Cambia los stats activos y limpia del cache los estados que dependen de ellos.</summary>
     protected void ActualizarStats(EnemyStats nuevosStats)
     {
         stats = nuevosStats;
         LimpiarCacheDeEstadosDeMovimiento();
     }
 
-    /// <summary>
-    /// Limpia del cache solo los estados que dependen de stats de movimiento.
-    /// Los estados reactivos (muerte, daño, stun) no se tocan porque no
-    /// dependen de stats que cambien entre fases.
-    /// </summary>
+    /// <summary>Los estados reactivos (muerte, daño, stun) no dependen de stats que cambien entre fases: se conservan.</summary>
     public void LimpiarCacheDeEstadosDeMovimiento()
     {
         estadosCache.Remove(typeof(EstadoAtacarJugador));
@@ -300,34 +355,64 @@ public class Enemigo : MonoBehaviour
         estadosCache.Remove(typeof(EstadoPatrullaEnemigo));
     }
 
-    // ─── API para EnemyManager ────────────────────────────────────────────────
+    // ─── Slot de ataque (API para EnemyManager) ───────────────────────────────
 
-    public bool EstaDisponibleParaAtacar() => disponibleParaAtacar && !vidaEnemigo.EstaMuerto;
-    public bool EstaAtacando()             => atacando;
-    public bool EstaMuerto()               => vidaEnemigo.EstaMuerto;
-    public void OrdenarAtacar()            => atacando = true;
-    public void TerminarAtaque()           { atacando = false; disponibleParaAtacar = true; }
-    public void BuscarJugador()            => detectarJugador?.BuscarJugador();
+    public bool EstaDisponibleParaAtacar() =>
+        disponibleParaAtacar && Time.time >= disponibleDesde && !vidaEnemigo.EstaMuerto;
+
+    public bool EstaAtacando() => atacando;
+    public bool EstaMuerto()   => vidaEnemigo.EstaMuerto;
+
+    /// <summary>Segundos desde que el manager le concedió el slot (0 si no tiene).</summary>
+    public float TiempoConSlot => atacando ? Time.time - momentoOrdenAtacar : 0f;
+
+    /// <summary>
+    /// False en enemigos que gestionan su propio ritmo de ataque (el jefe puede sobreescribirlo):
+    /// el manager no les quitará el slot por inactividad ni por cercanía.
+    /// </summary>
+    public virtual bool ParticipaEnIntercambioDeSlots => true;
+
+    public void OrdenarAtacar()
+    {
+        if (!atacando) momentoOrdenAtacar = Time.time;
+        atacando = true;
+    }
+
+    public void TerminarAtaque()
+    {
+        atacando             = false;
+        disponibleParaAtacar = true;
+    }
+
+    /// <summary>Impide que vuelva a recibir slot durante unos segundos (evita reasignaciones inmediatas).</summary>
+    public void EnfriarAtaque(float segundos) => disponibleDesde = Time.time + segundos;
 
     // ─── Combos ───────────────────────────────────────────────────────────────
 
     public void IniciarCombo(TipoAtaque tipo)
     {
-        estaEnCombo = true; ataqueActualEnCombo = 0; tipoAtaqueActual = tipo;
+        estaEnCombo         = true;
+        ataqueActualEnCombo = 0;
+        tipoAtaqueActual    = tipo;
     }
-    public void SiguienteAtaqueEnCombo()
+
+    // No finaliza el combo aquí: EstadoAtacarJugador lo hace al terminar la última animación.
+    public void SiguienteAtaqueEnCombo() => ataqueActualEnCombo++;
+
+    public void FinalizarCombo()
     {
-        ataqueActualEnCombo++;
-        if (ataqueActualEnCombo >= ObtenerMaxAtaquesCombo()) FinalizarCombo();
+        estaEnCombo         = false;
+        ataqueActualEnCombo = 0;
     }
-    public void FinalizarCombo()     { estaEnCombo = false; ataqueActualEnCombo = 0; }
-    public bool ComboCompletado()    => ataqueActualEnCombo >= ObtenerMaxAtaquesCombo();
+
+    public bool ComboCompletado() => ataqueActualEnCombo >= ObtenerMaxAtaquesCombo();
+
     private int ObtenerMaxAtaquesCombo() =>
         tipoAtaqueActual == TipoAtaque.Ligero
             ? stats.MaxAtaquesLigerosEnCombo
             : stats.MaxAtaquesFuertesEnCombo;
 
-    // ─── Callbacks de animacion ───────────────────────────────────────────────
+    // ─── Callbacks de animación ───────────────────────────────────────────────
 
     public void RegistrarEstadoAtacar(EstadoAtacarJugador e) => estadoAtacarActual = e;
     public void DesregistrarEstadoAtacar()                   => estadoAtacarActual = null;
@@ -337,21 +422,21 @@ public class Enemigo : MonoBehaviour
 
     public bool JugadorEstaAtacando()
     {
-        if (JugadorActual == null) return false;
-        var c = JugadorActual.GetComponent<ControladorCombate>();
-        return c != null && c.getAtacando();
+        var manager = EnemyManager.instance;
+        var combate = manager != null ? manager.CombateJugador : null;
+        return combate != null && combate.getAtacando();
     }
 
     public int ObtenerDanoActual() =>
         tipoAtaqueActual == TipoAtaque.Ligero ? stats.DanoAtaqueLigero : stats.DanoAtaqueFuerte;
 
-    // ─── Fisica ───────────────────────────────────────────────────────────────
+    public HealthComp GetHealthComp() => vidaEnemigo;
+
+    // ─── Física ───────────────────────────────────────────────────────────────
 
     public void ActivarInvulnerabilidad()    => gameObject.layer = layerInvulnerable;
     public void DesactivarInvulnerabilidad() => gameObject.layer = layerNormal;
 
     public virtual void desactivarCollider() { if (ColliderArma) ColliderArma.enabled = false; }
     public virtual void activarCollider()    { if (ColliderArma) ColliderArma.enabled = true; }
-
-    public HealthComp GetHealthComp() => vidaEnemigo;
 }

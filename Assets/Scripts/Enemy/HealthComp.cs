@@ -1,12 +1,11 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
-using System;
 
 public class HealthComp : MonoBehaviour
 {
-    // Los parámetros de configuración ya NO son SerializeField aquí.
-    // Viven en EnemyStats y se inyectan por Inicializar().
+    // Valores inyectados desde EnemyStats en Inicializar(); no se configuran en el inspector.
     private float vidaMax;
     private float staminaMax;
     private float regeneracionStamina;
@@ -26,25 +25,25 @@ public class HealthComp : MonoBehaviour
     // Estado interno
     private float vidaActual;
     private float staminaActual;
-    private int   golpesRecibidos = 0;
-    private bool  enGuardBreak    = false;
-    private bool  estaBloqueado   = false;
-    private bool  estaMuerto      = false;
-    private bool  terminaAnimacionMuerte = false;
-    private bool  estaSiendoDanado = false;
-    private bool  estaEsquivando   = false;
-    private bool  danoPendiente    = false;
-    private bool  estaEnFinisher   = false;
-    private bool  estaStuneado     = false;
-    private bool  inicializado     = false;
+    private int   golpesRecibidos;
+    private bool  enGuardBreak;
+    private bool  estaBloqueado;
+    private bool  estaMuerto;
+    private bool  terminaAnimacionMuerte;
+    private bool  estaSiendoDanado;
+    private bool  estaEsquivando;
+    private bool  danoPendiente;
+    private bool  estaEnFinisher;
+    private bool  estaStuneado;
+    private bool  inicializado;
 
     private Temporizador timerGuardBreak;
     private Coroutine    regeneracionCoroutine;
 
-    // ─── Eventos ──────────────────────────────────────────────────────────────
     public static event Action OnEnemyMuerto;
 
     // ─── Propiedades públicas ─────────────────────────────────────────────────
+
     public bool  EstaMuerto             => estaMuerto;
     public bool  TerminaAnimacionMuerte => terminaAnimacionMuerte;
     public bool  EstaSiendoDanado       => estaSiendoDanado;
@@ -58,20 +57,15 @@ public class HealthComp : MonoBehaviour
 
     // ─── Inicialización ───────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Llamado por Enemigo.Start() con los valores del EnemyStats.
-    /// Centraliza toda la configuración en el SO — no hay valores
-    /// hardcodeados ni duplicados entre componentes.
-    /// </summary>
     public void Inicializar(EnemyStats stats)
     {
-        vidaMax                    = stats.VidaMax;
-        staminaMax                 = stats.StaminaMax;
-        regeneracionStamina        = stats.RegeneracionStamina;
-        delayRegeneracionStamina   = stats.DelayRegeneracionStamina;
-        duracionGuardBreak         = stats.DuracionGuardBreak;
-        duracionStun               = stats.DuracionStun;
-        golpesAntesDeBloquear      = stats.GolpesAntesDeBloquear;
+        vidaMax                  = stats.VidaMax;
+        staminaMax               = stats.StaminaMax;
+        regeneracionStamina      = stats.RegeneracionStamina;
+        delayRegeneracionStamina = stats.DelayRegeneracionStamina;
+        duracionGuardBreak       = stats.DuracionGuardBreak;
+        duracionStun             = stats.DuracionStun;
+        golpesAntesDeBloquear    = stats.GolpesAntesDeBloquear;
 
         vidaActual    = vidaMax;
         staminaActual = staminaMax;
@@ -86,7 +80,16 @@ public class HealthComp : MonoBehaviour
         inicializado = true;
     }
 
-    // ─── Daño ─────────────────────────────────────────────────────────────────
+    /// <summary>Actualiza parámetros de combate sin tocar la vida actual (cambio de fase del jefe).</summary>
+    public void ActualizarParametrosDeCombate(EnemyStats stats)
+    {
+        staminaMax               = stats.StaminaMax;
+        regeneracionStamina      = stats.RegeneracionStamina;
+        delayRegeneracionStamina = stats.DelayRegeneracionStamina;
+        golpesAntesDeBloquear    = stats.GolpesAntesDeBloquear;
+    }
+
+    // ─── Daño y vida ──────────────────────────────────────────────────────────
 
     public void recibeDano(int cantidad)
     {
@@ -98,8 +101,7 @@ public class HealthComp : MonoBehaviour
             return;
         }
 
-        if (estaStuneado)
-            SalirDeStun();
+        if (estaStuneado) SalirDeStun();
 
         golpesRecibidos++;
         vidaActual = Mathf.Max(vidaActual - cantidad, 0f);
@@ -112,28 +114,59 @@ public class HealthComp : MonoBehaviour
         {
             estaMuerto = true;
             DetenerRegeneracion();
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
     }
 
-    public void TerminarDanoRecibido()    => estaSiendoDanado = false;
-    public void TerminarAnimacionMuerte() => terminaAnimacionMuerte = true;
-    public void setRecibiendoDano(bool v) => estaSiendoDanado = v;
-
+    /// <summary>Consume el aviso de daño: devuelve true una sola vez por golpe recibido.</summary>
     public bool EnemigoFueDanado()
     {
-        if (danoPendiente && !estaMuerto && !estaBloqueado)
-        {
-            danoPendiente = false;
-            return true;
-        }
-        return false;
+        if (!danoPendiente || estaMuerto || estaBloqueado) return false;
+
+        danoPendiente = false;
+        return true;
+    }
+
+    public void TerminarDanoRecibido() => estaSiendoDanado = false;
+
+    /// <summary>
+    /// Los scripts del jugador llaman setRecibiendoDano(true) después de recibeDano() incluso si el golpe
+    /// fue esquivado o bloqueado. Sin daño pendiente se ignora, para no dejar el flag atascado en true
+    /// (ningún estado lo limpiaría y el enemigo dejaría de evaluar su IA).
+    /// </summary>
+    public void setRecibiendoDano(bool valor)
+    {
+        if (valor && !danoPendiente) return;
+        estaSiendoDanado = valor;
+    }
+
+    public void  SetGolpesRecibidos(int g) => golpesRecibidos = g;
+    public float GetVidaActual()           => vidaActual;
+    public float GetVidaMaxima()           => vidaMax;
+    public float GetVidaNormalizada()      => Mathf.Clamp01(vidaActual / vidaMax);
+
+    // Tótems
+    public void AumentarVidaMax(float cantidad)
+    {
+        vidaMax    += cantidad;
+        vidaActual  = Mathf.Min(vidaActual + cantidad, vidaMax);
+        ActualizarBarra();
+    }
+
+    public void AumentarEstaminaMax(float cantidad)
+    {
+        staminaMax    += cantidad;
+        staminaActual  = Mathf.Min(staminaActual + cantidad, staminaMax);
+        ActualizarBarraStamina();
     }
 
     // ─── Muerte ───────────────────────────────────────────────────────────────
 
+    public void TerminarAnimacionMuerte() => terminaAnimacionMuerte = true;
+
     /// <summary>
-    /// Desregistra al enemigo del EnemyManager antes de desactivar
-    /// el objeto, evitando referencias null en las listas del Manager.
+    /// Desregistra al enemigo del EnemyManager antes de desactivar el objeto
+    /// para que sus listas no queden con referencias muertas.
     /// </summary>
     public void Eliminar()
     {
@@ -145,7 +178,7 @@ public class HealthComp : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // ─── Bloqueo ──────────────────────────────────────────────────────────────
+    // ─── Bloqueo y esquive ────────────────────────────────────────────────────
 
     public void setBloqueado(bool valor)
     {
@@ -156,28 +189,9 @@ public class HealthComp : MonoBehaviour
     public bool getBloqueando() => estaBloqueado;
     public bool DebeBloquear()  => golpesRecibidos >= golpesAntesDeBloquear;
 
-    // ─── Esquive ──────────────────────────────────────────────────────────────
-
     public void setEsquivando(bool valor) => estaEsquivando = valor;
 
-    // ─── Finisher ─────────────────────────────────────────────────────────────
-
-    public void SetFinisher()
-    {
-        estaEnFinisher = true;
-        OcultarUIFinisher();
-    }
-
-    public void FinalizarFinisher()
-    {
-        vidaActual = 0f;
-        estaMuerto = true;
-        DetenerRegeneracion();
-    }
-
-    public bool SePuedeHacerFinisher() => estaStuneado && !estaEnFinisher && !estaMuerto;
-
-    // ─── Stamina / Guard Break ────────────────────────────────────────────────
+    // ─── Stamina y guard break ────────────────────────────────────────────────
 
     public void ConsumirStaminaPorBloqueo(int danoBloqueado)
     {
@@ -193,13 +207,12 @@ public class HealthComp : MonoBehaviour
         }
     }
 
-    public void TickTimers(float deltaTime)
-    {
-        timerGuardBreak?.Tick(deltaTime);
-    }
+    public void TickTimers(float deltaTime) => timerGuardBreak?.Tick(deltaTime);
 
     private void RecuperarGuardBreak()
     {
+        if (!enGuardBreak) return; 
+        
         enGuardBreak  = false;
         staminaActual = staminaMax;
         ActualizarBarraStamina();
@@ -207,17 +220,15 @@ public class HealthComp : MonoBehaviour
 
     public void RegenerarStamina(float cantidad)
     {
-        if (!enGuardBreak && staminaActual < staminaMax)
-        {
-            staminaActual = Mathf.Clamp(staminaActual + cantidad, 0f, staminaMax);
-            ActualizarBarraStamina();
-        }
+        if (enGuardBreak || staminaActual >= staminaMax) return;
+
+        staminaActual = Mathf.Clamp(staminaActual + cantidad, 0f, staminaMax);
+        ActualizarBarraStamina();
     }
 
     public void EmpezarRegeneracionEstamina()
     {
-        if (regeneracionCoroutine != null)
-            StopCoroutine(regeneracionCoroutine);
+        if (regeneracionCoroutine != null) StopCoroutine(regeneracionCoroutine);
         regeneracionCoroutine = StartCoroutine(RegenerarEstaminaConDelay());
     }
 
@@ -236,11 +247,10 @@ public class HealthComp : MonoBehaviour
 
     private void DetenerRegeneracion()
     {
-        if (regeneracionCoroutine != null)
-        {
-            StopCoroutine(regeneracionCoroutine);
-            regeneracionCoroutine = null;
-        }
+        if (regeneracionCoroutine == null) return;
+
+        StopCoroutine(regeneracionCoroutine);
+        regeneracionCoroutine = null;
     }
 
     public void RestablecerEstamina()
@@ -248,16 +258,8 @@ public class HealthComp : MonoBehaviour
         staminaActual = staminaMax;
         ActualizarBarraStamina();
     }
-    //Actualiza parámetros de combate sin tocar la vida actual-Sirve para el jefe
-    public void ActualizarParametrosDeCombate(EnemyStats stats)
-    {
-        staminaMax               = stats.StaminaMax;
-        regeneracionStamina      = stats.RegeneracionStamina;
-        delayRegeneracionStamina = stats.DelayRegeneracionStamina;
-        golpesAntesDeBloquear    = stats.GolpesAntesDeBloquear;
-    }
 
-    // ─── Stun ─────────────────────────────────────────────────────────────────
+    // ─── Stun y finisher ──────────────────────────────────────────────────────
 
     public void EntrarEnStun()
     {
@@ -267,36 +269,36 @@ public class HealthComp : MonoBehaviour
 
     public void SalirDeStun()
     {
-        if (!estaEnFinisher)
-        {
-            estaStuneado = false;
-            OcultarUIFinisher();
-            MostrarUIBarras();
-        }
+        if (estaEnFinisher) return;
+
+        estaStuneado = false;
+        TerminarGuardBreak();   
+        OcultarUIFinisher();
+        MostrarUIBarras();
     }
 
-    // ─── Vida max y stamina max (para tótems) ─────────────────────────────────
+    public bool SePuedeHacerFinisher() => estaStuneado && !estaEnFinisher && !estaMuerto;
 
-    public void AumentarVidaMax(float cantidad)
+    public void SetFinisher()
     {
-        vidaMax    += cantidad;
-        vidaActual  = Mathf.Min(vidaActual + cantidad, vidaMax);
-        ActualizarBarra();
+        estaEnFinisher = true;
+        OcultarUIFinisher();
     }
 
-    public void AumentarEstaminaMax(float cantidad)
+    public void FinalizarFinisher()
     {
-        staminaMax    += cantidad;
-        staminaActual  = Mathf.Min(staminaActual + cantidad, staminaMax);
+        vidaActual = 0f;
+        estaMuerto = true;
+        DetenerRegeneracion();
+    }
+    private void TerminarGuardBreak()
+    {
+        if (!enGuardBreak) return;
+
+        enGuardBreak  = false;
+        staminaActual = staminaMax;
         ActualizarBarraStamina();
     }
-
-    // ─── Getters ──────────────────────────────────────────────────────────────
-
-    public void  SetGolpesRecibidos(int g) => golpesRecibidos = g;
-    public float GetVidaActual()           => vidaActual;
-    public float GetVidaMaxima()           => vidaMax;
-    public float GetVidaNormalizada()      => Mathf.Clamp01(vidaActual / vidaMax);
 
     // ─── UI ───────────────────────────────────────────────────────────────────
 
@@ -314,11 +316,23 @@ public class HealthComp : MonoBehaviour
 
     private void MostrarUIBarras()
     {
-        uiBarrasNormales?.SetActive(true);
+        SetActivo(uiBarrasNormales, true);
         OcultarUIFinisher();
     }
 
-    public void  OcultarUIBarras()    => uiBarrasNormales?.SetActive(false);
-    private void MostrarUIFinisher()  { uiFinisher?.SetActive(true); OcultarUIBarras(); }
-    private void OcultarUIFinisher()  => uiFinisher?.SetActive(false);
+    public void OcultarUIBarras() => SetActivo(uiBarrasNormales, false);
+
+    private void MostrarUIFinisher()
+    {
+        SetActivo(uiFinisher, true);
+        OcultarUIBarras();
+    }
+
+    private void OcultarUIFinisher() => SetActivo(uiFinisher, false);
+
+    // Se usa "!= null" y no "?." porque en objetos de Unity "?." ignora el chequeo de "destruido".
+    private static void SetActivo(GameObject objeto, bool activo)
+    {
+        if (objeto != null) objeto.SetActive(activo);
+    }
 }

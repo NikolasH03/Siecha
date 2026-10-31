@@ -96,6 +96,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "CambiarArmaDistancia",
+                    "type": "Button",
+                    "id": "87a12466-31e5-4247-a3b3-a39a89aa003a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "CambiarProtagonista",
                     "type": "Button",
                     "id": "793d7d4c-d325-47e4-983f-83068bdc1d5b",
@@ -240,6 +249,17 @@
                 },
                 {
                     "name": "",
+                    "id": "569c20c7-1570-431f-adda-82eb32a79062",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "Correr",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "18939c4c-368e-4b7f-95e3-5f4660bf013b",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -356,6 +376,39 @@
                     "processors": "",
                     "groups": "Console",
                     "action": "CambiarArmaMelee",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7043fd65-4e2f-495e-876e-d1373cd7b310",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard",
+                    "action": "CambiarArmaDistancia",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b3f35e09-28ff-456a-8d1c-a33d88fc492d",
+                    "path": "<Gamepad>/dpad/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "CambiarArmaDistancia",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "529f5535-ffa5-49b2-947a-aa475a8fecd9",
+                    "path": "<Gamepad>/dpad/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "CambiarArmaDistancia",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -811,6 +864,17 @@
                     "name": "",
                     "id": "fdded9a5-4740-4fcf-9865-c4428852bd81",
                     "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Console",
+                    "action": "Correr",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4fff8d2-1956-4b24-b715-1185f86cc690",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "Console",

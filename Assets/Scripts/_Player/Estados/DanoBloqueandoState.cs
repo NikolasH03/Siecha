@@ -16,12 +16,15 @@ public class DanoBloqueandoState : CombatState
 
         if (combatController.stats.EstaminaActual <= 0)
         {
+            RumbleManager.Play(TipoRumble.GuardiaRota);
             stateMachine.ChangeState(new PerderGuardiaState(stateMachine, combatController));
             return;
         }
         combatController.OrientarJugador(combatController.ultimoInputMovimiento);
         combatController.anim.SetTrigger("DanoBloqueando");
         combatController.Reproducir("bloqueo");
+        CameraShakeManager.instance.ShakeBloqueo();
+        RumbleManager.Play(TipoRumble.BloqueoImpacto);
         combatController.EmpezarRegeneracionEstamina();
 
     }

@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class MenuInicial : MenuBase
 {
+    [SerializeField] private VolumeSettings volumeSettings;
+    
     [Header("UI del Men� Inicial")]
     [SerializeField] private TextMeshProUGUI textoPressAnyKey;
     [SerializeField] private CanvasGroup canvasGroup;
@@ -21,10 +23,12 @@ public class MenuInicial : MenuBase
 
     protected override void OnMenuOpened()
     {
-        GameDataManager.Instance.ReiniciarDatosJugador();
-        // AudioManager.Instance.PlayMusic(AudioManager.Instance.mus_menu);
+        AudioManager.Instance.StopMusicaYAmbiente();
         esperandoInput = true;
+        
+        volumeSettings.CargarConfiguracion();
 
+        
         // Cambiar a input UI para detectar cualquier tecla
         InputJugador.instance?.CambiarInputUI();
 

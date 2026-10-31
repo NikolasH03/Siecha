@@ -233,7 +233,6 @@ public class MenuManager : MonoBehaviour
         if (EsEscenaDeMenuPrincipal(scene.name))
         {
             StartCoroutine(AbrirMenuInicialEnProximoFrame());
-            GameDataManager.Instance.ReiniciarDatosJugador();
         }
             
         else if (EsEscenaDeGameplay(scene.name))

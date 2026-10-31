@@ -1,4 +1,5 @@
 using UnityEngine;
+
 public class DetectarJugador : MonoBehaviour
 {
     private float anguloDeDeteccion;
@@ -6,23 +7,26 @@ public class DetectarJugador : MonoBehaviour
     private float radioDeDeteccionAutomatica;
     private float tiempoPorDeteccion;
 
-    public Transform Player { get; private set; }
-
     private Temporizador temporizadorDeDeteccion;
     private IEstrategiaDeDeteccion estrategiaDeDeteccion;
-    private bool inicializado = false;
+    private bool inicializado;
+
+    /// <summary>
+    /// El jugador siempre se lee del EnemyManager (única fuente de verdad),
+    /// así que si el manager cambia de jugador, todos los enemigos lo siguen.
+    /// </summary>
+    public Transform Player
+    {
+        get
+        {
+            var manager = EnemyManager.instance;
+            return manager != null && manager.Jugador != null ? manager.Jugador.transform : null;
+        }
+    }
 
     // ─── Inicialización ───────────────────────────────────────────────────────
 
-    void Awake()
-    {
-        BuscarJugador();
-    }
-
-    /// <summary>
-    /// Llamado por Enemigo.Start() con los valores del EnemyStats.
-    /// Debe ejecutarse antes de que el enemigo entre en su primer estado.
-    /// </summary>
+    /// <summary>Llamado por Enemigo antes de entrar en su primer estado.</summary>
     public void Inicializar(EnemyStats stats)
     {
         anguloDeDeteccion          = stats.AnguloDeDeteccion;
@@ -40,30 +44,13 @@ public class DetectarJugador : MonoBehaviour
         inicializado = true;
     }
 
-    void Update()
+    private void Update()
     {
         if (!inicializado) return;
         temporizadorDeDeteccion.Tick(Time.deltaTime);
     }
 
     // ─── API pública ──────────────────────────────────────────────────────────
-
-    public void BuscarJugador()
-    {
-        if (EnemyManager.instance == null)
-        {
-            Debug.LogWarning($"[{name}] BuscarJugador: EnemyManager no existe todavía.");
-            return;
-        }
-
-        if (EnemyManager.instance.Jugador == null)
-        {
-            Debug.LogWarning($"[{name}] BuscarJugador: EnemyManager.Jugador es null.");
-            return;
-        }
-
-        Player = EnemyManager.instance.Jugador.transform;
-    }
 
     public bool SePuedeDetectarAlJugador()
     {
@@ -72,7 +59,7 @@ public class DetectarJugador : MonoBehaviour
         return temporizadorDeDeteccion.EstaCorriendo ||
                estrategiaDeDeteccion.Ejecutar(Player, transform, temporizadorDeDeteccion);
     }
-    
+
     public bool SePuedeAtacarAlJugador(float rangoDeAtaque)
     {
         if (Player == null) return false;
@@ -81,9 +68,9 @@ public class DetectarJugador : MonoBehaviour
 
     // ─── Gizmos ───────────────────────────────────────────────────────────────
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
-        // En editor (antes de Inicializar) usamos valores de respaldo para visualizar.
+        // Antes de Inicializar() los valores son 0: se usan valores de respaldo para verlos en editor.
         float angulo    = anguloDeDeteccion          > 0 ? anguloDeDeteccion          : 120f;
         float radio     = radioDeDeteccion           > 0 ? radioDeDeteccion           : 15f;
         float radioAuto = radioDeDeteccionAutomatica > 0 ? radioDeDeteccionAutomatica : 5f;

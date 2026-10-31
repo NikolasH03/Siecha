@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class MenuPausa : MenuBaseConNavegacion
 {
-    [Header("Botones del Menú Pausa")]
+    [Header("Botones del Menï¿½ Pausa")]
     [SerializeField] private Button botonReanudar;
     [SerializeField] private Button botonOpciones;
     [SerializeField] private Button botonColeccionables;
@@ -71,7 +71,6 @@ public class MenuPausa : MenuBaseConNavegacion
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Menu");
-        GameFlowManager.Instance.ReiniciarFlujoDeJuego();
     }
     public void SalirJuego()
     {

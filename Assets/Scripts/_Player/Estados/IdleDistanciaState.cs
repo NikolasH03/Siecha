@@ -18,7 +18,6 @@ public class IdleDistanciaState : CombatState
     {
         if (InputJugador.instance.moverse.sqrMagnitude > 0.01f)
         {
-
             stateMachine.ChangeState(new MoverseDistanciaState(stateMachine, combatController));
             return;
         }
@@ -30,10 +29,8 @@ public class IdleDistanciaState : CombatState
             stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
 
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
+        IntentaCambiarProtagonista();
+        
         if (InputJugador.instance.apuntar)
         {
             stateMachine.ChangeState(new ApuntarState(stateMachine, combatController));

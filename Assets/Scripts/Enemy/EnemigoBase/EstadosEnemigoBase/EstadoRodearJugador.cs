@@ -1,89 +1,86 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Orbita al jugador sin atacar mientras espera un slot de ataque.
+/// La posición objetivo la reparte EnemyManager y se refresca cada pocos segundos.
+/// </summary>
 public class EstadoRodearJugador : EstadoBase
 {
+    private const float DistanciaRodeo          = 6f;
+    // La deriva orbital del manager se aplica una vez por actualización: este intervalo fija la velocidad orbital.
+    private const float IntervaloActualizacion  = 1f;
+
     private readonly NavMeshAgent agent;
+    private readonly HealthComp   salud;
+
     private Vector3 posicionObjetivo;
-    private float tiempoHastaActualizar;
-    private float intervaloActualizacion = 2f;
+    private float   tiempoHastaActualizar;
 
     public EstadoRodearJugador(Enemigo enemigo, Animator animator, NavMeshAgent agent)
         : base(enemigo, animator)
     {
         this.agent = agent;
+        salud      = enemigo.GetHealthComp();
     }
 
     public override void OnEnter()
     {
         animator.CrossFade(WalkingHash, duracionTransicion);
         ActualizarPosicion();
-        tiempoHastaActualizar = intervaloActualizacion;
+        tiempoHastaActualizar = IntervaloActualizacion;
     }
 
     public override void Update()
     {
+        // Bloqueando o esquivando: quieto para que la defensa funcione.
+        if (salud.getBloqueando() || salud.EstaEsquivando)
+        {
+            agent.isStopped = true;
+            return;
+        }
+        agent.isStopped = false;
+
         Transform jugador = enemigo.JugadorActual;
 
-        if (enemigo.GetHealthComp().getBloqueando() || enemigo.GetHealthComp().EstaEsquivando)
+        if (jugador == null || !enemigo.detectarJugador.SePuedeDetectarAlJugador())
         {
-            agent.isStopped = true; // Detener el movimiento para que la defensa funcione
-            return; 
-        }
-    
-        agent.isStopped = false;
-        if (jugador == null)
-        {
-            Debug.LogWarning($"[{enemigo.name}] Jugador null en EstadoRodear, volviendo a patrullar");
             enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
             return;
         }
 
-        if (!enemigo.detectarJugador.SePuedeDetectarAlJugador())
+        // Con slot concedido primero se acerca; Seguir pasa a Atacar al entrar en rango.
+        if (enemigo.EstaAtacando())
         {
-            Debug.Log($"[{enemigo.name}] Perdio deteccion del jugador, volviendo a patrullar");
-            enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
-            return;
-        }
-        if (enemigo.EstaAtacando()) 
-        {
-            enemigo.CambiarAEstado<EstadoAtacarJugador>();
+            enemigo.CambiarAEstado<EstadoSeguirJugador>();
             return;
         }
 
         tiempoHastaActualizar -= Time.deltaTime;
-
         if (tiempoHastaActualizar <= 0f)
         {
             ActualizarPosicion();
-            tiempoHastaActualizar = intervaloActualizacion;
+            tiempoHastaActualizar = IntervaloActualizacion;
         }
 
         agent.SetDestination(posicionObjetivo);
-
-        // Siempre mirar al jugador
-        Vector3 lookPosition = jugador.position;
-        lookPosition.y = enemigo.transform.position.y;
-        enemigo.transform.LookAt(lookPosition);
+        MirarAlJugador(jugador);
     }
+
+    public override void OnExit() => agent.isStopped = false;
 
     private void ActualizarPosicion()
     {
-        if (EnemyManager.instance != null)
-        {
-            // Usar distancia del radio de deteccion automotica como referencia
-            float distanciaRodeo = enemigo.detectarJugador != null ? 6f : 6f;
-            posicionObjetivo = EnemyManager.instance.ObtenerPosicionParaRodear(enemigo, distanciaRodeo);
-        }
-        else
-        {
-            // Fallback: quedarse donde esta
-            posicionObjetivo = enemigo.transform.position;
-        }
+        // Sin manager, se queda donde está.
+        posicionObjetivo = EnemyManager.instance != null
+            ? EnemyManager.instance.ObtenerPosicionParaRodear(enemigo, DistanciaRodeo)
+            : enemigo.transform.position;
     }
 
-    public override void OnExit()
+    private void MirarAlJugador(Transform jugador)
     {
-        agent.isStopped = false;
+        Vector3 mirar = jugador.position;
+        mirar.y = enemigo.transform.position.y;
+        enemigo.transform.LookAt(mirar);
     }
 }

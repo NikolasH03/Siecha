@@ -18,20 +18,9 @@ public class AtaqueLigero2 : CombatState
 
     public override void HandleInput()
     {
-        if (TryExecuteFinisher()) return;
-
-        if (InputJugador.instance.esquivar)
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-            return;
-        }
-        if (InputJugador.instance.bloquear)
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
-            return;
-        }
+        if (IntentaEjecutarFinisher()) return;
+        
+        if (IntentaHacerAccionDefensiva()) return;
 
         if (!combatController.puedeHacerCombo) return;
 

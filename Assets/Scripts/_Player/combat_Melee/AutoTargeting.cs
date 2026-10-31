@@ -24,6 +24,19 @@ public class AutoTargeting : MonoBehaviour
     [SerializeField] private float duracionDash   = 0.15f;
     [SerializeField] private Ease  easingDash     = Ease.OutQuint;
 
+    [Header("Colisiones (dash, desplazamiento y aproximación)")]
+    [Tooltip("Capas sólidas que bloquean el movimiento (muros, estructuras, props). " +
+             "NO incluir Player, JugadorInvulnerable, Enemigo ni Arma.")]
+    [SerializeField] private LayerMask capasObstaculos = 1; 
+    [SerializeField] private float radioJugador = 0.5f;
+    [SerializeField] private float alturaJugador = 1.8f;
+    [Tooltip("Obstáculos más bajos que esto (escalones, bordillos) no bloquean.")]
+    [SerializeField] private float alturaMinimaObstaculo = 0.3f;
+    [SerializeField] private float margenSeguridad = 0.1f;
+    
+    [Header("Componentes Físicos")]
+    [SerializeField] private Rigidbody rb;
+    
     private Transform enemigoObjetivo;
     private Tween     movimientoTween;
 
@@ -43,23 +56,36 @@ public class AutoTargeting : MonoBehaviour
 
         Collider[] enemigos = Physics.OverlapSphere(transform.position, rangoBusqueda, capaEnemigos);
 
-        float     mejorPuntaje  = Mathf.Cos(anguloBusqueda * 0.5f * Mathf.Deg2Rad);
+        // Puntaje mínimo para ser considerado (dentro del cono visual)
+        float umbralAngulo = Mathf.Cos(anguloBusqueda * 0.5f * Mathf.Deg2Rad);
+        
+        float mejorPuntaje  = float.MinValue; 
         Transform mejorObjetivo = null;
 
         foreach (Collider col in enemigos)
         {
-            // FIX: null check — Unity puede devolver colisores destruidos en el array
             if (col == null) continue;
 
             Vector3 dirEnemigo = (col.transform.position - transform.position);
             dirEnemigo.y = 0;
+            
+            float distancia = dirEnemigo.magnitude;
             dirEnemigo.Normalize();
 
             float dot = Vector3.Dot(dirMirada, dirEnemigo);
-            if (dot > mejorPuntaje)
+            
+            if (dot > umbralAngulo)
             {
-                mejorPuntaje  = dot;
-                mejorObjetivo = col.transform;
+                // SISTEMA DE PUNTAJE MIXTO
+                // Multiplicamos el dot (de -1 a 1) por un peso, y le restamos la distancia.
+                // Ajusta el '5f' según qué tanto quieras priorizar el joystick vs la cercanía.
+                float puntaje = (dot * 5f) - distancia;
+
+                if (puntaje > mejorPuntaje)
+                {
+                    mejorPuntaje  = puntaje;
+                    mejorObjetivo = col.transform;
+                }
             }
         }
 
@@ -91,7 +117,8 @@ public class AutoTargeting : MonoBehaviour
 
         Vector3 dir      = (enemigoObjetivo.position - transform.position).normalized;
         Vector3 destino  = enemigoObjetivo.position - dir * distanciaMinimaAtaque;
-
+        destino = LimitarDestino(destino); 
+        
         movimientoTween?.Kill();
         movimientoTween = transform.DOMove(destino, duracionAproximacion)
                                    .SetEase(easingAproximacion)
@@ -120,6 +147,7 @@ public class AutoTargeting : MonoBehaviour
             Vector3 fwd   = cam.transform.forward; fwd.y = 0; fwd.Normalize();
             Vector3 right = cam.transform.right;   right.y = 0; right.Normalize();
             direccion = (fwd * inputMovimiento.Value.y + right * inputMovimiento.Value.x).normalized;
+            Debug.Log("si entra a la seccion con input");
         }
         else
         {
@@ -130,6 +158,11 @@ public class AutoTargeting : MonoBehaviour
         }
 
         DesplazarseEnDireccion(direccion, distanciaDash, duracionDash, easingDash);
+        
+        if (inputMovimiento.HasValue && inputMovimiento.Value.sqrMagnitude > 0.1f)
+        {
+            referenciaRotacion.DORotateQuaternion(Quaternion.LookRotation(direccion), 0.1f);
+        }
     }
 
     // ─── Movimiento base ──────────────────────────────────────────────────────
@@ -140,11 +173,45 @@ public class AutoTargeting : MonoBehaviour
         direccion.Normalize();
 
         movimientoTween?.Kill();
-        movimientoTween = transform.DOMove(transform.position + direccion * distancia, duracion)
-                                   .SetEase(easing)
-                                   .SetUpdate(UpdateType.Fixed);
-    }
 
+        Vector3 destino = LimitarDestino(transform.position + direccion * distancia);
+
+        movimientoTween = transform.DOMove(destino, duracion)
+            .SetEase(easing)
+            .SetUpdate(UpdateType.Fixed);
+    }
+    /// <summary>
+    /// Devuelve el destino recortado para que el jugador se detenga antes de un obstáculo.
+    /// </summary>
+    private Vector3 LimitarDestino(Vector3 destino)
+    {
+        Vector3 origen = transform.position;
+
+        Vector3 delta = destino - origen;
+        delta.y = 0f;
+        float distancia = delta.magnitude;
+        if (distancia < 0.001f) return origen;
+
+        Vector3 dir = delta / distancia;
+
+        // Radio ligeramente menor para no "empezar dentro" de una pared pegada.
+        float radioCast = radioJugador * 0.95f;
+        Vector3 p1 = origen + Vector3.up * (alturaMinimaObstaculo + radioCast);
+        Vector3 p2 = origen + Vector3.up * Mathf.Max(alturaMinimaObstaculo + radioCast, alturaJugador - radioCast);
+
+        Vector3 resultado = destino;
+
+        if (Physics.CapsuleCast(p1, p2, radioCast, dir, out RaycastHit hit,
+                distancia + margenSeguridad, capasObstaculos,
+                QueryTriggerInteraction.Ignore))
+        {
+            float distanciaSegura = Mathf.Max(0f, hit.distance - margenSeguridad);
+            resultado = origen + dir * distanciaSegura;
+        }
+
+        resultado.y = destino.y;
+        return resultado;
+    }
     public void CancelarMovimiento() => movimientoTween?.Kill();
 
     private void OnDestroy() => movimientoTween?.Kill();

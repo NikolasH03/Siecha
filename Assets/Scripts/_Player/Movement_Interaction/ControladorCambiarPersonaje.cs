@@ -61,6 +61,8 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         esMuisca = true;
         
+        InputJugador.instance.CambiarInputMelee();
+        muisca.GetComponent<ControladorCombate>().CambiarArmaMelee();
         muisca.GetComponent<ControladorCombate>().AlActivarse();
     }
 
@@ -79,6 +81,8 @@ public class ControladorCambiarPersonaje : MonoBehaviour
 
         esMuisca = false;
         
+        InputJugador.instance.CambiarInputMelee();
+        espanol.GetComponent<ControladorCombate>().CambiarArmaMelee();
         espanol.GetComponent<ControladorCombate>().AlActivarse();
     }
 

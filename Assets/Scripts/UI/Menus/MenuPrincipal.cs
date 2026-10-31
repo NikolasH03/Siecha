@@ -8,6 +8,11 @@ public class MenuPrincipal : MenuBaseConNavegacion
     [SerializeField] private Button botonCreditos;
     [SerializeField] private Button botonSalir;
 
+    protected override void OnMenuOpened()
+    {
+        AudioManager.Instance.PlayMusicaMenuInicial();
+    }
+
     protected override void ConfigurarNavegacion()
     {
         if (botonJugar && botonOpciones && botonCreditos && botonSalir)

@@ -2,15 +2,20 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// FSM con nodos indexados por TIPO de estado (estado.GetType()): por eso los estados se deben
+/// registrar siempre con su tipo concreto, y una instancia nueva del mismo tipo reutiliza el nodo existente.
+/// </summary>
 public class MaquinaDeEstados
 {
-    NodoDeEstados current;
-    private Dictionary<Type, NodoDeEstados> nodos = new();
-    HashSet<ITrancsicion> transicionesGlobales = new();
+    private NodoDeEstados current;
+    private readonly Dictionary<Type, NodoDeEstados> nodos = new();
+    private readonly HashSet<ITrancsicion> transicionesGlobales = new();
+
+    // ─── Ciclo de vida ────────────────────────────────────────────────────────
 
     public void Update()
     {
-        //Verificar que hay un estado actual
         if (current == null || current.Estado == null)
         {
             Debug.LogWarning("[MaquinaDeEstados] No hay estado actual establecido");
@@ -24,7 +29,11 @@ public class MaquinaDeEstados
         current.Estado?.Update();
     }
 
-    //Ahora puede recibir estados que no están en el diccionario
+    public void FixedUpdate() => current?.Estado?.FixedUpdate();
+
+    // ─── Cambio de estado ─────────────────────────────────────────────────────
+
+    /// <summary>Establece el estado inicial (acepta estados aún no registrados en la FSM).</summary>
     public void SetEstado(IEstado estado)
     {
         if (estado == null)
@@ -33,14 +42,10 @@ public class MaquinaDeEstados
             return;
         }
 
-        // Si el estado no existe en nodos, agregarlo
-        var nodo = ObtenerOAgregarNodo(estado);
-
-        current = nodo;
+        current = ObtenerOAgregarNodo(estado);
         current.Estado?.OnEnter();
     }
 
-    //Manejo seguro de estados no registrados
     public void CambiarEstado(IEstado estado)
     {
         if (estado == null)
@@ -49,56 +54,43 @@ public class MaquinaDeEstados
             return;
         }
 
-        // Si es el mismo estado, no hacer nada
         if (current != null && estado == current.Estado) return;
 
-        // Obtener o crear el nodo del nuevo estado
         var nuevoNodo = ObtenerOAgregarNodo(estado);
 
-        // Salir del estado anterior si existe
         if (current != null && current.Estado != null)
-        {
             current.Estado.OnExit();
-        }
 
-        // Entrar al nuevo estado
         current = nuevoNodo;
         current.Estado?.OnEnter();
     }
 
-    ITrancsicion GetTransicion()
+    // ─── Transiciones ─────────────────────────────────────────────────────────
+
+    public void AgregarTransicionGlobal(IEstado nuevoEstado, IPredicate condicion) =>
+        transicionesGlobales.Add(new Trancsicion(ObtenerOAgregarNodo(nuevoEstado).Estado, condicion));
+
+    public void AgregarTransicion(IEstado estadoActual, IEstado estadoSiguiente, IPredicate condicion) =>
+        ObtenerOAgregarNodo(estadoActual).AgregarTransicion(ObtenerOAgregarNodo(estadoSiguiente).Estado, condicion);
+
+    /// <summary>Las globales tienen prioridad sobre las del estado actual.</summary>
+    private ITrancsicion GetTransicion()
     {
-        //Verificación de seguridad
         if (current == null) return null;
 
-        // Primero verificar transiciones globales
         foreach (var transicion in transicionesGlobales)
             if (transicion.Condicion.Evaluate())
                 return transicion;
 
-        // Luego verificar transiciones locales del estado actual
         if (current.Transiciones != null)
-        {
             foreach (var transicion in current.Transiciones)
                 if (transicion.Condicion.Evaluate())
                     return transicion;
-        }
 
         return null;
     }
 
-    public void AgregarTransicionGlobal(IEstado nuevoEstado, IPredicate condicion)
-    {
-        transicionesGlobales.Add(new Trancsicion(ObtenerOAgregarNodo(nuevoEstado).Estado, condicion));
-    }
-
-    public void AgregarTransicion(IEstado estadoActual, IEstado estadoSiguiente, IPredicate condicion)
-    {
-        ObtenerOAgregarNodo(estadoActual).AgregarTransicion(ObtenerOAgregarNodo(estadoSiguiente).Estado, condicion);
-    }
-
-    //Ahora retorna el nodo en lugar de solo agregarlo
-    NodoDeEstados ObtenerOAgregarNodo(IEstado estado)
+    private NodoDeEstados ObtenerOAgregarNodo(IEstado estado)
     {
         if (estado == null)
         {
@@ -107,51 +99,30 @@ public class MaquinaDeEstados
         }
 
         Type tipoEstado = estado.GetType();
-
-        // Si el nodo ya existe, retornarlo
         if (nodos.TryGetValue(tipoEstado, out var nodoExistente))
-        {
             return nodoExistente;
-        }
 
-        // Si no existe, crear uno nuevo
         var nuevoNodo = new NodoDeEstados(estado);
         nodos.Add(tipoEstado, nuevoNodo);
-
         return nuevoNodo;
     }
 
-    public void FixedUpdate()
-    {
-        current?.Estado?.FixedUpdate();
-    }
+    // ─── Consultas ────────────────────────────────────────────────────────────
 
-    //Método para verificar si hay un estado actual
-    public bool TieneEstadoActual()
-    {
-        return current != null && current.Estado != null;
-    }
+    public bool TieneEstadoActual() => current != null && current.Estado != null;
 
-    //Obtener el estado actual (útil para debug)
-    public IEstado ObtenerEstadoActual()
-    {
-        return current?.Estado;
-    }
+    public IEstado ObtenerEstadoActual() => current?.Estado;
 
-    class NodoDeEstados
+    // ─── Nodo ─────────────────────────────────────────────────────────────────
+
+    private class NodoDeEstados
     {
         public IEstado Estado { get; }
-        public HashSet<ITrancsicion> Transiciones { get; }
+        public HashSet<ITrancsicion> Transiciones { get; } = new HashSet<ITrancsicion>();
 
-        public NodoDeEstados(IEstado estado)
-        {
-            Estado = estado;
-            Transiciones = new HashSet<ITrancsicion>();
-        }
+        public NodoDeEstados(IEstado estado) => Estado = estado;
 
-        public void AgregarTransicion(IEstado nuevoEstado, IPredicate condicion)
-        {
+        public void AgregarTransicion(IEstado nuevoEstado, IPredicate condicion) =>
             Transiciones.Add(new Trancsicion(nuevoEstado, condicion));
-        }
     }
 }

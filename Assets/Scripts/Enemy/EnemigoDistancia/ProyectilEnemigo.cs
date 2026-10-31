@@ -1,77 +1,65 @@
 using UnityEngine;
+
+/// <summary>Proyectil del arquero: vuela en línea recta, daña al jugador al impactar y se destruye.</summary>
 public class ProyectilEnemigo : MonoBehaviour
 {
+    private const float CaidaMaxima         = 20f; // metros bajo la altura inicial antes de destruirse
+    private const float VelocidadMinima     = 1f;  // por debajo se considera atascado
+
     [Header("Movimiento")]
-    [SerializeField] private float velocidad = 25f;
+    [SerializeField] private float velocidad        = 25f;
     [SerializeField] private float tiempoVidaMaximo = 6f;
-    [SerializeField] private float distanciaMaxima = 80f;
+    [SerializeField] private float distanciaMaxima  = 80f;
 
     [Header("Capas")]
     [SerializeField] private LayerMask capasDeteccion = -1;
 
-    // Estado interno
-    private int dano;
-    private Vector3 posicionInicial;
-    private bool yaImpacto = false;
+    private int       dano;
+    private Vector3   posicionInicial;
+    private bool      yaImpacto;
     private Rigidbody rb;
-
-    // ─── Inicialización ───────────────────────────────────────────────────────
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        posicionInicial = transform.position;
+        rb               = GetComponent<Rigidbody>();
+        posicionInicial  = transform.position;
         gameObject.layer = LayerMask.NameToLayer("Enemigo");
     }
 
-    /// <summary>
-    /// Debe llamarse inmediatamente después de Instantiate().
-    /// Inyecta el daño y lanza el proyectil en la dirección forward del Transform.
-    /// </summary>
+    /// <summary>Debe llamarse justo después de Instantiate(): inyecta el daño y lanza el proyectil hacia su forward.</summary>
     public void Inicializar(int danoCausado)
     {
         dano = danoCausado;
-        if (rb != null)
-            rb.velocity = transform.forward * velocidad;
+        if (rb != null) rb.velocity = transform.forward * velocidad;
 
         Destroy(gameObject, tiempoVidaMaximo);
     }
-
-    // ─── Loop ─────────────────────────────────────────────────────────────────
 
     private void Update()
     {
         if (yaImpacto) return;
 
-        if (Vector3.Distance(transform.position, posicionInicial) > distanciaMaxima)
-            Destruir();
-        else if (transform.position.y < posicionInicial.y - 20f)
-            Destruir();
-        else if (rb != null && rb.velocity.magnitude < 1f)
+        bool demasiadoLejos = Vector3.Distance(transform.position, posicionInicial) > distanciaMaxima;
+        bool cayoAlVacio    = transform.position.y < posicionInicial.y - CaidaMaxima;
+        bool atascado       = rb != null && rb.velocity.magnitude < VelocidadMinima;
+
+        if (demasiadoLejos || cayoAlVacio || atascado)
             Destruir();
     }
-
-    // ─── Colisión ─────────────────────────────────────────────────────────────
 
     private void OnTriggerEnter(Collider other)
     {
         if (yaImpacto) return;
-
-        int otherLayer = 1 << other.gameObject.layer;
-        if ((capasDeteccion.value & otherLayer) == 0) return;
+        if ((capasDeteccion.value & (1 << other.gameObject.layer)) == 0) return;
 
         if (other.CompareTag("Player"))
         {
             ControladorCombate jugador = other.GetComponent<ControladorCombate>();
-
-            jugador.JugadorRecibeDano(dano);
-            
+            if (jugador != null) jugador.JugadorRecibeDano(dano);
         }
 
         Destruir();
     }
-
-    // ─── Destrucción ──────────────────────────────────────────────────────────
 
     private void Destruir()
     {

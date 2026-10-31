@@ -117,6 +117,8 @@ public class ArcoDisparo : MonoBehaviour
             {
                 enemigo.recibeDano(player.EntregarDanoArmaDistancia());
                 enemigo.setRecibiendoDano(true);
+                CameraShakeManager.instance.ShakeImpactoFlecha();
+                RumbleManager.Play(TipoRumble.ImpactoFlecha);
 
                 Debug.Log($"Flecha impact� enemigo: {enemyCollider.gameObject.name}");
             }

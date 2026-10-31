@@ -51,7 +51,7 @@ public class RecargarState : CombatState
     private void OnFinMinijuego(bool fuePerfecta)
     {
         esperandoResultado = false;
-        combatController.anim.speed = fuePerfecta ? 1.5f : 0.5f;
+        combatController.anim.speed = fuePerfecta ? 2f : 0.5f;
         if (fuePerfecta) combatController.ActivarBufoDisparo();
     }
 

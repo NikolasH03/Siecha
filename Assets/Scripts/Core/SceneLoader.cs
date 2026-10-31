@@ -34,6 +34,7 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator LoadSceneAsync(int id)
     {
+        AudioManager.Instance.StopMusicaYAmbiente();
         ProgressBar.fillAmount = 0;
         _target = 0;
 

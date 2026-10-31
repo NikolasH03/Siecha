@@ -20,7 +20,6 @@ public class IdleMeleeState : CombatState
     {
         if (InputJugador.instance.moverse.sqrMagnitude > 0.5f)
         {
-
             stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
             return;
 
@@ -33,26 +32,11 @@ public class IdleMeleeState : CombatState
             stateMachine.ChangeState(new VerificarTipoArmaState(stateMachine, combatController));
         }
 
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
-        if (InputJugador.instance.esquivar && !combatController.anim.GetBool("dashing"))
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-            return;
-        }
-        if (InputJugador.instance.bloquear)
-        {
-            if (combatController.stats.EstaminaActual <= 0) return;
+        IntentaCambiarProtagonista();
+            
+        if (IntentaHacerAccionDefensiva()) return;
 
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
-            return;
-        }
-
-        if (TryExecuteFinisher()) return;
+        if (IntentaEjecutarFinisher()) return;
 
         if (InputJugador.instance.AtaqueLigero && !combatController.anim.GetBool("running"))
         {

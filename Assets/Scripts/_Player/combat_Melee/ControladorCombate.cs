@@ -118,14 +118,15 @@ public class ControladorCombate : MonoBehaviour
     }
     public void AlActivarse()
     {
-        // 1. Limpiar cualquier residuo visual o de estado de la FSM anterior.
         ResetCompleto();
      
-        // 2. Reiniciar la FSM a un estado conocido según el arma actual.
+        int armaActual = cambioArma.getterArma();
+        if (armaActual == 1)
+            InputJugador.instance.CambiarInputMelee();
+        else
+            InputJugador.instance.CambiarInputDistancia();
+            
         fsm.ChangeState(new VerificarTipoArmaState(fsm, this));
-     
-        // 3. Sincronizar el input map con el arma actual de este personaje.
-        SincronizarInputConArmaActual();
     }
     
     private void SincronizarInputConArmaActual()
@@ -203,51 +204,22 @@ public class ControladorCombate : MonoBehaviour
 
     public int EntregarDanoArmaMelee(bool enemigoBloqueando)
     {
-        if (!enemigoBloqueando)
+        switch (tipoAtaque)
         {
-            if (tipoAtaque == "ligero")
-            {
-                CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaMelee.danoGolpeLigero;
-            }
-            else if (tipoAtaque == "fuerte")
-            {
+            case "fuerte":
                 CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaMelee.danoGolpeFuerte;
-            }
-            else if (tipoAtaque == "cargado")
-            {
+                RumbleManager.Play(TipoRumble.GolpeFuerte);
+                return enemigoBloqueando ? armaMelee.danoGolpeFuerteGuardia : armaMelee.danoGolpeFuerte;
+
+            case "cargado":
                 CameraShakeManager.instance.ShakeGolpeFuerte();
+                RumbleManager.Play(TipoRumble.GolpeCargado);
                 return armaMelee.danoGolpeCargado;
-            }
-            else
-            {
+
+            default: // "ligero" y cualquier otro
                 CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaMelee.danoGolpeLigero;
-            }
-        }
-        else
-        {
-            if (tipoAtaque == "ligero")
-            {
-                CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaMelee.danoGolpeLigeroGuardia;
-            }
-            else if (tipoAtaque == "fuerte")
-            {
-                CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaMelee.danoGolpeFuerteGuardia;
-            }
-            else if (tipoAtaque == "cargado")
-            {
-                CameraShakeManager.instance.ShakeGolpeFuerte();
-                return armaMelee.danoGolpeCargado;
-            }
-            else
-            {
-                CameraShakeManager.instance.ShakeGolpeLigero();
-                return armaMelee.danoGolpeLigeroGuardia;
-            }
+                RumbleManager.Play(TipoRumble.GolpeLigero);
+                return enemigoBloqueando ? armaMelee.danoGolpeLigeroGuardia : armaMelee.danoGolpeLigero;
         }
     }
     public HealthComp DetectarEnemigoStunned(float rango)
@@ -271,7 +243,7 @@ public class ControladorCombate : MonoBehaviour
         if (tieneBufoDisparo)
         {
             tieneBufoDisparo = false;
-            return Mathf.RoundToInt(armaDistancia.danoDisparo * 1.5f);
+            return Mathf.RoundToInt(armaDistancia.danoDisparo * 3f);
         }
         return armaDistancia.danoDisparo;
     }

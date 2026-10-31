@@ -5098,9 +5098,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99c142b0d0dbda749b5587e9196f6e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocidad: 25
-  tiempoVidaMaximo: 6
-  distanciaMaxima: 100
+  velocidad: 40
+  tiempoVidaMaximo: 8
+  distanciaMaxima: 200
   capasDeteccion:
     serializedVersion: 2
     m_Bits: 257

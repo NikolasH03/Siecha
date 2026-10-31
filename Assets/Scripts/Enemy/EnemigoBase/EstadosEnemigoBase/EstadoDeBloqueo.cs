@@ -1,16 +1,23 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Guardia activa: el enemigo se detiene y bloquea mientras el jugador siga atacando
+/// (con un tiempo m√°ximo de seguridad). Al terminar vuelve a seguir o a patrullar.
+/// </summary>
 public class EstadoDeBloqueo : EstadoBase
 {
+    private const float TiempoMaximoBloqueo = 5f;
+
     private readonly NavMeshAgent agent;
-    private readonly HealthComp vidaEnemigo;
-    private float tiempoEnBloqueo = 0f;
+    private readonly HealthComp   vidaEnemigo;
+
+    private float tiempoEnBloqueo;
 
     public EstadoDeBloqueo(Enemigo enemigo, Animator animator, NavMeshAgent agent, HealthComp vidaEnemigo)
         : base(enemigo, animator)
     {
-        this.agent = agent;
+        this.agent       = agent;
         this.vidaEnemigo = vidaEnemigo;
     }
 
@@ -26,19 +33,14 @@ public class EstadoDeBloqueo : EstadoBase
     {
         tiempoEnBloqueo += Time.deltaTime;
 
-        // Salir si el jugador dejÛ de atacar
-        if (!enemigo.JugadorEstaAtacando())
-        {
+        if (!enemigo.JugadorEstaAtacando() || tiempoEnBloqueo >= TiempoMaximoBloqueo)
             TerminarBloqueo();
-            return;
-        }
+    }
 
-        // Timeout de seguridad (5 segundos m·ximo)
-        if (tiempoEnBloqueo >= 5f)
-        {
-            TerminarBloqueo();
-            return;
-        }
+    public override void OnExit()
+    {
+        agent.isStopped = false;
+        vidaEnemigo.setBloqueado(false);
     }
 
     private void TerminarBloqueo()
@@ -46,19 +48,6 @@ public class EstadoDeBloqueo : EstadoBase
         vidaEnemigo.setBloqueado(false);
         agent.isStopped = false;
 
-        if (enemigo.detectarJugador.SePuedeDetectarAlJugador())
-        {
-            enemigo.CambiarAEstado<EstadoSeguirJugador>();
-        }
-        else
-        {
-            enemigo.CambiarAEstado<EstadoPatrullaEnemigo>();
-        }
-    }
-
-    public override void OnExit()
-    {
-        agent.isStopped = false;
-        vidaEnemigo.setBloqueado(false);
+        enemigo.VolverAComportamientoBase();
     }
 }

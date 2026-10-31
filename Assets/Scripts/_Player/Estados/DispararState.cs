@@ -26,12 +26,14 @@ public class DispararState : CombatState
         {
             apuntado.InstanciarBala(apuntado.ObtenerPosicionObjetivo());
             combatController.Reproducir("disparar_arco");
+            RumbleManager.Play(TipoRumble.DisparoArco);
         }
         else
         {
             apuntado.EsferaDeDano();
             combatController.Reproducir("disparo_arcabuz");
             CameraShakeManager.instance.ShakeExplosion();
+            RumbleManager.Play(TipoRumble.DisparoArcabuz);
         }
     }
 

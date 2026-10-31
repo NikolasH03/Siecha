@@ -1,21 +1,26 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+/// <summary>
+/// Combo de ataques del enemigo melee. Cada ataque espera el evento de animación
+/// OnAnimacionAtaqueCompletada antes de lanzar el siguiente; al terminar el combo
+/// devuelve el slot de ataque al EnemyManager y reevalúa el comportamiento.
+/// </summary>
 public class EstadoAtacarJugador : EstadoBase
 {
+    private const float FactorDistanciaDeAtaque = 0.8f;
+
     private readonly NavMeshAgent agent;
     private readonly float rangoDeAtaque;
-    private readonly EnemyStats stats;
 
-    private bool esperandoFinAnimacion = false;
-    private bool animacionCompletada = false;
+    private bool esperandoFinAnimacion;
+    private bool animacionCompletada;
 
     public EstadoAtacarJugador(Enemigo enemigo, Animator animator, NavMeshAgent agent, float rangoDeAtaque)
         : base(enemigo, animator)
     {
-        this.agent = agent;
+        this.agent         = agent;
         this.rangoDeAtaque = rangoDeAtaque;
-        this.stats = enemigo.Stats;
     }
 
     public override void OnEnter()
@@ -31,82 +36,84 @@ public class EstadoAtacarJugador : EstadoBase
         Transform jugador = enemigo.JugadorActual;
         if (jugador == null) return;
 
-        // Posicionamiento
-        Vector3 direccionAlJugador = (jugador.position - enemigo.transform.position).normalized;
-        float distanciaDeseada = rangoDeAtaque * 0.8f;
-        Vector3 destino = jugador.position - direccionAlJugador * distanciaDeseada;
+        MantenerDistanciaYMirar(jugador);
 
-        agent.SetDestination(destino);
-
-        Vector3 lookPosition = jugador.position;
-        lookPosition.y = enemigo.transform.position.y;
-        enemigo.transform.LookAt(lookPosition);
-
-        // Sistema de combo
         if (esperandoFinAnimacion && animacionCompletada)
-        {
-            animacionCompletada = false;
-            esperandoFinAnimacion = false;
-
-            if (!enemigo.ComboCompletado())
-            {
-                EjecutarAtaque();
-            }
-            else
-            {
-                enemigo.FinalizarCombo();
-                EnemyManager.instance.LiberarEnemigo(enemigo);
-
-                // Reevaluar comportamiento
-                enemigo.EvaluarComportamiento();
-            }
-        }
-    }
-
-    private void EjecutarAtaque()
-    {
-        ObtenerAnimacionCombo();
-        enemigo.SiguienteAtaqueEnCombo();
-        esperandoFinAnimacion = true;
-        animacionCompletada = false;
-    }
-
-    public void OnAnimacionAtaqueCompletada()
-    {
-        animacionCompletada = true;
-    }
-
-    private void ObtenerAnimacionCombo()
-    {
-        if (enemigo.TipoAtaqueActual == TipoAtaque.Ligero)
-        {
-            switch (enemigo.AtaqueActualEnCombo)
-            {
-                case 0: animator.CrossFade(LightAttack1Hash, duracionTransicion); break;
-                case 1: animator.CrossFade(LightAttack2Hash, duracionTransicion); break;
-                case 2: animator.CrossFade(LightAttack3Hash, duracionTransicion); break;
-                default: animator.CrossFade(LightAttack1Hash, duracionTransicion); break;
-            }
-        }
-        else
-        {
-            switch (enemigo.AtaqueActualEnCombo)
-            {
-                case 0: animator.CrossFade(HeavyAttack1Hash, duracionTransicion); break;
-                case 1: animator.CrossFade(HeavyAttack2Hash, duracionTransicion); break;
-                default: animator.CrossFade(HeavyAttack1Hash, duracionTransicion); break;
-            }
-        }
+            AvanzarCombo();
     }
 
     public override void OnExit()
     {
         enemigo.DesregistrarEstadoAtacar();
-        enemigo.desactivarCollider();
+        enemigo.FinalizarCombo();
 
-        if (enemigo.EstaEnCombo)
+        esperandoFinAnimacion = false;
+        animacionCompletada   = false;
+        agent.isStopped       = false;
+    }
+
+    /// <summary>Evento de animación: el ataque actual terminó.</summary>
+    public void OnAnimacionAtaqueCompletada() => animacionCompletada = true;
+
+    // ─── Combo ────────────────────────────────────────────────────────────────
+
+    private void AvanzarCombo()
+    {
+        animacionCompletada   = false;
+        esperandoFinAnimacion = false;
+
+        if (!enemigo.ComboCompletado())
         {
-            enemigo.FinalizarCombo();
+            EjecutarAtaque();
+            return;
         }
+
+        enemigo.FinalizarCombo();
+        EnemyManager.instance.LiberarEnemigo(enemigo);
+        enemigo.EvaluarComportamiento();
+    }
+
+    private void EjecutarAtaque()
+    {
+        ReproducirAnimacionCombo();
+        enemigo.SiguienteAtaqueEnCombo();
+
+        esperandoFinAnimacion = true;
+        animacionCompletada   = false;
+    }
+
+    private void ReproducirAnimacionCombo()
+    {
+        int indice = enemigo.AtaqueActualEnCombo;
+        int hash   = enemigo.TipoAtaqueActual == TipoAtaque.Ligero
+            ? HashAtaqueLigero(indice)
+            : HashAtaqueFuerte(indice);
+
+        animator.CrossFade(hash, duracionTransicion);
+    }
+
+    private int HashAtaqueLigero(int indice)
+    {
+        switch (indice)
+        {
+            case 1:  return LightAttack2Hash;
+            case 2:  return LightAttack3Hash;
+            default: return LightAttack1Hash;
+        }
+    }
+
+    private int HashAtaqueFuerte(int indice) => indice == 1 ? HeavyAttack2Hash : HeavyAttack1Hash;
+
+    // ─── Movimiento ───────────────────────────────────────────────────────────
+
+    /// <summary>Se coloca a una fracción del rango de ataque del jugador, mirándolo (sin inclinarse en Y).</summary>
+    private void MantenerDistanciaYMirar(Transform jugador)
+    {
+        Vector3 haciaJugador = (jugador.position - enemigo.transform.position).normalized;
+        agent.SetDestination(jugador.position - haciaJugador * (rangoDeAtaque * FactorDistanciaDeAtaque));
+
+        Vector3 mirar = jugador.position;
+        mirar.y = enemigo.transform.position.y;
+        enemigo.transform.LookAt(mirar);
     }
 }

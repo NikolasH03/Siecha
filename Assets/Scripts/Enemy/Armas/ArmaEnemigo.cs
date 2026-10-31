@@ -1,30 +1,24 @@
 using UnityEngine;
 
+/// <summary>Collider del arma melee del enemigo: al tocar al jugador le aplica el daÃ±o del ataque actual.</summary>
 public class ArmaEnemigo : MonoBehaviour
 {
     [SerializeField] private Enemigo enemigo;
-    private Collider armaCollider;
 
     private void Awake()
     {
-        armaCollider = GetComponent<Collider>();
+        if (enemigo == null) enemigo = GetComponentInParent<Enemigo>();
+
         if (enemigo == null)
-        {
-            enemigo = GetComponentInParent<Enemigo>();
-        }
+            Debug.LogError($"[{name}] ArmaEnemigo no encontrÃ³ un Enemigo en sus padres.");
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Verificar si golpeó al jugador
-        if (other.CompareTag("Player"))
-        {
-            ControladorCombate jugador = other.GetComponent<ControladorCombate>();
+        if (enemigo == null || !other.CompareTag("Player")) return;
 
-                Debug.Log($"Enemigo golpeó al jugador con {enemigo.TipoAtaqueActual} - Daño: {enemigo.ObtenerDanoActual()}");
-
+        ControladorCombate jugador = other.GetComponent<ControladorCombate>();
+        if (jugador != null)
             jugador.JugadorRecibeDano(enemigo.ObtenerDanoActual());
-            
-        }
     }
 }

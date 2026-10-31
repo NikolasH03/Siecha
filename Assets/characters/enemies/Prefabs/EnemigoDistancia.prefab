@@ -1215,6 +1215,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5159335832726590017}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7513019310822056738}
   m_SourcePrefab: {fileID: 100100000, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}
 --- !u!1 &3812067536363568426 stripped
 GameObject:
@@ -1241,11 +1244,11 @@ MonoBehaviour:
   prefabProyectil: {fileID: 4088112302413151866, guid: e581b79b2dee3ef4b93531ebdfbfa007, type: 3}
   spawnProyectil: {fileID: 4042175387580050216}
   danoProyectil: 10
-  tiempoApuntado: 1.5
-  tiempoCooldownDisparo: 2
-  rangoMinimoConfort: 4
-  distanciaReposicion: 10
-  velocidadHuida: 5
+  tiempoApuntado: 5
+  tiempoCooldownDisparo: 5
+  rangoMinimoConfort: 1.2
+  distanciaReposicion: 12
+  velocidadHuida: 4
 --- !u!114 &3159211931182544999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1346,6 +1349,18 @@ CapsuleCollider:
   m_Height: 0.13
   m_Direction: 1
   m_Center: {x: 0, y: 0.06, z: 0}
+--- !u!114 &7513019310822056738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3812067536363568426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c19d571699e5d2b40b85100830995782, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &4588323143282583440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bb15644d490a89a4e8c61eb1d2ce3fb9, type: 3}

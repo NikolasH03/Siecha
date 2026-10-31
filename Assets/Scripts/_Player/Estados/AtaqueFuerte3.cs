@@ -19,20 +19,9 @@ public class AtaqueFuerte3 : CombatState
     {
         if (combatController.statsBase.maxAtaquesFuertes <= 3) return;
 
-        if (TryExecuteFinisher()) return;
+        if (IntentaEjecutarFinisher()) return;
 
-        if (InputJugador.instance.esquivar)
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
-            return;
-        }
-        if (InputJugador.instance.bloquear)
-        {
-            combatController.DesactivarVentanaCombo();
-            stateMachine.ChangeState(new BloqueoState(stateMachine, combatController));
-            return;
-        }
+        if (IntentaHacerAccionDefensiva()) return;
 
         if (!combatController.puedeHacerCombo) return;
 

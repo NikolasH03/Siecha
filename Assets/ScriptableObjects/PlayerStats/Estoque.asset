@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ddf640d6616efa418000a4e9a967c9b, type: 3}
+  m_Name: Estoque
+  m_EditorClassIdentifier: 
+  nombre: Estoque
+  danoGolpeFuerte: 40
+  danoGolpeLigero: 25
+  danoGolpeCargado: 60
+  danoGolpeFuerteGuardia: 45
+  danoGolpeLigeroGuardia: 30
+  prefabArmaPrincipal: {fileID: 7206013468772476052, guid: 8ed580d19dbf2ee4288d63d1d22b6194, type: 3}
+  prefabArmaSecundaria: {fileID: 6870289579515822118, guid: d3c62e5b487beaf4a8d851ab1d9e9284, type: 3}

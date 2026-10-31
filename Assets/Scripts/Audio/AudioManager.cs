@@ -77,9 +77,16 @@ public class AudioManager : MonoBehaviour
         InitPool();
     }
 
-    private void Start()
+    public void PlayMusicaMenuInicial()
     {
+        StopAmbience();
         PlayMusic(musicMenuTemp);
+    }
+
+    public void StopMusicaYAmbiente()
+    {
+        StopAmbience();
+        StopMusic();
     }
 
     /// <summary>

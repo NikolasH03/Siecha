@@ -35,10 +35,7 @@ public class MoverseDistanciaState : CombatState
             stateMachine.ChangeState(new MoverseMeleeState(stateMachine, combatController));
         }
 
-        if (InputJugador.instance.cambiarProtagonista)
-        {
-            ControladorCambiarPersonaje.instance.CambiarProtagonista();
-        }
+        IntentaCambiarProtagonista();
 
         if (InputJugador.instance.apuntar && !anim.GetBool("running"))
         {
@@ -49,16 +46,7 @@ public class MoverseDistanciaState : CombatState
             stateMachine.ChangeState(new EsquivaState(stateMachine, combatController));
             return;
         }
-        if (InputJugador.instance.correr && InputJugador.instance.moverse.sqrMagnitude > 0.01f)
-        {
-            anim.SetBool("running", true);
-            movimiento.CambiarVelocidad(true);
-        }
-        if (!InputJugador.instance.correr || InputJugador.instance.moverse.sqrMagnitude < 0.01f)
-        {
-            anim.SetBool("running", false);
-            movimiento.CambiarVelocidad(false);
-        }
+        IntentaCorrer();
     }
 
     public override void Exit()

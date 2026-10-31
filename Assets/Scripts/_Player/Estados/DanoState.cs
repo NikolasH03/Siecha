@@ -32,6 +32,7 @@ public class DanoState : CombatState
             combatController.anim.SetTrigger("Dano");
             combatController.Reproducir("recibe_impacto");
             CameraShakeManager.instance.ShakeGolpeFuerte();
+            RumbleManager.Play(TipoRumble.RecibirDano);
 
         }
 

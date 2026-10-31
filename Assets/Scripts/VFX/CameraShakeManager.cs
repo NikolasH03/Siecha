@@ -10,6 +10,10 @@ public class CameraShakeManager : MonoBehaviour
     public CinemachineImpulseSource golpeFuerteImpulse;
     public CinemachineImpulseSource explosionImpulse;
 
+    [Header("Fuerza de shakes suaves")]
+    [SerializeField, Range(0f, 1f)] private float fuerzaBloqueo = 0.6f;
+    [SerializeField, Range(0f, 1f)] private float fuerzaImpactoFlecha = 0.5f;
+    
     void Awake()
     {
         if (instance == null)
@@ -35,6 +39,15 @@ public class CameraShakeManager : MonoBehaviour
     public void ShakeExplosion()
     {
         explosionImpulse.GenerateImpulse();
+    }
+    public void ShakeBloqueo()
+    {
+        golpeLigeroImpulse.GenerateImpulseWithForce(fuerzaBloqueo);
+    }
+
+    public void ShakeImpactoFlecha()
+    {
+        golpeLigeroImpulse.GenerateImpulseWithForce(fuerzaImpactoFlecha);
     }
 }
 
